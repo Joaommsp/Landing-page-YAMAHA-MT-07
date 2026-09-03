@@ -167,7 +167,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T5: Criar as máscaras de campo
+### T5: Criar as máscaras de campo ✅
 
 **What**: `maskCPF`, `maskPhone`, `maskCEP` e `maskCard`, preservando só dígitos e reaplicando o formato.
 **Where**: `src/lib/masks.js`
@@ -177,13 +177,13 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] `maskCPF("12345678909")` retorna `123.456.789-09`
-- [ ] `maskPhone` cobre 10 e 11 dígitos
-- [ ] `maskCEP("30140071")` retorna `30140-071`
-- [ ] `maskCard("4429881200431197")` retorna grupos de quatro separados por espaço
-- [ ] Valor já formatado colado é normalizado para os mesmos dígitos (edge case da spec)
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 9 testes passam
+- [x] `maskCPF("12345678909")` retorna `123.456.789-09`
+- [x] `maskPhone` cobre 10 e 11 dígitos
+- [x] `maskCEP("30140071")` retorna `30140-071`
+- [x] `maskCard("4429881200431197")` retorna grupos de quatro separados por espaço
+- [x] Valor já formatado colado é normalizado para os mesmos dígitos (edge case da spec)
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 9 testes passam
 
 **Tests**: unit
 **Gate**: quick
