@@ -644,7 +644,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T22: Compor a página
+### T22: Compor a página ✅
 
 **What**: `Home` montando cabeçalho, hero, ficha, galeria, rodapé e o configurador em modal.
 **Where**: `src/Pages/Home/index.jsx`
@@ -654,11 +654,13 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Acionar o botão do hero abre o configurador no passo 1
-- [ ] Fechar o configurador devolve o foco ao botão que o abriu
-- [ ] Âncora do cabeçalho aponta para a seção correspondente
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 5 testes passam
+- [x] Acionar o botão do hero abre o configurador no passo 1
+- [x] Acionar o botão do cabeçalho abre o mesmo configurador
+- [x] Fechar o configurador devolve o foco ao botão que o abriu — hero ou cabeçalho
+- [x] Âncora do cabeçalho aponta para a seção correspondente
+- [x] Dublê de `IntersectionObserver` no `setupTests.js`: o jsdom não o implementa e o `whileInView` do `Reveal` depende dele
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 5 testes passam (113 na suíte)
 
 **Tests**: unit
 **Gate**: full

@@ -222,7 +222,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | Requirement ID | Story | Tasks entregues | Status |
 | -------------- | ----- | --------------- | ------ |
 | MT07-01 | P1: Design system em tokens | T1, T8, T14b | Done |
-| MT07-02 | P1: Hero e seções da landing | T11 | Implementing |
+| MT07-02 | P1: Hero e seções da landing | T11, T22 | Done |
 | MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | Done |
 | MT07-04 | P1: Hero e seções da landing (galeria) | T13 | Done |
 | MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21 | Done |
@@ -234,7 +234,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-11 | P2: Limpeza da base técnica | T2, T10 | Implementing |
 | MT07-12 | P3: Rodapé e navegação | T14 | Done |
 
-**Coverage:** 12 total, 12 mapeados para tasks no plano, 8 concluídos.
+**Coverage:** 12 total, 12 mapeados para tasks no plano, 9 concluídos.
 
 ---
 
