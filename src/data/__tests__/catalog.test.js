@@ -5,7 +5,8 @@ import {
   COLORS,
   OPTIONS,
   SPECS,
-  GALLERY,
+  GALLERY_CHAPTERS,
+  chapterSpecs,
   STEPS,
   STEP_IDS,
   STEP_FIELDS,
@@ -96,17 +97,33 @@ describe("catálogo de produto — ficha técnica", () => {
 });
 
 describe("catálogo de produto — galeria", () => {
-  it("traz as imagens do acervo, cada uma com legenda e texto alternativo", () => {
-    expect(GALLERY.length).toBeGreaterThanOrEqual(6);
+  it("traz os capítulos com foto, texto e números resolvidos do catálogo", () => {
+    expect(GALLERY_CHAPTERS.length).toBeGreaterThanOrEqual(3);
 
-    GALLERY.forEach((item) => {
-      expect(item.id).toBeTruthy();
-      expect(item.image).toBeTruthy();
-      expect(item.caption).toBeTruthy();
-      expect(item.alt).toBeTruthy();
+    GALLERY_CHAPTERS.forEach((chapter) => {
+      expect(chapter.id).toBeTruthy();
+      expect(chapter.image).toBeTruthy();
+      expect(chapter.alt).toBeTruthy();
+      expect(chapter.eyebrow).toBeTruthy();
+      expect(chapter.title).toHaveLength(2);
+      expect(chapter.text).toBeTruthy();
     });
 
-    expect(new Set(GALLERY.map((item) => item.id)).size).toBe(GALLERY.length);
+    expect(new Set(GALLERY_CHAPTERS.map((c) => c.id)).size).toBe(
+      GALLERY_CHAPTERS.length
+    );
+  });
+
+  /* O capítulo guarda o id da especificação, nunca o valor: é isso que impede a
+     seção de afirmar um número diferente do da ficha técnica. */
+  it("resolve os números do capítulo pelos ids declarados", () => {
+    const withSpecs = GALLERY_CHAPTERS.find((c) => c.specIds.length > 0);
+
+    expect(withSpecs).toBeDefined();
+    expect(chapterSpecs(withSpecs).map((spec) => spec.id)).toEqual(
+      withSpecs.specIds
+    );
+    expect(chapterSpecs({ specIds: ["nao-existe"] })).toEqual([]);
   });
 });
 

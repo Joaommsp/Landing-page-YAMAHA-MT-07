@@ -39,6 +39,8 @@
 | AD-032 | `stepPosition(stepId)` no catálogo é o dono único da posição do passo; hook, trilho e shell consomem, ninguém rederiva | Depois do fix da AD-026 a mesma conta existia em três camadas — `stepIndex` no hook, `positionOf` no `Stepper` e `STEPS.indexOf` no `Configurator` — e o fallback DIVERGIA: id fora da lista virava posição 0 no hook e −1 no trilho, destravando lados opostos do trilho. Era a mesma classe de divergência que a AD-026 fechou, só deslocada do id para o fallback (achado BLOQUEANTE dos dois revisores). A decisão sobre id desconhecido é uma: conta como o primeiro passo, o único destino sempre liberado | 2026-09-03 |
 | AD-031 | Critério que não vira assertiva honesta no ambiente da suíte é REGISTRADO com motivo em `validation.md`, não convertido em assertiva de string de classe | Foco visível, snap de rolagem, altura reservada de imagem e breakpoint são resolvidos pelo navegador; o jsdom não avalia `:focus-visible`, não faz layout e não lê media query, e a suíte roda com `css: false`. Assertar `toHaveClass("focus-visible:outline-2")` provaria o `className`, não o comportamento — teste que passa sem medir nada é pior que lacuna declarada. Onde há contrato que o navegador executa (eixo do snap, ponto de encaixe), o contrato é travado e o limite é dito | 2026-09-03 |
 
+| AD-033 | Galeria em trilho horizontal dá lugar a capítulos alternados | O trilho gastava uma faixa só de altura, encurtava a página e deixava metade das fotos fora da tela; capítulos mostram foto, argumento e números com o gesto de rolar. Três capítulos, não seis, para a seção não ficar repetitiva; `GALLERY` saiu do catálogo por virar código morto | 2026-09-03 |
+
 ## Handoff
 
 **Feature**: redesign-mt07

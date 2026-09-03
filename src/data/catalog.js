@@ -1,6 +1,5 @@
 import { Model } from "../assets/images/models/models";
 import { Optionals } from "../assets/images/optionals/optionals";
-import GalleryDetail from "../assets/images/gellery/exportGallery";
 import kitImage from "../assets/images/optionals-bg.png";
 import gallery1 from "../assets/images/gallery1.png";
 import gallery2 from "../assets/images/gallery2.png";
@@ -159,62 +158,50 @@ export function sectionHref(sectionId) {
   return `#${sectionId}`;
 }
 
-export const GALLERY = [
-  {
-    id: "front-three-quarter",
-    image: gallery1,
-    caption: "Frente de três quartos — farol central e admissão exposta",
-    alt: "Yamaha MT-07 vista de três quartos pela frente",
-  },
+/* Capítulos da seção de conforto e engenharia. Cada um é uma foto do acervo
+   com o argumento do lado e os números que aquele detalhe sustenta — não é
+   legenda, é conteúdo. Os valores repetidos aqui saem de `SPECS` para a página
+   nunca afirmar dois números diferentes para a mesma coisa.
+
+   Três capítulos, não seis: com seis a seção fica longa e repetitiva, e as
+   fotos que sobram continuam servindo à galeria de detalhes. */
+export const GALLERY_CHAPTERS = [
   {
     id: "cp2-engine",
     image: gallery2,
-    caption: "Motor CP2 de 689 cc, dois cilindros em paralelo",
     alt: "Detalhe do motor CP2 da Yamaha MT-07",
+    eyebrow: "Motor",
+    title: ["Bicilíndrico", "CP2"],
+    text: "Dois cilindros em paralelo com virabrequim crossplane de 270°: o torque chega cheio desde baixo e a resposta ao acelerador é imediata, sem esperar giro.",
+    specIds: ["displacement", "power", "torque"],
   },
   {
     id: "chassis",
     image: gallery3,
-    caption: "Chassi tubular de aço, 184 kg em ordem de marcha",
     alt: "Chassi tubular da Yamaha MT-07",
-  },
-  {
-    id: "riding-position",
-    image: gallery4,
-    caption: "Posição de pilotagem ereta, guidão alto e largo",
-    alt: "Piloto na posição de pilotagem da Yamaha MT-07",
+    eyebrow: "Chassi",
+    title: ["Estrutura", "tubular de aço"],
+    text: "Quadro compacto que usa o motor como elemento estrutural. É o que mantém a moto leve e o entre-eixos curto, para trocar de direção sem esforço de guidão.",
+    specIds: ["weight"],
   },
   {
     id: "rear-suspension",
     image: gallery5,
-    caption: "Monoamortecedor traseiro com ajuste de pré-carga",
     alt: "Suspensão traseira da Yamaha MT-07",
-  },
-  {
-    id: "front-brakes",
-    image: gallery6,
-    caption: "Freio dianteiro de disco duplo com ABS de série",
-    alt: "Conjunto de freio dianteiro da Yamaha MT-07",
-  },
-  {
-    id: "cockpit",
-    image: GalleryDetail.image01,
-    caption: "Painel digital com conta-giros em barra",
-    alt: "Painel de instrumentos da Yamaha MT-07",
-  },
-  {
-    id: "profile",
-    image: GalleryDetail.image02,
-    caption: "Perfil completo — entre-eixos de 1.400 mm",
-    alt: "Yamaha MT-07 vista de perfil",
-  },
-  {
-    id: "exhaust",
-    image: GalleryDetail.image03,
-    caption: "Escapamento lateral curto, saída única",
-    alt: "Escapamento da Yamaha MT-07",
+    eyebrow: "Conforto",
+    title: ["Monoamortecedor", "ajustável"],
+    text: "Ajuste de retorno e pré-carga na traseira, banco largo e triângulo de pilotagem ereto: a mesma moto serve para o trânsito diário e para a estrada.",
+    specIds: [],
   },
 ];
+
+/* Os números de cada capítulo, resolvidos na hora do uso: o capítulo guarda o
+   id da especificação, nunca o valor. */
+export function chapterSpecs(chapter) {
+  return chapter.specIds
+    .map((id) => SPECS.find((spec) => spec.id === id))
+    .filter(Boolean);
+}
 
 /* Cada passo é identificado por nome, não por posição no array: quem valida ou
    navega importa o id, e reordenar a lista não muda o significado de ninguém. */

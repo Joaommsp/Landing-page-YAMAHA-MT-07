@@ -86,7 +86,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 1. WHEN a página termina de carregar THEN o sistema SHALL exibir nome do produto, subtítulo, os três números de desempenho (689 cc, 74,8 cv, 6,9 kgf.m) e o preço inicial sem exigir rolagem.
 2. WHEN a pessoa aciona o botão principal do hero THEN o sistema SHALL abrir o configurador no passo 1.
 3. The system SHALL exibir a ficha técnica com uma barra proporcional ao valor de cada especificação.
-4. WHILE a pessoa arrasta o trilho da galeria o sistema SHALL alinhar a imagem seguinte ao início do trilho (scroll snap).
+4. WHEN a seção de conforto é exibida THEN o sistema SHALL apresentar cada capítulo do catálogo empilhado, com foto, argumento e os números que aquele capítulo declara.
 5. IF a pessoa navega por teclado THEN o sistema SHALL manter foco visível em todo elemento interativo.
 
 **Independent Test**: Abrir a página, ver hero completo sem rolar, clicar no botão e chegar ao passo 1 do configurador.
@@ -224,7 +224,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-01 | P1: Design system em tokens | T1, T8, T14b | ✅ Verificado (inspeção + build gate, conforme a matriz) |
 | MT07-02 | P1: Hero e seções da landing | T11, T22, V6 | ✅ Coberto (AC 5, foco visível: limitação do ambiente registrada em `validation.md`) |
 | MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12, V4 | ✅ Coberto (AC 3 ligada ao `ratio` do catálogo — AD-030) |
-| MT07-04 | P1: Hero e seções da landing (galeria) | T13, V5 | ✅ Coberto (AC 4: contrato do snap; o encaixe em si não é observável no jsdom) |
+| MT07-04 | P1: Hero e seções da landing (capítulos de conforto) | T13, V5 | ✅ Coberto (AC 4: conteúdo de cada capítulo; a alternância de lado depende de layout e não é observável no jsdom) |
 | MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21, V1, V7 | ✅ Coberto (AC 4 agora exercita o clamp de verdade) |
 | MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17, T21 | ✅ Verificado (M1, M2, M3 mortos) |
 | MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13, V6 | ✅ Coberto (edge case da imagem que falha: limitação do ambiente registrada) |
