@@ -490,21 +490,23 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T17: Criar o passo de opcionais
+### T17: Criar o passo de opcionais ✅
 
 **What**: `OptionsStep` com marcação de opcionais e o kit de personalização.
 **Where**: `src/components/configurator/steps/OptionsStep.jsx`
 **Depends on**: T16
-**Reuses**: `src/data/catalog.js`, `src/lib/currency.js`
+**Reuses**: `src/data/catalog.js`, `src/lib/currency.js`, `src/components/ui/Button.jsx`
 **Requirement**: MT07-06
 
 **Done when**:
 
-- [ ] Marcar e desmarcar um opcional chama `onToggle` com o id correspondente
-- [ ] Cada opcional exibe preço em BRL completo
-- [ ] Opcional marcado tem estado visual e `aria-pressed` verdadeiro
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 5 testes passam
+- [x] Marcar e desmarcar um opcional chama `onToggle` com o id correspondente
+- [x] Cada opcional exibe preço em BRL completo
+- [x] Opcional marcado tem estado visual e `aria-pressed` verdadeiro
+- [x] Kit em destaque separado pelo `featured` do catálogo, com ação de adicionar e de remover
+- [x] Catálogo sem opcional exibe aviso, não bloco vazio
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 5 testes passam (74 na suíte)
 
 **Tests**: unit
 **Gate**: quick

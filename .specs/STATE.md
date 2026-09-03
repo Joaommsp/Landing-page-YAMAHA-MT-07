@@ -27,4 +27,4 @@
 **Feature**: redesign-mt07
 **Fase**: Execute — fase 3 (Configurador) em curso
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T17 (passo de opcionais)
+**Próximo passo**: T18 (passo de dados pessoais)

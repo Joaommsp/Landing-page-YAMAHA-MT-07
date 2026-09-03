@@ -225,7 +225,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | Done |
 | MT07-04 | P1: Hero e seções da landing (galeria) | T13 | Done |
 | MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16 | Implementing |
-| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b | Implementing |
+| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17 | Implementing |
 | MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | Done |
 | MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b | Implementing |
 | MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b | Implementing |
