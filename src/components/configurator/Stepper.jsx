@@ -5,6 +5,7 @@ import {
   CONFIGURATOR_PANEL_ID,
   STEPS,
   STEP_IDS,
+  stepPosition,
   stepTabId,
 } from "../../data/catalog";
 
@@ -48,14 +49,6 @@ const TAB_CLASS =
 const MARK_CLASS =
   "absolute inset-y-1.5 left-0 w-0.5 bg-cyan md:-left-px";
 
-/* Posição do passo na lista, nunca aritmética no id (AD-026): o hook navega e
-   recusa salto adiante por posição em `STEPS`, e o trilho tem de destravar
-   exatamente o que ele aceita. Com id não contíguo ou lista reordenada,
-   `step.id <= furthest` ofereceria aba que o hook recusaria. */
-function positionOf(stepId) {
-  return STEPS.findIndex((item) => item.id === stepId);
-}
-
 function Stepper({
   current,
   furthest = current,
@@ -68,13 +61,17 @@ function Stepper({
      salto, então o trilho não oferece o que seria recusado. `locked` fecha o
      trilho inteiro enquanto o pedido está em envio — menos o passo atual, para
      o foco não sumir de dentro do diálogo. */
-  const furthestPosition = positionOf(furthest);
+  /* Posição na lista, nunca aritmética no id (AD-026): o hook recusa salto
+     adiante pela mesma conta do catálogo, e o trilho tem de destravar
+     exatamente o que ele aceita. Com id não contíguo ou lista reordenada,
+     `step.id <= furthest` ofereceria aba que o hook recusaria. */
+  const furthestPosition = stepPosition(furthest);
   const isUnlocked = (step) =>
     step.id === current ||
-    (!locked && positionOf(step.id) <= furthestPosition);
+    (!locked && stepPosition(step.id) <= furthestPosition);
 
   const focusStep = (step) => {
-    const index = STEPS.findIndex((item) => item.id === step.id);
+    const index = stepPosition(step.id);
     onSelect(step.id);
     tabsRef.current[index]?.focus();
   };

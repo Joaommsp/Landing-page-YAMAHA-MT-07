@@ -17,6 +17,7 @@ import {
   LAST_STEP,
   STEPS,
   STEP_IDS,
+  stepPosition,
   stepTabId,
 } from "../../data/catalog";
 import { formatBRL, formatParcel } from "../../lib/currency";
@@ -83,7 +84,7 @@ function Configurator({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const current = STEPS.find((step) => step.id === state.step);
-  const position = STEPS.indexOf(current) + 1;
+  const position = stepPosition(state.step) + 1;
   const progress = `${(position / STEPS.length) * 100}%`;
   const hasErrors = Object.keys(state.errors).length > 0;
 

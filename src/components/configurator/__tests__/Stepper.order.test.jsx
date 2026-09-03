@@ -10,7 +10,22 @@ import { describe, expect, it, vi } from "vitest";
    arquivo é separado do `Stepper.test.jsx`, que precisa da ordem real. */
 vi.mock("../../../data/catalog", async (importOriginal) => {
   const actual = await importOriginal();
-  return { ...actual, STEPS: [...actual.STEPS].reverse() };
+  const reversed = [...actual.STEPS].reverse();
+
+  /* O dublê é um catálogo coerente, não só uma lista trocada: pontas e posição
+     saem da MESMA ordem invertida. Um catálogo em que `stepPosition` respondesse
+     pela ordem real não existe em ambiente nenhum, e o teste afirmaria algo que
+     a produção nunca produz. */
+  return {
+    ...actual,
+    STEPS: reversed,
+    FIRST_STEP: reversed[0].id,
+    LAST_STEP: reversed[reversed.length - 1].id,
+    stepPosition: (stepId) => {
+      const index = reversed.findIndex((step) => step.id === stepId);
+      return index === -1 ? 0 : index;
+    },
+  };
 });
 
 import Stepper from "../Stepper";

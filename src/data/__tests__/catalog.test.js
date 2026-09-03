@@ -10,6 +10,7 @@ import {
   STEP_IDS,
   STEP_FIELDS,
   FIELD_TYPES,
+  stepPosition,
 } from "../catalog";
 
 describe("catálogo de produto — preços", () => {
@@ -125,6 +126,22 @@ describe("catálogo de produto — passos do configurador", () => {
       STEP_IDS.DELIVERY,
       STEP_IDS.PAYMENT,
     ]);
+  });
+});
+
+/* AD-026 e AD-032 — quem navega o fluxo (hook, trilho e shell) pergunta a
+   posição ao catálogo, dono da ordem. A conta não pode ser aritmética no id:
+   hoje os ids são 1 a 5, contíguos, e as duas coincidem por acidente. */
+describe("catálogo de produto — posição do passo", () => {
+  it("devolve a posição na lista, não o número do id", () => {
+    STEPS.forEach((step, index) => {
+      expect(stepPosition(step.id)).toBe(index);
+    });
+  });
+
+  it("conta passo fora da lista como o primeiro, o único destino sempre liberado", () => {
+    expect(stepPosition(999)).toBe(0);
+    expect(stepPosition(undefined)).toBe(0);
   });
 });
 

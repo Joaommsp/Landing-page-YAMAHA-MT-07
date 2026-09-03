@@ -228,6 +228,17 @@ export function stepTabId(stepId) {
 export const FIRST_STEP = STEPS[0].id;
 export const LAST_STEP = STEPS[STEPS.length - 1].id;
 
+/* Posição do passo na lista — dona única da conta que move o fluxo (AD-026,
+   AD-032). Hook, trilho e shell derivavam essa mesma posição cada um do seu
+   jeito, e o fallback divergia: com id fora da lista um tratava como primeiro
+   passo e o outro como "antes do primeiro", o que destravava lados opostos do
+   trilho. Aqui a decisão é uma: passo fora da lista conta como o primeiro, que
+   é o único destino sempre liberado. */
+export function stepPosition(stepId) {
+  const index = STEPS.findIndex((step) => step.id === stepId);
+  return index === -1 ? 0 : index;
+}
+
 /* Vocabulário de tipo de campo: escolhe a máscara na entrada e o validador na
    saída. Fica no catálogo para que os dois lados leiam a mesma lista. */
 export const FIELD_TYPES = {

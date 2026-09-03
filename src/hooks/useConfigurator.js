@@ -10,6 +10,7 @@ import {
   OPTIONS,
   STEPS,
   STEP_IDS,
+  stepPosition,
 } from "../data/catalog";
 import { validateStep } from "../lib/validation";
 
@@ -69,13 +70,10 @@ export function computeTotal(state) {
 
 /* Navegação por posição na lista de passos, nunca por aritmética no id: o
    catálogo promete que reordenar `STEPS` não muda o significado de ninguém, e
-   `step + 1` quebraria essa promessa no primeiro id não contíguo. */
+   `step + 1` quebraria essa promessa no primeiro id não contíguo. A posição vem
+   de `stepPosition`, do catálogo, que é dono da ordem — aqui fica só o caminho
+   inverso, da posição de volta ao id, com o limite do fluxo. */
 const STEP_ORDER = STEPS.map((step) => step.id);
-
-function stepIndex(step) {
-  const index = STEP_ORDER.indexOf(step);
-  return index === -1 ? 0 : index;
-}
 
 function stepAt(index) {
   const bounded = Math.min(Math.max(index, 0), STEP_ORDER.length - 1);
@@ -83,7 +81,7 @@ function stepAt(index) {
 }
 
 function clampStep(step) {
-  return stepAt(stepIndex(step));
+  return stepAt(stepPosition(step));
 }
 
 function errorsOfStep(state, step) {
@@ -96,7 +94,7 @@ export function reducer(state, action) {
     case "goTo": {
       const target = clampStep(action.step);
       // Voltar é sempre livre; ir adiante, só até onde o fluxo já foi validado.
-      if (stepIndex(target) > stepIndex(state.furthestStep)) return state;
+      if (stepPosition(target) > stepPosition(state.furthestStep)) return state;
       return { ...state, step: target, errors: {} };
     }
 
@@ -104,9 +102,9 @@ export function reducer(state, action) {
       const errors = errorsOfStep(state, state.step);
       if (Object.keys(errors).length > 0) return { ...state, errors };
 
-      const step = stepAt(stepIndex(state.step) + 1);
+      const step = stepAt(stepPosition(state.step) + 1);
       const furthestStep =
-        stepIndex(step) > stepIndex(state.furthestStep)
+        stepPosition(step) > stepPosition(state.furthestStep)
           ? step
           : state.furthestStep;
 
@@ -116,7 +114,7 @@ export function reducer(state, action) {
     case "previous":
       return {
         ...state,
-        step: stepAt(stepIndex(state.step) - 1),
+        step: stepAt(stepPosition(state.step) - 1),
         errors: {},
       };
 
