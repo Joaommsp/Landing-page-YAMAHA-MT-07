@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import ColorStep from "../ColorStep";
 import { COLORS, DEFAULT_COLOR_ID } from "../../../../data/catalog";
 import { formatBRL } from "../../../../lib/currency";
+import { entryOffsetPx, hasMotionMark } from "../../../../test/motionMarks";
 
 const PAID_COLOR = COLORS.find((color) => color.surcharge > 0);
 const FREE_COLOR = COLORS.find((color) => color.surcharge === 0);
@@ -62,8 +63,8 @@ describe("ColorStep", () => {
       new RegExp(`MT-07 ${PAID_COLOR.name}`, "i")
     );
 
-    expect(image.style.opacity).not.toBe("");
-    expect(image.style.transform).toMatch(/translateX/);
+    expect(hasMotionMark(image)).toBe(true);
+    expect(entryOffsetPx(image, "X")).not.toBe(0);
   });
 
   it("exibe o acréscimo da cor em BRL completo e marca as sem custo", () => {

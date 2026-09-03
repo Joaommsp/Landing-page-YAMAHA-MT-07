@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import Reveal from "../Reveal";
+import { entryOffsetPx } from "../../../test/motionMarks";
 
 /* AC MT07-10.1 — a seção é revelada a partir de um deslocamento de NO MÁXIMO
    24px. O teto é da spec: movimento que sublinha a leitura, não que a
@@ -9,21 +10,14 @@ import Reveal from "../Reveal";
 
 const MAX_OFFSET_PX = 24;
 
-/* O estado inicial do motion chega como estilo inline: é dele que sai o
-   deslocamento de entrada realmente aplicado ao elemento. */
-function entryOffset(element) {
-  const match = element.style.transform.match(/translateY\((-?[\d.]+)px\)/);
-  return match ? Number(match[1]) : 0;
-}
-
 describe("Reveal", () => {
   it("entra de baixo, com deslocamento de no máximo 24px", () => {
     render(<Reveal>Conforto e postura</Reveal>);
 
     const section = screen.getByText("Conforto e postura");
 
-    expect(entryOffset(section)).toBeGreaterThan(0);
-    expect(entryOffset(section)).toBeLessThanOrEqual(MAX_OFFSET_PX);
+    expect(entryOffsetPx(section)).toBeGreaterThan(0);
+    expect(entryOffsetPx(section)).toBeLessThanOrEqual(MAX_OFFSET_PX);
   });
 
   it("desenha a tag pedida em `as`, com a classe de quem chama", () => {

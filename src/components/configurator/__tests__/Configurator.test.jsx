@@ -11,6 +11,7 @@ import {
   STEPS,
 } from "../../../data/catalog";
 import { formatBRL } from "../../../lib/currency";
+import { entryOffsetPx, hasMotionMark } from "../../../test/motionMarks";
 
 const PAID_COLOR = COLORS.find((color) => color.surcharge > 0);
 const OPTION = OPTIONS.find((option) => !option.featured);
@@ -124,11 +125,13 @@ describe("Configurator", () => {
     await goNext(user);
     const options = await screen.findByRole("group", { name: /^opcionais$/i });
 
-    const animated = screen.getByRole("tabpanel").firstElementChild;
+    /* Sobe do conteúdo até o invólucro animado, em vez de contar com ele ser o
+       primeiro filho do painel. */
+    const animated = options.closest("[style]");
 
     expect(animated).toContainElement(options);
-    expect(animated.style.opacity).not.toBe("");
-    expect(animated.style.transform).toMatch(/translateY/);
+    expect(hasMotionMark(animated)).toBe(true);
+    expect(entryOffsetPx(animated)).not.toBe(0);
   });
 
   it("reflete no cabeçalho o preço e a parcela do hook", async () => {
