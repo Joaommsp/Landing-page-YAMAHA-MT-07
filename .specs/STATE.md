@@ -25,10 +25,11 @@
 | AD-019 | `Field` (apresentação pura, em `ui/`) e `FieldGrid` (lista do catálogo, `maskByType`, validador no `blur`) servem aos três passos com formulário | Sem eles PersonalStep, DeliveryStep e PaymentStep repetiriam o mesmo encanamento três vezes — a duplicação que esta feature existe para matar. O erro do fluxo (avançar/finalizar) chega por prop e tem precedência sobre o erro de saída de campo | 2026-09-03 |
 | AD-020 | O passo de pagamento não traz as abas de forma de pagamento (Cartão/Pix/Financiamento) que o mockup desenha | Só o cartão é simulado nesta entrega; três abas em que duas não fazem nada seriam controle morto na tela. Se Pix e financiamento entrarem, entram com comportamento | 2026-09-03 |
 | AD-021 | Fechar o configurador não desmonta o shell: ele fica montado e devolve `null` | O estado vive no `useConfigurator` dentro do shell; desmontar apagaria cor e opcionais, e a spec exige que reabrir preserve as escolhas. Como nada se perde ao fechar, a saída também não precisa de diálogo de confirmação | 2026-09-03 |
+| AD-022 | Sem roteador: `main.jsx` renderiza a `Home` direto; `App.jsx`, `AppRoutes.jsx` e `react-router-dom` saem | Duas rotas apontavam para a mesma página e nada no projeto navega por rota — a navegação é por âncora. `AppRoutes` era indireção vazia e o roteador, dependência sem uso, contra a AC1 de MT07-11. O número segue a sequência do log: AD-018 já estava tomada pelos ids do configurador | 2026-09-03 |
 
 ## Handoff
 
 **Feature**: redesign-mt07
-**Fase**: Execute — fase 3 (Configurador) concluída
+**Fase**: Execute — fase 4 (Integração e limpeza) em andamento
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T22 (compor a Home, fase 4)
+**Próximo passo**: T25 (README)

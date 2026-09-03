@@ -693,7 +693,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T24: Ajustar a raiz da aplicação
+### T24: Ajustar a raiz da aplicação ✅
 
 **What**: `main.jsx` com `MotionConfig reducedMotion="user"` e importação do tema, sem o bundle do bootstrap.
 **Where**: `src/main.jsx`
@@ -703,9 +703,10 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] `MotionConfig reducedMotion="user"` envolvendo a árvore
-- [ ] Tema importado uma única vez, na raiz
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] `MotionConfig reducedMotion="user"` envolvendo a árvore
+- [x] Tema importado uma única vez, na raiz
+- [x] `App.jsx` e `AppRoutes.jsx` apagados: com uma página só o roteador era indireção vazia — `react-router-dom` sai junto (AD-022)
+- [x] Gate check passa: `npm test -- --run` e `npm run build`; o lint só acusa arquivo em edição concorrente fora do escopo desta task
 
 **Tests**: none
 **Gate**: build

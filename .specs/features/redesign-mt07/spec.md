@@ -230,11 +230,11 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | Done |
 | MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21 | Done |
 | MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21 | Done |
-| MT07-10 | P2: Motion com função | T9, T16, T21 | Implementing |
+| MT07-10 | P2: Motion com função | T9, T16, T21, T24 | Done |
 | MT07-11 | P2: Limpeza da base técnica | T2, T10, T23 | Implementing |
 | MT07-12 | P3: Rodapé e navegação | T14 | Done |
 
-**Coverage:** 12 total, 12 mapeados para tasks no plano, 9 concluídos.
+**Coverage:** 12 total, 12 mapeados para tasks no plano, 10 concluídos.
 
 ---
 
