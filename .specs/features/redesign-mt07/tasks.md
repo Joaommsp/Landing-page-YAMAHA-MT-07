@@ -246,7 +246,7 @@ T22 → T23 → T24 → T25
 
 **What**: Aplicar as decisões AD-008 a AD-013 sobre a fundação: subtotal da moto separado do total do pedido, submissão assíncrona por `status`, validação de telefone, CEP, cartão e validade, `STEP_FIELDS` no catálogo, elo `maskByType` e `formatBRL` devolvendo `—` sem dado.
 **Where**: `src/data/catalog.js`, `src/lib/{currency,masks,validation}.js`, `src/hooks/useConfigurator.js`
-**Depends on**: T7
+**Depends on**: None (fecha a fase 1)
 **Reuses**: Módulos da fase 1
 **Requirement**: MT07-05, MT07-06, MT07-08, MT07-09
 
@@ -422,7 +422,7 @@ T22 → T23 → T24 → T25
 
 **What**: Levar ao tema a escala tipográfica, a escala de empilhamento e o `scroll-padding`, substituindo os `clamp()` e tamanhos arbitrários que a fase 2 espalhou pelos componentes.
 **Where**: `src/styles/index.css`
-**Depends on**: T14
+**Depends on**: None (fecha a fase 2)
 **Reuses**: Tokens de T1
 **Requirement**: MT07-01
 
@@ -728,7 +728,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T5 | T4 | T4 → T5 | ✅ Match |
 | T6 | T5 | T5 → T6 | ✅ Match |
 | T7 | T6 | T6 → T7 | ✅ Match |
-| T7b | T7 | T7 → T7b | ✅ Match |
+| T7b | None (fecha a fase 1) | — | ✅ Match |
 | T8 | None (fase 1 concluída) | — | ✅ Match |
 | T9 | T8 | T8 → T9 | ✅ Match |
 | T10 | T9 | T9 → T10 | ✅ Match |
@@ -736,7 +736,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T12 | T11 | T11 → T12 | ✅ Match |
 | T13 | T12 | T12 → T13 | ✅ Match |
 | T14 | T13 | T13 → T14 | ✅ Match |
-| T14b | T14 | T14 → T14b | ✅ Match |
+| T14b | None (fecha a fase 2) | — | ✅ Match |
 | T15 | None (fase 2 concluída) | — | ✅ Match |
 | T16 | T15 | T15 → T16 | ✅ Match |
 | T17 | T16 | T16 → T17 | ✅ Match |
