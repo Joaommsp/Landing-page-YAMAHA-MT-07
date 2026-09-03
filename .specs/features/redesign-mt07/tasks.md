@@ -120,7 +120,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T3: Criar o catálogo de produto
+### T3: Criar o catálogo de produto ✅
 
 **What**: Centralizar preço base, entrega, cores, opcionais, ficha técnica e galeria num módulo de dados, com teste garantindo a forma e os valores.
 **Where**: `src/data/catalog.js`
@@ -130,12 +130,12 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] `BASE_PRICE === 48500` e `DELIVERY_PRICE === 2000`
-- [ ] `COLORS` com id, nome, hex, `surcharge` e imagem para as três cores do mockup
-- [ ] `OPTIONS` com id, nome, preço e descrição para os quatro opcionais e o kit
-- [ ] `SPECS` com valor, unidade e `ratio` entre 0 e 1 para as quatro especificações
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 6 testes passam
+- [x] `BASE_PRICE === 48500` e `DELIVERY_PRICE === 2000`
+- [x] `COLORS` com id, nome, hex, `surcharge` e imagem para as três cores do mockup
+- [x] `OPTIONS` com id, nome, preço e descrição para os quatro opcionais e o kit
+- [x] `SPECS` com valor, unidade e `ratio` entre 0 e 1 para as quatro especificações
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 6 testes passam
 
 **Tests**: unit
 **Gate**: quick
