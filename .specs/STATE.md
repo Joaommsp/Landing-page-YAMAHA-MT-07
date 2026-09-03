@@ -35,17 +35,35 @@
 | AD-027 | `setField(name, value)` — a seção sai do passo atual, dentro do reducer | O shell repassava `"personal"`/`"delivery"`/`"payment"` à mão; divergência de nome virava no-op silencioso e o campo não digitava | 2026-09-03 |
 | AD-028 | O diálogo do configurador vive num portal em `document.body`, com `inert` no `#root` e rolagem travada | Sem isso a landing seguia rolando e navegável por leitor de tela atrás do modal; o `inert` no root alcançaria o próprio diálogo se ele continuasse dentro da árvore da página | 2026-09-03 |
 | AD-029 | Porta de desenvolvimento fixa em 9000 (`strictPort`), preview em 9001 | Pedido do dono do projeto; `strictPort` falha alto em vez de subir noutra porta em silêncio | 2026-09-03 |
+| AD-030 | A barra da ficha técnica é proporcional ao `ratio` do catálogo, e o `ratio` é número de direção de arte — não proporção calculada do valor contra o teto da categoria | A AC MT07-02.3 diz "proporcional ao valor de cada especificação" e não define teto de categoria nenhum (689 cc → 0,86; 184 kg → 0,52 não saem da mesma conta). O que o código promete, e o que o teste trava, é o elo barra ↔ `ratio`: mudar o `ratio` muda a barra, e nada mais a muda | 2026-09-03 |
+| AD-031 | Critério que não vira assertiva honesta no ambiente da suíte é REGISTRADO com motivo em `validation.md`, não convertido em assertiva de string de classe | Foco visível, snap de rolagem, altura reservada de imagem e breakpoint são resolvidos pelo navegador; o jsdom não avalia `:focus-visible`, não faz layout e não lê media query, e a suíte roda com `css: false`. Assertar `toHaveClass("focus-visible:outline-2")` provaria o `className`, não o comportamento — teste que passa sem medir nada é pior que lacuna declarada. Onde há contrato que o navegador executa (eixo do snap, ponto de encaixe), o contrato é travado e o limite é dito | 2026-09-03 |
 
 ## Handoff
 
 **Feature**: redesign-mt07
 **Branch**: `feat/redesign-2026` (árvore limpa, NADA empurrado)
 **Data**: 2026-09-03
-**Estado**: 25 tasks + 5 fix tasks implementadas. Gates: 123 testes / 16 arquivos verdes, `npm run lint` sem erro nem aviso, `npm run build` verde. Dev server em http://localhost:9000.
+**Estado**: 25 tasks + 5 fix tasks de implementação + 6 fix tasks de cobertura (F1) concluídas. Gates: **141 testes / 22 arquivos** verdes, `npm run lint` sem erro nem aviso, `npm run build` verde. Dev server do dono do projeto em http://localhost:9000 (não subir outro).
 
-**Achados de revisão: todos fechados.** Os 7 que estavam abertos saíram no commit `fix(configurator): close the review findings still open` — foco preso contando abas com `tabindex="-1"`, seção de campo duplicada no shell, navegação por aritmética de id, prop `panelId` sem chamador, `aria-orientation` fixa contra o layout, fundo rolando atrás do modal e erro de blur sobrevivendo à troca de passo. Quatro testes novos cobrem o que não tinha cobertura, cada um validado por mutação.
+**As 12 lacunas do Verifier estão fechadas.** O relatório de 2026-09-03
+(`validation.md`) deu FAIL por **cobertura**, não por comportamento: 9 mutantes
+sobreviveram e 11 critérios não tinham assertiva. Os 6 commits desta rodada:
 
-**Próximo passo (obrigatório antes de declarar a feature pronta)**: rodar o Verifier independente da fase 9 do Execute (author ≠ verifier) sobre `main..HEAD`, que precisa escrever `.specs/features/redesign-mt07/validation.md` com veredito PASS, evidência `file:line` por AC e resultado do sensor de discriminação. Depois, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0.
+- `test(hooks): exercise the last-step clamp for real` — M6, o teste que passava pelo portão de validação em vez do clamp (AC MT07-05.4);
+- `test(lib): pin the exact validation messages the spec names` — M14/M15, os textos que a spec enumera agora travados como literal;
+- `test(motion): cover the reduced-motion branches` — M17, os três ramos de `prefers-reduced-motion` com `vi.mock("motion/react")`;
+- `test(landing): tie the spec bars to the catalog ratio` — M18, barra ↔ `ratio` do catálogo (AD-030);
+- `test(landing): cover the gallery snap track and the footer credit` — M20 e M19;
+- `test(ui): cover the remaining motion and layout criteria` — M16 e as ACs MT07-10.2/10.3, mais o registro dos critérios que não viram assertiva honesta (AD-031);
+- `fix(configurator): unlock steps by position, not by id` — **único achado de código**: `Stepper` destravava aba por aritmética de id, contra a AD-026. Latente com os ids atuais; o teste chega pela lista invertida por mock do catálogo, onde as duas contas divergem.
+
+Cada assertiva nova foi provada por mutação (mutação aplicada → teste falha →
+arquivo restaurado de cópia `cp`; sem `git stash` e sem `git checkout` na
+árvore). Nenhum teste existente foi enfraquecido ou removido.
+
+**Próximo passo (obrigatório antes de declarar a feature pronta)**: **reverificação** por um Verifier independente sobre `main..HEAD` — quem implementou não vira o próprio veredito, e o `validation.md` segue com **Result: FAIL** até isso. O sensor precisa reexecutar M6, M14, M15, M16, M17, M18, M19, M20 e a aritmética de id do `Stepper`, todos esperados **mortos** agora. Depois, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0. Limite de 3 ciclos fix → reverificação antes de escalar (este é o 1º).
+
+**Fora de escopo por decisão, não por esquecimento** (ver `validation.md`, seção "Lacunas registradas em vez de testadas"): foco visível (AC MT07-02.5), imagem que falha mantendo altura, coluna única abaixo de 768px, "sem exigir rolagem" da primeira dobra e o cenário "sem JS de animação" da AC MT07-10.5. Todos com motivo escrito e o lugar onde a regra vive de fato (AD-031).
 
 **Pendências de produto, não de código**:
 - As capturas na raiz (`MacBook Pro-*.jpeg`, `iPhone 12 Pro-*.jpeg`) são do design ANTIGO; o README já as rotula como "antes". Faltam as capturas do redesenho.
@@ -53,5 +71,6 @@
 - `validateCard` exige 16 dígitos exatos — Amex (15) é recusada. Limitação conhecida.
 - A parcela usa `subtotal / 24` com arredondamento normal (R$ 2.020,83); o mockup mostrava R$ 2.020,84, arredondado para cima por engano.
 - Sugestão menor recusada: esconder o botão "Próximo" no último passo. A AC MT07-05.4 manda **desabilitar**, e há teste fixando isso.
+- `Configurator.jsx:85`/`:184` desreferenciam `current` sem guarda. Segue **inalcançável** (o clamp garante id válido) e sem correção de propósito: a guarda seria ramo que nenhum teste honesto alcança. Registrado em `validation.md`, com o gatilho que a traria de volta (passo vindo de fora do hook).
 
 **Mockup aprovado**: artifact `https://claude.ai/code/artifact/35c48844-4f20-4608-936e-87a678a915ae`, fonte em `scratchpad/mt07-redesign.src.html`.

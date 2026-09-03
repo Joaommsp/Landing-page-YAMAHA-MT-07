@@ -221,27 +221,27 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 
 | Requirement ID | Story | Tasks entregues | Status |
 | -------------- | ----- | --------------- | ------ |
-| MT07-01 | P1: Design system em tokens | T1, T8, T14b | ✅ Verificado |
-| MT07-02 | P1: Hero e seções da landing | T11, T22 | ❌ Precisa de correção (AC 5) |
-| MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | ❌ Precisa de correção (AC 3) |
-| MT07-04 | P1: Hero e seções da landing (galeria) | T13 | ❌ Precisa de correção (AC 4) |
-| MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21 | ❌ Precisa de correção (AC 4) |
-| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17, T21 | ✅ Verificado |
-| MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | ❌ Precisa de correção (edge case) |
-| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21 | ✅ Verificado |
-| MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21 | ❌ Precisa de correção (AC 6) |
-| MT07-10 | P2: Motion com função | T9, T16, T21, T24 | ❌ Precisa de correção (AC 1, AC 4) |
-| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | ✅ Verificado |
-| MT07-12 | P3: Rodapé e navegação | T14 | ❌ Precisa de correção (AC 1) |
+| MT07-01 | P1: Design system em tokens | T1, T8, T14b | ✅ Verificado (inspeção + build gate, conforme a matriz) |
+| MT07-02 | P1: Hero e seções da landing | T11, T22, V6 | ✅ Coberto (AC 5, foco visível: limitação do ambiente registrada em `validation.md`) |
+| MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12, V4 | ✅ Coberto (AC 3 ligada ao `ratio` do catálogo — AD-030) |
+| MT07-04 | P1: Hero e seções da landing (galeria) | T13, V5 | ✅ Coberto (AC 4: contrato do snap; o encaixe em si não é observável no jsdom) |
+| MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21, V1, V7 | ✅ Coberto (AC 4 agora exercita o clamp de verdade) |
+| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17, T21 | ✅ Verificado (M1, M2, M3 mortos) |
+| MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13, V6 | ✅ Coberto (edge case da imagem que falha: limitação do ambiente registrada) |
+| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21, V2 | ✅ Verificado (textos exatos travados; AC 8.6/8.7 pelo `Field`, AD-019) |
+| MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21, V2 | ✅ Coberto (os seis textos da AC 6 travados como literal) |
+| MT07-10 | P2: Motion com função | T9, T16, T21, T24, V3, V6 | ✅ Coberto (AC 1, 2, 3 e 4 com assertiva; AC 5 registrada como lacuna de precisão) |
+| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | ✅ Verificado (3 gates verdes; grep de dep morta limpo) |
+| MT07-12 | P3: Rodapé e navegação | T14, V5 | ✅ Coberto (crédito e aviso do rodapé asseridos) |
 
-**Coverage:** 12 total, 12 mapeados para tasks no plano, 12 implementados — **5 verificados, 7 com lacuna de teste** apontada em `validation.md` (Verifier, 2026-09-03).
+**Coverage:** 12 total, 12 mapeados para tasks no plano, 12 implementados — **12 cobertos**, dos quais 5 verificados pelo Verifier de 2026-09-03 e 7 fechados pelas fix tasks de cobertura (V1–V7) da mesma data, cada assertiva nova provada por mutação. Seis critérios ficaram **registrados** como limitação do ambiente (jsdom sem layout, sem media query e sem `:focus-visible`) ou lacuna de precisão da spec, em vez de ganhar teste teatral — a lista, com o motivo de cada um, está em `validation.md`. O veredito de `validation.md` segue **FAIL até a reverificação** por um Verifier independente: quem implementou não vira o próprio veredito.
 
 ---
 
 ## Success Criteria
 
 - [x] `npm run build` e `npm run lint` concluem sem erro nem aviso.
-- [ ] A suíte de testes cobre cada AC dos P1 e passa inteira. **123 testes passam**, mas o Verifier achou 11 critérios sem assertiva e 9 mutantes sobreviventes — ver `validation.md`.
+- [x] A suíte de testes cobre cada AC dos P1 e passa inteira. **141 testes em 22 arquivos**, todos verdes. Os 9 mutantes que sobreviveram ao Verifier de 2026-09-03 (M6, M14–M20 e o teste que passava pelo motivo errado) foram mortos por assertiva nova; os critérios que não viram assertiva honesta no jsdom estão registrados com motivo em `validation.md`, não silenciados.
 - [x] `package.json` não lista `bootstrap`, `react-spinners`, `styled-components` nem `gsap` — nem `react-imask`, órfão com a saída do Checkout legado.
 - [x] Nenhum arquivo em `src/components` contém literal hexadecimal de cor da identidade.
 - [x] O fluxo de compra vai do hero à confirmação do pedido em 5 passos, com o total correto em BRL completo.

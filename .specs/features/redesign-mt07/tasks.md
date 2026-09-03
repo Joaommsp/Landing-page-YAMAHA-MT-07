@@ -15,6 +15,8 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 ## Test Coverage Matrix
 
+> **Revisada em 2026-09-03**, depois do Verifier: a linha de componente de apresentação saiu de `none` para `unit`. Classificá-la como build gate deixou quatro ACs de P1/P2/P3 sem nenhuma assertiva (M16, M18, M19, M20 sobreviveram) — "sem estado" não é o mesmo que "sem valor de AC". O que o ambiente não alcança fica registrado em `validation.md` (AD-031).
+>
 > Gerada do codebase e da spec. Guidelines encontradas: nenhuma (`AGENTS.md`, `CONTRIBUTING.md`, config de cobertura — ausentes). Defaults fortes aplicados. O repo não tem nenhum teste hoje; a suíte nasce nesta feature.
 
 | Code Layer | Required Test Type | Coverage Expectation | Location Pattern | Run Command |
@@ -22,7 +24,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 | Lógica pura (`src/lib/*`, `src/data/*`) | unit | Todos os ramos; 1:1 com as ACs da spec; todo edge case listado tem teste | `src/lib/__tests__/*.test.js`, `src/data/__tests__/*.test.js` | `npm test -- --run` |
 | Hook de estado (`src/hooks/*`) | unit | Toda transição de estado e todo cálculo derivado; edge cases de limite (primeiro/último passo, zero opcionais, todos os opcionais) | `src/hooks/__tests__/*.test.jsx` | `npm test -- --run` |
 | Componente com interação/estado (`Header`, `Hero`, `Stepper`, `steps/*`, `Configurator`, `Home`) | unit | Caminho feliz + cada edge case listado + cada estado de erro descrito na AC | `src/components/**/__tests__/*.test.jsx` | `npm test -- --run` |
-| Componente de apresentação sem estado (`Button`, `Reveal`, `SpecSheet`, `Gallery`, `Footer`) | none | — (build gate) | — | build gate |
+| Componente de apresentação sem estado (`Button`, `Reveal`, `SpecSheet`, `Gallery`, `Footer`) | unit | Só o que a AC fixa como valor: teto do deslocamento de entrada (`Reveal`), barra ↔ `ratio` (`SpecSheet`), contrato do snap (`Gallery`), crédito e aviso (`Footer`). `Button` segue no build gate — não tem valor de AC próprio | `src/components/**/__tests__/*.test.jsx` | `npm test -- --run` |
 | Config / build (`vite.config.js`, `package.json`, `src/styles/index.css`) | none | — (build gate) | — | build gate |
 
 ## Gate Check Commands
@@ -738,15 +740,44 @@ T22 → T23 → T24 → T25
 
 ---
 
+### Phase 5: Cobertura (fix tasks do Verifier de 2026-09-03) ✅
+
+O relatório `validation.md` deu **FAIL por cobertura**, sem defeito de
+comportamento: 9 mutantes sobreviveram e 11 critérios não tinham assertiva.
+Cada task abaixo fecha uma lacuna priorizada, com **uma mutação por assertiva
+nova** — mutação aplicada, teste falha, arquivo restaurado de cópia.
+
+| Task | O que fecha | Onde | Requisito | Commit |
+| ---- | ----------- | ---- | --------- | ------ |
+| V1 ✅ | M6 — o teste do último passo saía no portão de validação, não no clamp | `src/hooks/__tests__/useConfigurator.test.jsx` | MT07-05 | `test(hooks): exercise the last-step clamp for real` |
+| V2 ✅ | M14/M15 — os textos que a spec enumera, travados como literal | `src/lib/__tests__/validation.test.js` | MT07-08, MT07-09 | `test(lib): pin the exact validation messages the spec names` |
+| V3 ✅ | M17 — os três ramos de `prefers-reduced-motion`, por mock do módulo | `src/components/__tests__/reduced-motion.test.jsx` | MT07-10 | `test(motion): cover the reduced-motion branches` |
+| V4 ✅ | M18 — barra da ficha ligada ao `ratio` do catálogo (AD-030) | `src/components/landing/__tests__/SpecSheet.test.jsx` | MT07-03 | `test(landing): tie the spec bars to the catalog ratio` |
+| V5 ✅ | M20 e M19 — contrato do snap da galeria e crédito/aviso do rodapé | `src/components/landing/__tests__/Gallery.test.jsx`, `src/components/layout/__tests__/Footer.test.jsx` | MT07-04, MT07-12 | `test(landing): cover the gallery snap track and the footer credit` |
+| V6 ✅ | M16 e as ACs 10.2/10.3; registro dos critérios que o jsdom não alcança (AD-031) | `src/components/ui/__tests__/Reveal.test.jsx`, `Configurator.test.jsx`, `ColorStep.test.jsx`, `validation.md` | MT07-02, MT07-07, MT07-10 | `test(ui): cover the remaining motion and layout criteria` |
+| V7 ✅ | Achado de código: `Stepper` destravava aba por aritmética de id, contra a AD-026 | `src/components/configurator/Stepper.jsx`, `src/components/configurator/__tests__/Stepper.order.test.jsx` | MT07-05 | `fix(configurator): unlock steps by position, not by id` |
+
+**Gate da fase**: `npm run lint && npm test -- --run && npm run build` — lint
+limpo, **141 testes / 22 arquivos** verdes, build verde.
+
+**Não fechado de propósito**: AC MT07-08.6/08.7 seguem asseridas num passo só
+(o contador e o rótulo sem ícone são do `Field`, AD-019 — replicar testaria o
+mesmo componente três vezes), e `Configurator.jsx:85`/`:184` seguem sem guarda
+em `current`, ramo inalcançável pelo clamp. Os dois estão registrados em
+`validation.md`.
+
+---
+
 ## Phase Execution Map
 
 ```
-Phase 1 → Phase 2 → Phase 3 → Phase 4
+Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5
 
 Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
 Phase 3:  T15 → T16 → T17 → T18 → T19 → T19b → T20 → T21
 Phase 4:  T22 → T23 → T24 → T25
+Phase 5:  V1 → V2 → V3 → V4 → V5 → V6 → V7   (fix tasks de cobertura do Verifier)
 ```
 
 ---

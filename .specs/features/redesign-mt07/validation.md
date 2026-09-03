@@ -2,6 +2,14 @@
 
 **Result**: ❌ FAIL
 
+> **Estado depois das fix tasks (implementador, 2026-09-03)**: as 12 lacunas
+> priorizadas abaixo estão fechadas — 9 viraram assertiva provada por mutação, 6
+> critérios ficaram registrados como limitação do ambiente ou lacuna de precisão
+> da spec, e o único achado de código (`Stepper` contra a AD-026) foi corrigido.
+> Ver **Fechamento das lacunas** e **Lacunas registradas em vez de testadas**, no
+> fim deste arquivo. O veredito segue FAIL até a **reverificação** por um
+> Verifier independente: quem implementou não vira o próprio veredito.
+
 **Data**: 2026-09-03
 **Spec**: `.specs/features/redesign-mt07/spec.md`
 **Diff verificado**: `main..HEAD` — 34 commits, `HEAD = 4429c27ddd4ef32a96bf207a809cbb18164757ae`, 72 arquivos (+9179 / −4615)
@@ -379,3 +387,51 @@ ao editar), acessibilidade do diálogo (foco preso, devolução do foco ao gatil
 (o Verifier é read-only sobre o código), reexecutar o sensor sobre M6, M14, M15,
 M17, M18, M19 e M20, e revalidar. Limite de 3 ciclos fix → reverificação antes
 de escalar.
+
+---
+
+## Fechamento das lacunas (implementador, 2026-09-03)
+
+Um commit atômico por lacuna. Cada assertiva nova trava o valor que a spec fixa
+e foi provada por mutação: a mutação foi aplicada, a suíte rodou, o teste
+falhou, e o arquivo voltou de cópia (`cp`) — sem `git stash` e sem
+`git checkout` na árvore.
+
+| Lacuna do Verifier | Commit | Assertiva nova | Mutação que a prova |
+| ------------------ | ------ | -------------- | ------------------- |
+| 1 — M6, teste que passava pelo motivo errado (AC MT07-05.4) | `test(hooks): exercise the last-step clamp for real` | `src/hooks/__tests__/useConfigurator.test.jsx:174`–`:183` — preenche o passo de pagamento antes do `next` e assere `state.errors` vazio **e** `state.step === LAST_STEP` | `src/hooks/useConfigurator.js:81` — teto do clamp fora (`Math.min` removido): 1 teste falha com `step: undefined` |
+| 2 — M14 / M15, textos da AC MT07-09.6 sem trava | `test(lib): pin the exact validation messages the spec names` | `src/lib/__tests__/validation.test.js:106`, `:114`, `:125`, `:136` — `"Validade inválida"`, `"Cartão vencido"` e `"CVV inválido"` como literal, no estilo já usado pelos outros cinco textos | `src/lib/validation.js:18`–`:20`, um texto por vez: `Cartão vencido` → `Data do cartão no passado` (1 falha), `CVV inválido` → `Código de segurança inválido` (1 falha), `Validade inválida` → `Data de validade incorreta` (2 falhas) |
+| 3 — M17, `prefers-reduced-motion` sem guarda (AC MT07-10.4) | `test(motion): cover the reduced-motion branches` | `src/components/__tests__/reduced-motion.test.jsx` — `vi.mock("motion/react")` com `useReducedMotion: () => true`; um teste por ramo (`Reveal`, painel do `Configurator`, foto do `ColorStep`), asserindo conteúdo em estado final e zero estilo inline de animação | `prefersReducedMotion` → `false` em `src/components/ui/Reveal.jsx:22`, `src/components/configurator/Configurator.jsx:230` e `src/components/configurator/steps/ColorStep.jsx:44`: cada mutante mata exatamente 1 dos 3 testes |
+| 4 — M18, barra da ficha solta do `ratio` (AC MT07-02.3) | `test(landing): tie the spec bars to the catalog ratio` | `src/components/landing/__tests__/SpecSheet.test.jsx` — a lista de larguras inline, em ordem, é igual a `Math.round(ratio * 100)%` do catálogo, e há tantas larguras distintas quantos `ratio` distintos | `src/components/landing/SpecSheet.jsx:15` — `barWidth` → `"100%"` fixo (2 falhas) e → `ratio * 90` (1 falha) |
+| 5 — M20, snap da galeria (AC MT07-02.4) | `test(landing): cover the gallery snap track and the footer credit` | `src/components/landing/__tests__/Gallery.test.jsx` — eixo e obrigatoriedade do snap no trilho, rolagem contida nele, trilho focável e ponto de encaixe em cada figura | `src/components/landing/Gallery.jsx:37` — `snap-start` fora do item (1 falha); `:31` — `snap-x snap-mandatory` fora do trilho (1 falha) |
+| 6 — M19, crédito e aviso do rodapé (AC MT07-12.1) | idem acima | `src/components/layout/__tests__/Footer.test.jsx` — crédito de autoria e aviso de uso não comercial como texto, e as âncoras pela fonte única do catálogo | `src/components/layout/Footer.jsx:77`–`:78` — crédito e aviso removidos: 2 falhas |
+| 7 — AC MT07-02.5, foco visível | `test(ui): cover the remaining motion and layout criteria` | **registrada como limitação do ambiente** — ver a seção anterior | — |
+| 8 — M16, teto de 24px do reveal (AC MT07-10.1) | idem acima | `src/components/ui/__tests__/Reveal.test.jsx` — o deslocamento lido do estilo inline é `> 0` e `<= 24` | `src/components/ui/Reveal.jsx:9` — `OFFSET` 24 → 96: 1 falha |
+| 9 — ACs MT07-10.2 e 10.3 sem assertiva | idem acima | `Configurator.test.jsx` — o invólucro do painel carrega opacidade e `translateY` inline e contém o painel novo; `ColorStep.test.jsx` — a foto que entra carrega opacidade e `translateX` | `Configurator.jsx:48` — `initial` do painel esvaziado (1 falha); `ColorStep.jsx:57` — `initial` da foto em estado final (1 falha) |
+| 10 — edge cases de imagem que falha e de coluna única | idem acima | **registrados como limitação do ambiente** — ver a seção anterior | — |
+| 11 — ACs MT07-08.6 / 08.7 asseridas num passo só | — | **não alterado**: segue como ressalva. O contador e o rótulo sem ícone são do `Field` (AD-019), que serve os três passos; a assertiva existe em `PersonalStep.test.jsx:51` e `:91`. Replicá-la por passo testaria o mesmo componente três vezes | — |
+| 12 — achados extra 1 a 3 | `fix(configurator): unlock steps by position, not by id` | Achado 1 **corrigido**: `src/components/configurator/Stepper.jsx:55` e `:71`–`:74` destravam por posição em `STEPS`; teste em `src/components/configurator/__tests__/Stepper.order.test.jsx`, com a lista invertida por mock do catálogo, onde posição e id divergem. Achado 2 (contagem na spec) já estava correto em `spec.md`. Achado 3 registrado abaixo | Voltando a `step.id <= furthest`: 1 falha |
+
+### Achado 3 — `current` sem guarda, registrado e não alterado
+
+`src/components/configurator/Configurator.jsx:85` resolve `current` por
+`STEPS.find` e o desreferencia em `:87` (`position`) e `:184` (`current.label`).
+Continua **inalcançável**: `clampStep` (`src/hooks/useConfigurator.js:85`)
+garante id válido em toda transição, e o `Stepper` agora recusa exatamente o que
+o hook recusaria. Uma guarda aqui seria ramo que nenhum teste honesto alcança —
+para exercitá-la seria preciso quebrar o clamp, e nesse cenário o passo já está
+errado antes de chegar ao shell. Fica anotado como fragilidade latente: se algum
+dia o passo puder vir de fora do hook (deep link, restauração de estado), a
+guarda entra junto com esse caminho e com o teste dele.
+
+### Gates depois das fix tasks
+
+| Gate | Comando | Saída | Código |
+| ---- | ------- | ----- | ------ |
+| Full | `npm test -- --run` | `Test Files 22 passed (22)` · `Tests 141 passed (141)` | 0 |
+| Lint | `npm run lint` | saída vazia (`--max-warnings 0`) | 0 |
+| Build | `npm run build` | `✓ built in 495ms` | 0 |
+
+Delta da suíte: **123 → 141 testes** (+18), **16 → 22 arquivos** (+6:
+`reduced-motion`, `SpecSheet`, `Gallery`, `Footer`, `Reveal`, `Stepper.order`).
+Nenhum teste existente foi enfraquecido ou removido.
