@@ -221,27 +221,27 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 
 | Requirement ID | Story | Tasks entregues | Status |
 | -------------- | ----- | --------------- | ------ |
-| MT07-01 | P1: Design system em tokens | T1, T8, T14b | Done |
-| MT07-02 | P1: Hero e seções da landing | T11, T22 | Done |
-| MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | Done |
-| MT07-04 | P1: Hero e seções da landing (galeria) | T13 | Done |
-| MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21 | Done |
-| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17, T21 | Done |
-| MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | Done |
-| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21 | Done |
-| MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21 | Done |
-| MT07-10 | P2: Motion com função | T9, T16, T21, T24 | Done |
-| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | Done |
-| MT07-12 | P3: Rodapé e navegação | T14 | Done |
+| MT07-01 | P1: Design system em tokens | T1, T8, T14b | ✅ Verificado |
+| MT07-02 | P1: Hero e seções da landing | T11, T22 | ❌ Precisa de correção (AC 5) |
+| MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | ❌ Precisa de correção (AC 3) |
+| MT07-04 | P1: Hero e seções da landing (galeria) | T13 | ❌ Precisa de correção (AC 4) |
+| MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21 | ❌ Precisa de correção (AC 4) |
+| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17, T21 | ✅ Verificado |
+| MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | ❌ Precisa de correção (edge case) |
+| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21 | ✅ Verificado |
+| MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21 | ❌ Precisa de correção (AC 6) |
+| MT07-10 | P2: Motion com função | T9, T16, T21, T24 | ❌ Precisa de correção (AC 1, AC 4) |
+| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | ✅ Verificado |
+| MT07-12 | P3: Rodapé e navegação | T14 | ❌ Precisa de correção (AC 1) |
 
-**Coverage:** 12 total, 12 mapeados para tasks no plano, 12 concluídos.
+**Coverage:** 12 total, 12 mapeados para tasks no plano, 12 implementados — **5 verificados, 7 com lacuna de teste** apontada em `validation.md` (Verifier, 2026-09-03).
 
 ---
 
 ## Success Criteria
 
 - [x] `npm run build` e `npm run lint` concluem sem erro nem aviso.
-- [x] A suíte de testes cobre cada AC dos P1 e passa inteira (113 testes).
+- [ ] A suíte de testes cobre cada AC dos P1 e passa inteira. **123 testes passam**, mas o Verifier achou 11 critérios sem assertiva e 9 mutantes sobreviventes — ver `validation.md`.
 - [x] `package.json` não lista `bootstrap`, `react-spinners`, `styled-components` nem `gsap` — nem `react-imask`, órfão com a saída do Checkout legado.
 - [x] Nenhum arquivo em `src/components` contém literal hexadecimal de cor da identidade.
 - [x] O fluxo de compra vai do hero à confirmação do pedido em 5 passos, com o total correto em BRL completo.
