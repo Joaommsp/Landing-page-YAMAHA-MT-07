@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
@@ -31,8 +32,16 @@ import { SUBMIT_STATUS, useConfigurator } from "../../hooks/useConfigurator";
 
 const TITLE_ID = "configurador-titulo";
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex]";
+
+/* Parada de tabulação de verdade: o trilho de passos usa foco itinerante
+   (`tabIndex={-1}` nas abas não selecionadas), e incluí-las na conta fazia o
+   Shift+Tab da primeira parada real escapar do diálogo. */
+function tabStops(container) {
+  return Array.from(container.querySelectorAll(FOCUSABLE)).filter(
+    (element) => !element.disabled && element.tabIndex >= 0
+  );
+}
 
 /* Entrada do painel: sobe 10px e aparece, como o mockup pede. */
 const PANEL_MOTION = {
@@ -57,7 +66,16 @@ function Configurator({ isOpen, onClose }) {
     const previouslyFocused = document.activeElement;
     closeRef.current?.focus();
 
+    /* A landing atrás do diálogo para de rolar e sai do fluxo de leitura — sem
+       isso ela seguia navegável por leitor de tela por trás do modal. */
+    const page = document.getElementById("root");
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    page?.setAttribute("inert", "");
+
     return () => {
+      document.body.style.overflow = previousOverflow;
+      page?.removeAttribute("inert");
       if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
     };
   }, [isOpen]);
@@ -84,9 +102,7 @@ function Configurator({ isOpen, onClose }) {
 
     if (event.key !== "Tab" || !dialogRef.current) return;
 
-    const focusables = Array.from(
-      dialogRef.current.querySelectorAll(FOCUSABLE)
-    );
+    const focusables = tabStops(dialogRef.current);
     if (focusables.length === 0) return;
 
     const first = focusables[0];
@@ -112,7 +128,7 @@ function Configurator({ isOpen, onClose }) {
       <PersonalStep
         disabled={state.status !== SUBMIT_STATUS.idle}
         errors={state.errors}
-        onChange={(name, value) => actions.setField("personal", name, value)}
+        onChange={actions.setField}
         values={state.personal}
       />
     ),
@@ -120,7 +136,7 @@ function Configurator({ isOpen, onClose }) {
       <DeliveryStep
         disabled={state.status !== SUBMIT_STATUS.idle}
         errors={state.errors}
-        onChange={(name, value) => actions.setField("delivery", name, value)}
+        onChange={actions.setField}
         values={state.delivery}
       />
     ),
@@ -129,7 +145,7 @@ function Configurator({ isOpen, onClose }) {
         color={color}
         errors={state.errors}
         motorcyclePrice={motorcyclePrice}
-        onChange={(name, value) => actions.setField("payment", name, value)}
+        onChange={actions.setField}
         onSubmit={actions.submit}
         options={options}
         status={state.status}
@@ -142,7 +158,7 @@ function Configurator({ isOpen, onClose }) {
 
   const panel = panelByStep[state.step];
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[var(--z-overlay)] grid place-items-center bg-ink/85 p-3 backdrop-blur-sm md:p-6"
       onKeyDown={handleKeyDown}
@@ -247,7 +263,8 @@ function Configurator({ isOpen, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

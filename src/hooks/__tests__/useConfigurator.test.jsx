@@ -11,6 +11,7 @@ import {
   INSTALLMENTS,
   COLORS,
   OPTIONS,
+  STEPS,
   STEP_IDS,
   FIRST_STEP,
   LAST_STEP,
@@ -56,20 +57,26 @@ const validPayment = {
   cardCvv: "123",
 };
 
-const fill = (result, section, values) => {
+/* Digita no passo em que o configurador está: a seção é resolvida pelo hook. */
+const fill = (result, values) => {
   Object.entries(values).forEach(([name, value]) => {
-    act(() => result.current.actions.setField(section, name, value));
+    act(() => result.current.actions.setField(name, value));
   });
 };
 
-/* Chega ao passo pedido pelo caminho real: preenche os formulários e avança um
-   passo de cada vez, porque saltar adiante é justamente o que não se pode. */
-const advanceTo = (result, step) => {
-  fill(result, "personal", validPersonal);
-  fill(result, "delivery", validDelivery);
+const VALUES_BY_STEP = {
+  [STEP_IDS.PERSONAL]: validPersonal,
+  [STEP_IDS.DELIVERY]: validDelivery,
+};
 
-  for (let attempt = 0; attempt < LAST_STEP; attempt += 1) {
-    if (result.current.state.step >= step) break;
+/* Chega ao passo pedido pelo caminho real: em cada passo com formulário,
+   preenche e só então avança — saltar adiante é justamente o que não se pode.
+   O passo de destino não é preenchido: quem testa decide o que colocar nele. */
+const advanceTo = (result, step) => {
+  for (let attempt = 0; attempt <= STEPS.length; attempt += 1) {
+    if (result.current.state.step === step) return;
+    const values = VALUES_BY_STEP[result.current.state.step];
+    if (values) fill(result, values);
     act(() => result.current.actions.next());
   }
 };
@@ -212,8 +219,11 @@ describe("useConfigurator — conclusão", () => {
     expect(result.current.state.step).toBe(STEP_IDS.PAYMENT);
     expect(result.current.state.errors.cardHolder).toBe(MESSAGES.required);
 
-    fill(result, "payment", validPayment);
-    act(() => result.current.actions.setField("delivery", "city", ""));
+    fill(result, validPayment);
+    /* Volta ao passo de entrega para esvaziar a cidade: digitar num passo
+       exige estar nele, e é isso que o resumo do envio precisa enxergar. */
+    act(() => result.current.actions.goTo(STEP_IDS.DELIVERY));
+    act(() => result.current.actions.setField("city", ""));
     act(() => result.current.actions.submit());
 
     expect(result.current.state.status).toBe(SUBMIT_STATUS.idle);
@@ -226,7 +236,7 @@ describe("useConfigurator — conclusão", () => {
       const { result } = renderHook(() => useConfigurator());
 
       advanceTo(result, STEP_IDS.PAYMENT);
-      fill(result, "payment", validPayment);
+      fill(result, validPayment);
       act(() => result.current.actions.submit());
 
       expect(result.current.state.errors).toEqual({});
@@ -243,14 +253,43 @@ describe("useConfigurator — conclusão", () => {
       const { result } = renderHook(() => useConfigurator());
 
       advanceTo(result, STEP_IDS.PAYMENT);
-      fill(result, "payment", validPayment);
+      fill(result, validPayment);
       act(() => result.current.actions.submit());
       act(() => vi.advanceTimersByTime(SUBMIT_DELAY_MS));
       expect(result.current.state.status).toBe(SUBMIT_STATUS.confirmed);
 
-      act(() => result.current.actions.setField("payment", "cardCvv", "999"));
+      act(() => result.current.actions.setField("cardCvv", "999"));
 
       expect(result.current.state.status).toBe(SUBMIT_STATUS.idle);
     });
+  });
+  /* A seção do campo é resolvida pelo passo atual. Nos passos de cor e
+     opcionais não há formulário: digitar ali não pode inventar seção nem
+     sujar outra parte do estado. */
+  it("ignora campo digitado em passo sem formulário", () => {
+    const { result } = renderHook(() => useConfigurator());
+
+    act(() => result.current.actions.setField("firstName", "João"));
+
+    expect(result.current.state.personal).toEqual({});
+    expect(result.current.state.delivery).toEqual({});
+    expect(result.current.state.payment).toEqual({});
+  });
+
+  /* Navegação por posição na lista, não por aritmética no id: o catálogo
+     promete que reordenar `STEPS` não muda o significado de ninguém. */
+  it("anda pela ordem da lista de passos, não pelo número do id", () => {
+    const { result } = renderHook(() => useConfigurator());
+
+    expect(result.current.state.step).toBe(STEPS[0].id);
+
+    act(() => result.current.actions.next());
+    expect(result.current.state.step).toBe(STEPS[1].id);
+
+    act(() => result.current.actions.next());
+    expect(result.current.state.step).toBe(STEPS[2].id);
+
+    act(() => result.current.actions.previous());
+    expect(result.current.state.step).toBe(STEPS[1].id);
   });
 });

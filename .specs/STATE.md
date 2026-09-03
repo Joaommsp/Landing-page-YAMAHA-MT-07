@@ -31,29 +31,27 @@
 | AD-024 | Pedido em envio tranca trilho, Anterior e Próximo; fechar segue liberado | Voltar a um passo de formulário durante o envio e digitar disparava `setField`, que zera o `status` e mata o temporizador: o pedido era cancelado em silêncio. Fechar é saída, não edição, e não cancela nada (achado BLOQUEANTE) | 2026-09-03 |
 | AD-025 | A curva de movimento vive em `src/lib/motion.js` (`EASE_EDITORIAL`) | O array `[0.22, 1, 0.36, 1]` estava redigitado em três componentes além do token `--ease-editorial` do tema; o motion é JS e não lê o `@theme`, então o espelho precisa ser único | 2026-09-03 |
 
+| AD-026 | Navegação do configurador por posição em `STEPS`, não por aritmética no id | `step ± 1` contrariava a promessa do catálogo de que reordenar os passos não muda o significado de ninguém; id não contíguo levaria a passo inexistente e quebra em `current.label` | 2026-09-03 |
+| AD-027 | `setField(name, value)` — a seção sai do passo atual, dentro do reducer | O shell repassava `"personal"`/`"delivery"`/`"payment"` à mão; divergência de nome virava no-op silencioso e o campo não digitava | 2026-09-03 |
+| AD-028 | O diálogo do configurador vive num portal em `document.body`, com `inert` no `#root` e rolagem travada | Sem isso a landing seguia rolando e navegável por leitor de tela atrás do modal; o `inert` no root alcançaria o próprio diálogo se ele continuasse dentro da árvore da página | 2026-09-03 |
+| AD-029 | Porta de desenvolvimento fixa em 9000 (`strictPort`), preview em 9001 | Pedido do dono do projeto; `strictPort` falha alto em vez de subir noutra porta em silêncio | 2026-09-03 |
+
 ## Handoff
 
 **Feature**: redesign-mt07
-**Branch**: `feat/redesign-2026` (32 commits, árvore limpa, NADA empurrado)
+**Branch**: `feat/redesign-2026` (árvore limpa, NADA empurrado)
 **Data**: 2026-09-03
-**Estado**: as 25 tasks + 4 fix tasks estão implementadas e commitadas. Gates verdes: 115 testes / 15 arquivos, `npm run lint` sem erro nem aviso, `npm run build` verde.
+**Estado**: 25 tasks + 5 fix tasks implementadas. Gates: 123 testes / 16 arquivos verdes, `npm run lint` sem erro nem aviso, `npm run build` verde. Dev server em http://localhost:9000.
 
-**Próximo passo (obrigatório antes de declarar a feature pronta)**: rodar o Verifier independente da fase 9 do Execute (author ≠ verifier) sobre o range `main..HEAD`, que precisa escrever `.specs/features/redesign-mt07/validation.md` com veredito PASS, evidência `file:line` por AC e resultado do sensor de discriminação. Depois disso, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0. Enquanto isso não roda, a feature NÃO está fechada.
+**Achados de revisão: todos fechados.** Os 7 que estavam abertos saíram no commit `fix(configurator): close the review findings still open` — foco preso contando abas com `tabindex="-1"`, seção de campo duplicada no shell, navegação por aritmética de id, prop `panelId` sem chamador, `aria-orientation` fixa contra o layout, fundo rolando atrás do modal e erro de blur sobrevivendo à troca de passo. Quatro testes novos cobrem o que não tinha cobertura, cada um validado por mutação.
 
-**Achados de revisão ainda ABERTOS** (dos revisores que o orquestrador rodou sobre a fase 3; o commit `59a4c06` fechou os quatro bloqueantes, estes ficaram):
-
-1. `src/components/configurator/Configurator.jsx:34-35` — o seletor `FOCUSABLE` só descarta `tabindex="-1"` na última cláusula, então `button:not([disabled])` casa as abas do stepper com foco itinerante. A partir do passo 2, a primeira parada calculada é uma aba inalcançável por Tab e o `Shift+Tab` escapa do diálogo. Corrigir aplicando `:not([tabindex="-1"])` a todas as cláusulas, ou filtrando por `el.tabIndex >= 0`. Não há teste cobrindo a circulação por Tab.
-2. `src/components/configurator/Configurator.jsx:115,123,132` — o shell escreve à mão os nomes de seção (`"personal"`, `"delivery"`, `"payment"`) que o hook já tem em `SECTION_BY_STEP` (privado). Divergência de nome vira no-op silencioso em `useConfigurator.js` (`if (!SECTIONS.includes(...)) return state`) — o campo simplesmente não digita. Corrigir com `setField(name, value)` resolvendo a seção pelo passo atual.
-3. `src/hooks/useConfigurator.js:93,103` — `next`/`previous` navegam por aritmética no id (`step ± 1`), contrariando o contrato que `catalog.js` declara em comentário ("cada passo é identificado por nome, não por posição"). Com id não contíguo, `clampStep` devolve passo inexistente e `Configurator.jsx` quebra em `current.label`. Navegar por índice em `STEPS`.
-4. `src/components/configurator/Stepper.jsx:56,110,149` — prop `panelId` com default que nenhum chamador usa: quem a passar troca o `aria-controls` sem trocar o `id` do painel, reabrindo o que a AD-018 fechou. Remover e consumir `CONFIGURATOR_PANEL_ID` direto.
-5. `src/components/configurator/Stepper.jsx:100` — `aria-orientation="vertical"` fixo, mas o trilho só é coluna a partir de `md`. Casar com o breakpoint ou omitir.
-6. `src/components/configurator/Configurator.jsx` — com o modal aberto, a landing atrás continua rolando e no fluxo de leitura de leitor de tela. Falta `overflow: hidden` no body e `inert`/`aria-hidden` no conteúdo da Home enquanto aberto.
-7. `src/components/configurator/FieldGrid.jsx` — `blurErrors` só é limpo por desmontagem; nada o zera quando `stepId` muda na mesma instância. Funciona hoje só porque o `AnimatePresence` desmonta cada passo. Um `useEffect` que zera ao mudar `stepId` fecha a dependência implícita.
+**Próximo passo (obrigatório antes de declarar a feature pronta)**: rodar o Verifier independente da fase 9 do Execute (author ≠ verifier) sobre `main..HEAD`, que precisa escrever `.specs/features/redesign-mt07/validation.md` com veredito PASS, evidência `file:line` por AC e resultado do sensor de discriminação. Depois, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0.
 
 **Pendências de produto, não de código**:
-- As capturas na raiz do repo (`MacBook Pro-*.jpeg`, `iPhone 12 Pro-*.jpeg`) são do design ANTIGO. O README já as rotula como "antes"; faltam as capturas do redesenho.
-- As imagens dos modelos ainda são PNG de ~3 MB cada (`racingBlue`, `lightBlue`, `silverBlue`). Converter para WebP responsivo estava no mockup, mas ficou fora do escopo das tasks.
-- Limitação conhecida: `validateCard` exige 16 dígitos exatos — Amex (15) é recusada.
-- A parcela usa `subtotal / 24` com arredondamento normal (R$ 2.020,83). O mockup mostrava R$ 2.020,84; o código está certo, o mockup é que arredondou para cima.
+- As capturas na raiz (`MacBook Pro-*.jpeg`, `iPhone 12 Pro-*.jpeg`) são do design ANTIGO; o README já as rotula como "antes". Faltam as capturas do redesenho.
+- Imagens dos modelos ainda são PNG de ~3 MB (`racingBlue`, `lightBlue`, `silverBlue`). Converter para WebP responsivo ficou fora do escopo das tasks.
+- `validateCard` exige 16 dígitos exatos — Amex (15) é recusada. Limitação conhecida.
+- A parcela usa `subtotal / 24` com arredondamento normal (R$ 2.020,83); o mockup mostrava R$ 2.020,84, arredondado para cima por engano.
+- Sugestão menor recusada: esconder o botão "Próximo" no último passo. A AC MT07-05.4 manda **desabilitar**, e há teste fixando isso.
 
-**Mockup aprovado** (referência visual da feature): artifact `https://claude.ai/code/artifact/35c48844-4f20-4608-936e-87a678a915ae`, fonte em `scratchpad/mt07-redesign.src.html`.
+**Mockup aprovado**: artifact `https://claude.ai/code/artifact/35c48844-4f20-4608-936e-87a678a915ae`, fonte em `scratchpad/mt07-redesign.src.html`.

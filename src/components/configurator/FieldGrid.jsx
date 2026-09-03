@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import Field from "../ui/Field";
@@ -48,6 +48,13 @@ function FieldGrid({
   /* Erro de saída de campo: nasce no `blur` e morre na próxima digitação. O
      erro do fluxo (avançar ou finalizar) chega por prop e tem precedência. */
   const [blurErrors, setBlurErrors] = useState(EMPTY_VALUES);
+
+  /* Trocar de passo zera o erro de saída de campo. Hoje cada passo é uma
+     instância própria (o `AnimatePresence` desmonta), mas depender disso deixa
+     o erro de um passo aparecer no seguinte se a montagem passar a ser reusada. */
+  useEffect(() => {
+    setBlurErrors(EMPTY_VALUES);
+  }, [stepId]);
 
   const fields = STEP_FIELDS[stepId] || EMPTY_FIELDS;
 

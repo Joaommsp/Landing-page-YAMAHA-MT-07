@@ -7,8 +7,8 @@ import {
   DELIVERY_PRICE,
   FIRST_STEP,
   INSTALLMENTS,
-  LAST_STEP,
   OPTIONS,
+  STEPS,
   STEP_IDS,
 } from "../data/catalog";
 import { validateStep } from "../lib/validation";
@@ -22,7 +22,6 @@ const SECTION_BY_STEP = {
 };
 
 const FORM_STEPS = Object.keys(SECTION_BY_STEP).map(Number);
-const SECTIONS = Object.values(SECTION_BY_STEP);
 
 export const SUBMIT_STATUS = {
   idle: "idle",
@@ -68,8 +67,23 @@ export function computeTotal(state) {
   return computeSubtotal(state) + DELIVERY_PRICE;
 }
 
+/* Navegação por posição na lista de passos, nunca por aritmética no id: o
+   catálogo promete que reordenar `STEPS` não muda o significado de ninguém, e
+   `step + 1` quebraria essa promessa no primeiro id não contíguo. */
+const STEP_ORDER = STEPS.map((step) => step.id);
+
+function stepIndex(step) {
+  const index = STEP_ORDER.indexOf(step);
+  return index === -1 ? 0 : index;
+}
+
+function stepAt(index) {
+  const bounded = Math.min(Math.max(index, 0), STEP_ORDER.length - 1);
+  return STEP_ORDER[bounded];
+}
+
 function clampStep(step) {
-  return Math.min(Math.max(step, FIRST_STEP), LAST_STEP);
+  return stepAt(stepIndex(step));
 }
 
 function errorsOfStep(state, step) {
@@ -82,7 +96,7 @@ export function reducer(state, action) {
     case "goTo": {
       const target = clampStep(action.step);
       // Voltar é sempre livre; ir adiante, só até onde o fluxo já foi validado.
-      if (target > state.furthestStep) return state;
+      if (stepIndex(target) > stepIndex(state.furthestStep)) return state;
       return { ...state, step: target, errors: {} };
     }
 
@@ -90,17 +104,21 @@ export function reducer(state, action) {
       const errors = errorsOfStep(state, state.step);
       if (Object.keys(errors).length > 0) return { ...state, errors };
 
-      const step = clampStep(state.step + 1);
-      return {
-        ...state,
-        step,
-        furthestStep: Math.max(state.furthestStep, step),
-        errors: {},
-      };
+      const step = stepAt(stepIndex(state.step) + 1);
+      const furthestStep =
+        stepIndex(step) > stepIndex(state.furthestStep)
+          ? step
+          : state.furthestStep;
+
+      return { ...state, step, furthestStep, errors: {} };
     }
 
     case "previous":
-      return { ...state, step: clampStep(state.step - 1), errors: {} };
+      return {
+        ...state,
+        step: stepAt(stepIndex(state.step) - 1),
+        errors: {},
+      };
 
     case "selectColor":
       return { ...state, colorId: action.colorId };
@@ -116,21 +134,18 @@ export function reducer(state, action) {
     }
 
     case "setField": {
-      // Só as seções de formulário aceitam campo: assim um nome errado não
-      // sobrescreve outra parte do estado em silêncio.
-      if (!SECTIONS.includes(action.section)) return state;
+      /* A seção sai do passo atual: quem digita não repassa o nome dela, então
+         não há como um literal divergente virar um no-op silencioso. Passo sem
+         formulário simplesmente não tem onde guardar campo. */
+      const name = SECTION_BY_STEP[state.step];
+      if (!name) return state;
 
-      const section = { ...state[action.section], [action.name]: action.value };
+      const section = { ...state[name], [action.name]: action.value };
       const errors = { ...state.errors };
       delete errors[action.name];
 
       // Editar reabre o pedido: a confirmação era do conjunto anterior de dados.
-      return {
-        ...state,
-        [action.section]: section,
-        errors,
-        status: SUBMIT_STATUS.idle,
-      };
+      return { ...state, [name]: section, errors, status: SUBMIT_STATUS.idle };
     }
 
     case "submit": {
@@ -175,8 +190,7 @@ export function useConfigurator() {
       previous: () => dispatch({ type: "previous" }),
       selectColor: (colorId) => dispatch({ type: "selectColor", colorId }),
       toggleOption: (optionId) => dispatch({ type: "toggleOption", optionId }),
-      setField: (section, name, value) =>
-        dispatch({ type: "setField", section, name, value }),
+      setField: (name, value) => dispatch({ type: "setField", name, value }),
       submit: () => dispatch({ type: "submit" }),
     }),
     []

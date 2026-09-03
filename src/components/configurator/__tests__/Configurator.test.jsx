@@ -204,4 +204,48 @@ describe("Configurator", () => {
     await user.keyboard("{Escape}");
     expect(onClose).toHaveBeenCalledTimes(2);
   });
+  /* O trilho de passos usa foco itinerante: as abas não selecionadas ficam com
+     `tabindex="-1"`. Contá-las como parada de tabulação fazia o Shift+Tab da
+     primeira parada real cair fora do diálogo, com o modal aberto. */
+  it("mantém o foco preso no diálogo ao tabular para trás", async () => {
+    const user = userEvent.setup();
+    renderConfigurator();
+
+    /* Do passo 2 em diante a aba anterior fica habilitada e com
+       `tabindex="-1"` — é exatamente aí que a conta errada de paradas
+       escolhia como primeira parada uma aba inalcançável por Tab. */
+    await goNext(user);
+    await screen.findByRole("tab", { name: /opcionais/i, selected: true });
+
+    const dialog = screen.getByRole("dialog");
+    const stops = Array.from(
+      dialog.querySelectorAll("a[href], button, input, select, textarea, [tabindex]")
+    ).filter((element) => !element.disabled && element.tabIndex >= 0);
+
+    stops[0].focus();
+    expect(document.activeElement).toBe(stops[0]);
+
+    await user.tab({ shift: true });
+
+    expect(dialog.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement).toBe(stops[stops.length - 1]);
+  });
+
+  it("torna a página de trás inerte e sem rolagem enquanto está aberto", () => {
+    const page = document.createElement("div");
+    page.id = "root";
+    document.body.appendChild(page);
+
+    const { view } = renderConfigurator();
+
+    expect(page.hasAttribute("inert")).toBe(true);
+    expect(document.body.style.overflow).toBe("hidden");
+
+    view.unmount();
+
+    expect(page.hasAttribute("inert")).toBe(false);
+    expect(document.body.style.overflow).toBe("");
+
+    page.remove();
+  });
 });

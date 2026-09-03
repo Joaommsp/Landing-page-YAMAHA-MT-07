@@ -53,7 +53,6 @@ function Stepper({
   furthest = current,
   locked = false,
   onSelect,
-  panelId = CONFIGURATOR_PANEL_ID,
 }) {
   const tabsRef = useRef([]);
 
@@ -97,7 +96,9 @@ function Stepper({
   return (
     <div
       aria-label="Etapas da compra"
-      aria-orientation="vertical"
+      /* Sem `aria-orientation`: o trilho é horizontal até `md` e coluna
+         depois, e o teclado atende os dois eixos. Fixar o valor anunciaria
+         uma orientação que a tela não tem. */
       className="flex shrink-0 items-center gap-1 border-b border-line bg-ink-2 px-3 py-2 md:flex-col md:border-b-0 md:border-r md:px-2 md:py-4"
       onKeyDown={handleKeyDown}
       role="tablist"
@@ -107,7 +108,7 @@ function Stepper({
 
         return (
           <button
-            aria-controls={panelId}
+            aria-controls={CONFIGURATOR_PANEL_ID}
             aria-selected={selected}
             className={TAB_CLASS}
             disabled={!isUnlocked(step)}
@@ -146,7 +147,6 @@ Stepper.propTypes = {
   furthest: PropTypes.number,
   locked: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
-  panelId: PropTypes.string,
 };
 
 export default Stepper;
