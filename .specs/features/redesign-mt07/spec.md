@@ -220,7 +220,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| MT07-01 | P1: Design system em tokens | Implementing | In Tasks |
+| MT07-01 | P1: Design system em tokens | Implementing | Done |
 | MT07-02 | P1: Hero e seções da landing | Design | Pending |
 | MT07-03 | P1: Hero e seções da landing (ficha técnica) | Design | Pending |
 | MT07-04 | P1: Hero e seções da landing (galeria) | Design | Pending |

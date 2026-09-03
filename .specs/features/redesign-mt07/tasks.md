@@ -269,7 +269,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T8: Criar o botão da interface
+### T8: Criar o botão da interface ✅
 
 **What**: Componente `Button` com variantes sólida e fantasma, foco visível e estado desabilitado.
 **Where**: `src/components/ui/Button.jsx`
@@ -279,9 +279,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Variantes `solid` e `ghost` sem literal hexadecimal no arquivo
-- [ ] `:focus-visible` com contorno visível
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Variantes `solid` e `ghost` sem literal hexadecimal no arquivo
+- [x] `:focus-visible` com contorno visível
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
 **Tests**: none
 **Gate**: build
