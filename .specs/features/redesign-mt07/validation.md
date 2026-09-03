@@ -428,10 +428,32 @@ guarda entra junto com esse caminho e com o teste dele.
 
 | Gate | Comando | Saída | Código |
 | ---- | ------- | ----- | ------ |
-| Full | `npm test -- --run` | `Test Files 22 passed (22)` · `Tests 141 passed (141)` | 0 |
+| Full | `npm test -- --run` | `Test Files 24 passed (24)` · `Tests 142 passed (142)` | 0 |
 | Lint | `npm run lint` | saída vazia (`--max-warnings 0`) | 0 |
-| Build | `npm run build` | `✓ built in 495ms` | 0 |
+| Build | `npm run build` | `✓ built in 543ms` | 0 |
 
-Delta da suíte: **123 → 141 testes** (+18), **16 → 22 arquivos** (+6:
-`reduced-motion`, `SpecSheet`, `Gallery`, `Footer`, `Reveal`, `Stepper.order`).
-Nenhum teste existente foi enfraquecido ou removido.
+Delta da suíte: **123 → 142 testes** (+19), **16 → 24 arquivos** (+8:
+`SpecSheet`, `Gallery`, `Footer`, `Reveal`, `Stepper.order` e os três
+`*.reduced-motion`). Nenhum teste existente foi enfraquecido ou removido; o
+único teste retirado é um teste **novo** desta rodada, que dava falso alarme
+(ver abaixo).
+
+### Rodada dos dois revisores (obrigatória, sobre o diff das fix tasks)
+
+`revisor-reuso-padroes` e `revisor-arquitetura`, em paralelo, read-only sobre
+`32d8e8b..HEAD`: **1 bloqueante, 6 importantes, 11 menores**. O bloqueante e os
+importantes estão fechados em três commits.
+
+| Achado | Severidade | Fechamento |
+| ------ | ---------- | ---------- |
+| `positionOf` no `Stepper` era a **terceira** cópia de "posição do passo", com fallback divergente do hook (0 × −1): id fora da lista destravava lados opostos do trilho | 🔴 Bloqueante (os dois revisores) | `refactor(catalog): own step position in one place` — `stepPosition` passa a viver no catálogo, dono da ordem, com a decisão de fallback tomada uma vez (AD-032). Hook, trilho e shell consomem; `focusStep` e `STEPS.indexOf` do shell também |
+| A sonda das marcas do motion no DOM estava reescrita em 4 formas em 4 arquivos | 🟡 Importante | `test(motion): share the probe, co-locate reduced-motion specs` — `src/test/motionMarks.js` |
+| Arquivo de movimento reduzido cobria 3 camadas numa pasta sem componente, contra a convenção co-locada | 🟡 Importante | idem — três arquivos, um ao lado de cada componente, sufixo `.reduced-motion` |
+| Literal só na 1ª assertiva de cada bloco de `validation.test.js`, misturando estilos no mesmo `it` | 🟡 Importante | `test(review): close the reviewers findings on the new specs` |
+| 3º teste do `SpecSheet` sem poder de detecção extra e com falso alarme (`ratio` legítimo que arredonda igual) | 🟡 Importante | idem — teste retirado, busca das barras escopada na trilha da linha |
+| Nome do teste de âncora do rodapé prometia mais do que media; âncora do início sem assertiva | 🔵 Menor | idem |
+| `firstElementChild` amarrava a assertiva à posição no DOM | 🔵 Menor | `closest("[style]")`, subindo do conteúdo |
+| Dublê do catálogo incoerente (`STEPS` invertida, pontas na ordem real) | 🔵 Menor | pontas e `stepPosition` derivados da mesma ordem invertida |
+| Assertiva em grafia de classe do Tailwind na galeria | 🔵 Menor | **não alterado**, por decisão: é o contrato que o navegador executa e a alternativa (exportar as classes do componente só para o teste ler) inverte a dependência. Limite registrado na AD-031 |
+| `usePrefersReducedMotion` na casa (`src/lib/motion.js`) para o teste não mockar biblioteca de terceiros | 🔵 Menor / Importante (1 revisor) | **não alterado**: é refactor de produção em 3 componentes para servir testabilidade, fora do escopo desta rodada de cobertura. Registrado como sugestão viva |
+| Laço de nome acessível repetido entre `Stepper.test.jsx` e `Stepper.order.test.jsx` | 🔵 Menor | **não alterado**: 8 linhas, e o do arquivo novo roda sobre a lista invertida — extrair acoplaria os dois arquivos a um helper de 3 linhas |

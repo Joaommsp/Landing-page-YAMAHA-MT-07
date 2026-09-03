@@ -757,8 +757,12 @@ nova** — mutação aplicada, teste falha, arquivo restaurado de cópia.
 | V6 ✅ | M16 e as ACs 10.2/10.3; registro dos critérios que o jsdom não alcança (AD-031) | `src/components/ui/__tests__/Reveal.test.jsx`, `Configurator.test.jsx`, `ColorStep.test.jsx`, `validation.md` | MT07-02, MT07-07, MT07-10 | `test(ui): cover the remaining motion and layout criteria` |
 | V7 ✅ | Achado de código: `Stepper` destravava aba por aritmética de id, contra a AD-026 | `src/components/configurator/Stepper.jsx`, `src/components/configurator/__tests__/Stepper.order.test.jsx` | MT07-05 | `fix(configurator): unlock steps by position, not by id` |
 
+| V8 ✅ | Achado BLOQUEANTE dos dois revisores: posição do passo derivada em três camadas, com fallback divergente | `src/data/catalog.js`, `src/hooks/useConfigurator.js`, `src/components/configurator/Stepper.jsx`, `src/components/configurator/Configurator.jsx` | MT07-05 | `refactor(catalog): own step position in one place` |
+| V9 ✅ | Achado importante: sonda das marcas do motion duplicada em 4 arquivos; especs de movimento reduzido fora da convenção co-locada | `src/test/motionMarks.js` e os três `*.reduced-motion.test.jsx` | MT07-10 | `test(motion): share the probe, co-locate reduced-motion specs` |
+| V10 ✅ | Achados importantes/menores restantes: literal parcial em `validation.test.js`, teste redundante e com falso alarme no `SpecSheet`, nome e cobertura da âncora do rodapé | `src/lib/__tests__/validation.test.js`, `src/components/landing/__tests__/SpecSheet.test.jsx`, `src/components/layout/__tests__/Footer.test.jsx` | MT07-03, MT07-08, MT07-09, MT07-12 | `test(review): close the reviewers findings on the new specs` |
+
 **Gate da fase**: `npm run lint && npm test -- --run && npm run build` — lint
-limpo, **141 testes / 22 arquivos** verdes, build verde.
+limpo, **142 testes / 24 arquivos** verdes, build verde.
 
 **Não fechado de propósito**: AC MT07-08.6/08.7 seguem asseridas num passo só
 (o contador e o rótulo sem ícone são do `Field`, AD-019 — replicar testaria o
@@ -777,7 +781,7 @@ Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
 Phase 3:  T15 → T16 → T17 → T18 → T19 → T19b → T20 → T21
 Phase 4:  T22 → T23 → T24 → T25
-Phase 5:  V1 → V2 → V3 → V4 → V5 → V6 → V7   (fix tasks de cobertura do Verifier)
+Phase 5:  V1 → V2 → V3 → V4 → V5 → V6 → V7 → V8 → V9 → V10   (cobertura do Verifier + rodada dos 2 revisores)
 ```
 
 ---

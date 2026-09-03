@@ -44,7 +44,7 @@
 **Feature**: redesign-mt07
 **Branch**: `feat/redesign-2026` (árvore limpa, NADA empurrado)
 **Data**: 2026-09-03
-**Estado**: 25 tasks + 5 fix tasks de implementação + 6 fix tasks de cobertura (F1) concluídas. Gates: **141 testes / 22 arquivos** verdes, `npm run lint` sem erro nem aviso, `npm run build` verde. Dev server do dono do projeto em http://localhost:9000 (não subir outro).
+**Estado**: 25 tasks + 5 fix tasks de implementação + 10 fix tasks de cobertura e revisão (V1–V10) concluídas. Gates: **142 testes / 24 arquivos** verdes, `npm run lint` sem erro nem aviso, `npm run build` verde. Dev server do dono do projeto em http://localhost:9000 (não subir outro).
 
 **As 12 lacunas do Verifier estão fechadas.** O relatório de 2026-09-03
 (`validation.md`) deu FAIL por **cobertura**, não por comportamento: 9 mutantes
@@ -61,6 +61,17 @@ sobreviveram e 11 critérios não tinham assertiva. Os 6 commits desta rodada:
 Cada assertiva nova foi provada por mutação (mutação aplicada → teste falha →
 arquivo restaurado de cópia `cp`; sem `git stash` e sem `git checkout` na
 árvore). Nenhum teste existente foi enfraquecido ou removido.
+
+**Rodada dos dois revisores** sobre esse diff: 1 bloqueante, 6 importantes, 11
+menores. Fechados em `refactor(catalog): own step position in one place` (o
+bloqueante — `stepPosition` era a terceira cópia da mesma conta, com fallback
+divergente; virou dono único no catálogo, AD-032),
+`test(motion): share the probe, co-locate reduced-motion specs` (sonda de motion
+compartilhada e especs co-locadas) e
+`test(review): close the reviewers findings on the new specs`. Três achados
+menores ficaram **não alterados por decisão**, com o motivo escrito na tabela de
+`validation.md` — entre eles a sugestão viva de expor `usePrefersReducedMotion`
+em `src/lib/motion.js` para o teste deixar de mockar biblioteca de terceiros.
 
 **Próximo passo (obrigatório antes de declarar a feature pronta)**: **reverificação** por um Verifier independente sobre `main..HEAD` — quem implementou não vira o próprio veredito, e o `validation.md` segue com **Result: FAIL** até isso. O sensor precisa reexecutar M6, M14, M15, M16, M17, M18, M19, M20 e a aritmética de id do `Stepper`, todos esperados **mortos** agora. Depois, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0. Limite de 3 ciclos fix → reverificação antes de escalar (este é o 1º).
 

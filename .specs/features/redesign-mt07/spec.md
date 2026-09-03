@@ -241,7 +241,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 ## Success Criteria
 
 - [x] `npm run build` e `npm run lint` concluem sem erro nem aviso.
-- [x] A suíte de testes cobre cada AC dos P1 e passa inteira. **141 testes em 22 arquivos**, todos verdes. Os 9 mutantes que sobreviveram ao Verifier de 2026-09-03 (M6, M14–M20 e o teste que passava pelo motivo errado) foram mortos por assertiva nova; os critérios que não viram assertiva honesta no jsdom estão registrados com motivo em `validation.md`, não silenciados.
+- [x] A suíte de testes cobre cada AC dos P1 e passa inteira. **142 testes em 24 arquivos**, todos verdes. Os 9 mutantes que sobreviveram ao Verifier de 2026-09-03 (M6, M14–M20 e o teste que passava pelo motivo errado) foram mortos por assertiva nova; os critérios que não viram assertiva honesta no jsdom estão registrados com motivo em `validation.md`, não silenciados.
 - [x] `package.json` não lista `bootstrap`, `react-spinners`, `styled-components` nem `gsap` — nem `react-imask`, órfão com a saída do Checkout legado.
 - [x] Nenhum arquivo em `src/components` contém literal hexadecimal de cor da identidade.
 - [x] O fluxo de compra vai do hero à confirmação do pedido em 5 passos, com o total correto em BRL completo.
