@@ -6,11 +6,11 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 
 ## Goals
 
-- [ ] Aplicar o design system do mockup aprovado em 100% das telas: tokens de cor, tipografia e espaçamento em fonte única, zero hex solto em componente.
-- [ ] Migrar a camada de estilo de `styled-components` + `bootstrap` para Tailwind CSS, e o motion de GSAP para Framer Motion, sem perder nenhuma funcionalidade existente.
-- [ ] Entregar o configurador de 5 passos com preço reativo, estado de passo visível e um único componente de stepper no lugar dos cinco blocos duplicados.
-- [ ] Interface inteiramente em PT-BR com valores monetários em BRL completo.
-- [ ] Reduzir dependências: remover `bootstrap`, `react-spinners`, `styled-components` e `gsap` do `package.json`.
+- [x] Aplicar o design system do mockup aprovado em 100% das telas: tokens de cor, tipografia e espaçamento em fonte única, zero hex solto em componente.
+- [x] Migrar a camada de estilo de `styled-components` + `bootstrap` para Tailwind CSS, e o motion de GSAP para Framer Motion, sem perder nenhuma funcionalidade existente.
+- [x] Entregar o configurador de 5 passos com preço reativo, estado de passo visível e um único componente de stepper no lugar dos cinco blocos duplicados.
+- [x] Interface inteiramente em PT-BR com valores monetários em BRL completo.
+- [x] Reduzir dependências: remover `bootstrap`, `react-spinners`, `styled-components` e `gsap` do `package.json`.
 
 ## Out of Scope
 
@@ -231,17 +231,17 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b, T21 | Done |
 | MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T19b, T20, T21 | Done |
 | MT07-10 | P2: Motion com função | T9, T16, T21, T24 | Done |
-| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23 | Implementing |
+| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | Done |
 | MT07-12 | P3: Rodapé e navegação | T14 | Done |
 
-**Coverage:** 12 total, 12 mapeados para tasks no plano, 10 concluídos.
+**Coverage:** 12 total, 12 mapeados para tasks no plano, 12 concluídos.
 
 ---
 
 ## Success Criteria
 
-- [ ] `npm run build` e `npm run lint` concluem sem erro nem aviso.
-- [ ] A suíte de testes cobre cada AC dos P1 e passa inteira.
+- [x] `npm run build` e `npm run lint` concluem sem erro nem aviso.
+- [x] A suíte de testes cobre cada AC dos P1 e passa inteira (113 testes).
 - [x] `package.json` não lista `bootstrap`, `react-spinners`, `styled-components` nem `gsap` — nem `react-imask`, órfão com a saída do Checkout legado.
-- [ ] Nenhum arquivo em `src/components` contém literal hexadecimal de cor da identidade.
-- [ ] O fluxo de compra vai do hero à confirmação do pedido em 5 passos, com o total correto em BRL completo.
+- [x] Nenhum arquivo em `src/components` contém literal hexadecimal de cor da identidade.
+- [x] O fluxo de compra vai do hero à confirmação do pedido em 5 passos, com o total correto em BRL completo.

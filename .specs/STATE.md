@@ -30,6 +30,6 @@
 ## Handoff
 
 **Feature**: redesign-mt07
-**Fase**: Execute — fase 4 (Integração e limpeza) em andamento
+**Fase**: Execute — fase 4 (Integração e limpeza) concluída; as 25 tasks fechadas
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T25 (README)
+**Próximo passo**: revisão do diff da fase 4 e verificação independente

@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/redesign-mt07/design.md`
-**Status**: In Progress
+**Status**: Complete
 
 ---
 
@@ -715,7 +715,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T25: Atualizar o README
+### T25: Atualizar o README ✅
 
 **What**: Reescrever o README com a stack nova, como rodar os testes e as capturas do redesenho.
 **Where**: `README.md`
@@ -725,9 +725,11 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Stack descrita corresponde ao `package.json` final
-- [ ] Comando de teste documentado
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Stack descrita corresponde ao `package.json` final
+- [x] Comandos documentados: `npm i`, `npm run dev`, `npm test`, `npm run build`, `npm run lint`
+- [x] Seção do que mudou no redesenho, com as dependências que saíram
+- [x] As capturas antigas ficam no repositório apresentadas como "antes"; o README diz que as do desenho novo ainda serão geradas
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build` — lint limpo, 113 testes verdes, build verde
 
 **Tests**: none
 **Gate**: build

@@ -1,67 +1,90 @@
-# Landing Page mt-07
+# Landing Page Yamaha MT-07
 
-<div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" height="40" alt="vscode logo"
-    />
-      <img width="12" />
-            <img width="12" />
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Vite-Dark.svg" height="40" alt="vite logo"  />
-    <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" height="40" alt="figma logo"  />
-    <img width="12" />
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/StyledComponents.svg" height="40" alt="Styled components"  />
-</div>
-<br/>
+Página de vitrine da Yamaha MT-07, com configurador de compra em cinco passos:
+cor, opcionais, dados pessoais, entrega e pagamento. Projeto de portfólio, sem
+fim comercial — não há backend nem gateway de pagamento: o pedido é simulado do
+início ao fim.
 
-<img src="./src/assets/images/yamahaLogo.png" alt="logo">
-<br/>
+<img src="./src/assets/images/yamahaLogo.png" alt="Yamaha">
 
-### 📷 Images
+## Stack
 
-![](./MacBook%20Pro-1719152539497.jpeg)
-![](./MacBook%20Pro-1719152555239.jpeg)
+| Camada | O que é usado |
+| ------ | ------------- |
+| Interface | React 18 |
+| Build | Vite 5 |
+| Estilo | Tailwind CSS v4, com os tokens do tema em `src/styles/index.css` |
+| Motion | Motion (Framer Motion), `motion/react` |
+| Tipos de prop | prop-types |
+| Testes | Vitest + Testing Library + jsdom |
+| Lint | ESLint |
 
-### 📱 Responsive Design
-
-![](./iPhone%2012%20Pro-1719152939398.jpeg)
-
-![](./iPhone%2012%20Pro-1719152589875.jpeg)
-
-##
+## Como rodar
 
 ```
 git clone https://github.com/Joaommsp/purchase-page-YAMAHA-MT-07.git
-```
-
-```
 cd purchase-page-YAMAHA-MT-07
 ```
 
 ```
-npm i
+npm i          # instala as dependências
+npm run dev    # sobe o servidor de desenvolvimento
+npm test       # roda a suíte (Vitest); use `npm test -- --run` para uma passada só
+npm run build  # gera o pacote de produção
+npm run lint   # análise estática
 ```
 
-```
-npm run dev
-```
+## O que mudou no redesenho
 
-## 🔗 Deploy
+O projeto nasceu em 2024 e foi refeito de ponta a ponta em 2026, com a direção
+visual "editorial de performance":
 
-Clique e acesse o projeto
+- **Estilo**: `styled-components` e `bootstrap` deram lugar ao Tailwind CSS v4.
+  Cor, tipografia, escala e ordem de empilhamento vivem num único bloco
+  `@theme`; nenhum componente declara hexadecimal. O acento passou a ser o ciano
+  `#2BD4CF`, no lugar do verde que carregava a página inteira.
+- **Motion**: GSAP com seletor de classe dentro de `useEffect` saiu; entrou
+  Motion, declarativo. `MotionConfig reducedMotion="user"` na raiz garante que
+  quem pede movimento reduzido no sistema receba todo conteúdo em estado final.
+- **Configurador**: os cinco blocos de indicador de passo duplicados viraram um
+  componente só, e os dez `useState` soltos viraram uma máquina de estado em
+  `useReducer` (`useConfigurator`), com preço, subtotal e parcela derivados de
+  função pura.
+- **Formulários**: campos controlados, máscaras brasileiras (CPF, telefone, CEP,
+  cartão) e validadores próprios — incluindo dígitos verificadores de CPF e
+  recusa de cartão vencido. O menu passou a abrir e fechar por estado do React,
+  sem `classList.toggle`.
+- **Testes**: o projeto não tinha nenhum. A suíte nasceu com o redesenho, sobre
+  os critérios de aceite da especificação em `.specs/features/redesign-mt07/`.
+- **Dependências**: `bootstrap`, `gsap`, `styled-components`, `react-spinners`,
+  `react-imask` e `react-router-dom` saíram do `package.json`.
+
+## Capturas
+
+As imagens abaixo são do **desenho antigo**, anterior ao redesenho de 2026, e
+ficam aqui como registro do ponto de partida. As capturas da versão nova ainda
+serão geradas.
+
+### Antes — desktop
+
+![Versão antiga em desktop](./MacBook%20Pro-1719152539497.jpeg)
+![Versão antiga em desktop](./MacBook%20Pro-1719152555239.jpeg)
+
+### Antes — mobile
+
+![Versão antiga em mobile](./iPhone%2012%20Pro-1719152939398.jpeg)
+![Versão antiga em mobile](./iPhone%2012%20Pro-1719152589875.jpeg)
+
+## Deploy
 
 <div align="left">
-  <a href="https://purchase-page-yamaha-mt-07.vercel.app/"><img src="https://skillicons.dev/icons?i=vercel" height="40" alt="vercel logo"  /></a>
+  <a href="https://purchase-page-yamaha-mt-07.vercel.app/"><img src="https://skillicons.dev/icons?i=vercel" height="40" alt="Vercel"  /></a>
 </div>
 
-## React + Vite
+## Crédito
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Desenvolvido por **João Marcos** — [LinkedIn](https://www.linkedin.com/in/joaomarcosmsp/)
+· [GitHub](https://github.com/Joaommsp).
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Projeto sem fim comercial, feito como estudo de interface e de fluxo de compra.
+Marca, nome e imagens da Yamaha MT-07 pertencem aos seus detentores.
