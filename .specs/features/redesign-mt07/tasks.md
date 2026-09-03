@@ -376,7 +376,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T13: Redesenhar a galeria
+### T13: Redesenhar a galeria ✅
 
 **What**: `Gallery` em trilho horizontal com scroll snap e legenda técnica por imagem.
 **Where**: `src/components/landing/Gallery.jsx`
@@ -386,9 +386,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Trilho com `snap-x`/`snap-start` e rolagem horizontal contida no próprio container
-- [ ] Cada figura com `aspect-ratio` fixo e `alt` descritivo
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Trilho com `snap-x`/`snap-start` e rolagem horizontal contida no próprio container
+- [x] Cada figura com `aspect-ratio` fixo e `alt` descritivo
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
 **Tests**: none
 **Gate**: build
