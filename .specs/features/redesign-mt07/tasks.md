@@ -542,20 +542,21 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T19: Criar o passo de entrega
+### T19: Criar o passo de entrega ✅
 
 **What**: `DeliveryStep` com CEP mascarado e campos de endereço controlados.
 **Where**: `src/components/configurator/steps/DeliveryStep.jsx`
 **Depends on**: T18
-**Reuses**: `src/lib/masks.js`, `src/lib/validation.js`
+**Reuses**: `src/components/configurator/FieldGrid.jsx`, `src/lib/masks.js`, `src/lib/validation.js`
 **Requirement**: MT07-08
 
 **Done when**:
 
-- [ ] CEP recebe máscara `00000-000` ao digitar
-- [ ] Campo obrigatório vazio exibe erro ao sair do campo
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 4 testes passam
+- [x] CEP recebe máscara `00000-000` ao digitar
+- [x] Campo obrigatório vazio exibe erro ao sair do campo
+- [x] CEP incompleto exibe `CEP incompleto`, a mensagem do próprio validador
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 4 testes passam (85 na suíte)
 
 **Tests**: unit
 **Gate**: quick

@@ -28,4 +28,4 @@
 **Feature**: redesign-mt07
 **Fase**: Execute — fase 3 (Configurador) em curso
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T19 (passo de entrega)
+**Próximo passo**: T19b (cartão vencido e CVV)
