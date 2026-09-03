@@ -333,7 +333,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T11: Redesenhar o hero
+### T11: Redesenhar o hero ✅
 
 **What**: `Hero` com nome, subtítulo, três números de desempenho, preço inicial e botão que abre o configurador.
 **Where**: `src/components/landing/Hero.jsx`
@@ -343,10 +343,10 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Nome, subtítulo, os três números e o preço em BRL completo estão no DOM na carga
-- [ ] Acionar o botão principal dispara `onOpenConfigurator`
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 5 testes passam
+- [x] Nome, subtítulo, os três números e o preço em BRL completo estão no DOM na carga
+- [x] Acionar o botão principal dispara `onOpenConfigurator`
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 5 testes passam
 
 **Tests**: unit
 **Gate**: quick

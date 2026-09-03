@@ -221,12 +221,12 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
 | MT07-01 | P1: Design system em tokens | Implementing | Done |
-| MT07-02 | P1: Hero e seções da landing | Design | Pending |
+| MT07-02 | P1: Hero e seções da landing | Design | Implementing |
 | MT07-03 | P1: Hero e seções da landing (ficha técnica) | Design | Pending |
 | MT07-04 | P1: Hero e seções da landing (galeria) | Design | Pending |
 | MT07-05 | P1: Configurador de 5 passos | Design | Implementing |
 | MT07-06 | P1: Configurador de 5 passos (preço) | Design | Implementing |
-| MT07-07 | P1: Hero e seções da landing (imagens) | Design | Pending |
+| MT07-07 | P1: Hero e seções da landing (imagens) | Design | Implementing |
 | MT07-08 | P1: Formulários de dados e entrega | Design | Implementing |
 | MT07-09 | P1: Pagamento e resumo do pedido | Design | Implementing |
 | MT07-10 | P2: Motion com função | Design | Implementing |
