@@ -24,7 +24,7 @@ function Hero({
 }) {
   return (
     <section
-      className="relative grid min-h-[560px] scroll-mt-16 grid-rows-[1fr_auto] overflow-hidden"
+      className="relative grid min-h-[560px] grid-rows-[1fr_auto] overflow-hidden"
       id={id}
     >
       {/* A foto preenche o bloco em posição absoluta: se não carregar, o hero
@@ -47,15 +47,15 @@ function Hero({
           </p>
 
           <h1 className="mt-3">
-            <span className="display-wide block text-[clamp(52px,10.5vw,148px)]">
+            <span className="display-wide block text-hero">
               MT-07
             </span>{" "}
-            <span className="display-narrow mt-1.5 block text-[clamp(20px,3.4vw,44px)] text-khaki">
+            <span className="display-narrow mt-1.5 block text-sub text-khaki">
               Master of torque
             </span>
           </h1>
 
-          <p className="mt-5 max-w-[38ch] text-[15px] font-light text-paper-dim">
+          <p className="mt-5 max-w-[38ch] text-body-sm font-light text-paper-dim">
             Motor CP2 de 689 cc, chassi compacto e resposta imediata. A Hyper
             Naked mais vendida da Yamaha, com mais de 160 mil unidades rodando
             pelo mundo.
@@ -75,7 +75,7 @@ function Hero({
         >
           {HERO_SPECS.map((spec) => (
             <li key={spec.id}>
-              <p className="data-figure text-[34px] leading-none">
+              <p className="data-figure text-figure">
                 <span>{spec.value}</span>
                 <span className="ml-1 font-mono text-sm text-khaki">
                   {spec.unitShort}

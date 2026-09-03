@@ -20,6 +20,26 @@
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Escala tipográfica editorial: os quatro degraus fluidos que as seções usam.
+     Sem eles cada componente inventa o seu clamp e a escala deixa de existir. */
+  --text-hero: clamp(52px, 10.5vw, 148px);
+  --text-hero--line-height: 0.82;
+  --text-section: clamp(28px, 4.4vw, 56px);
+  --text-section--line-height: 0.95;
+  --text-sub: clamp(20px, 3.4vw, 44px);
+  --text-sub--line-height: 1;
+  --text-figure: clamp(26px, 2.6vw, 34px);
+  --text-figure--line-height: 1;
+  --text-body-sm: 0.9375rem;
+  --text-body-sm--line-height: 1.55;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+
+  /* Escala de empilhamento: o modal do configurador precisa vencer o header fixo. */
+  --z-header: 40;
+  --z-overlay: 50;
+  --z-modal: 60;
 }
 
 @layer base {
@@ -43,6 +63,18 @@
   img {
     display: block;
     max-width: 100%;
+  }
+
+  /* Âncora do cabeçalho não pode enfiar o título embaixo do header fixo. */
+  html {
+    scroll-padding-top: 5rem;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 

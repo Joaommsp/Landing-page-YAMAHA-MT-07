@@ -17,11 +17,11 @@ function barWidth(ratio) {
 
 function SpecSheet({ id = SECTION_IDS.specSheet }) {
   return (
-    <section className="grid scroll-mt-16 bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
+    <section className="grid bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
       <div className="px-5 py-10 md:px-12 md:py-14">
         <Reveal>
           <p className="label-mono text-cyan">Engenharia</p>
-          <h2 className="display-tight mt-3.5 text-[clamp(28px,4.4vw,56px)]">
+          <h2 className="display-tight mt-3.5 text-section">
             Da pista
             <br />
             para <span className="text-cyan">a rua</span>

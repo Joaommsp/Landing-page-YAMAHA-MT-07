@@ -48,7 +48,7 @@ T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 ### Phase 2: Landing
 
 ```
-T8 → T9 → T10 → T11 → T12 → T13 → T14
+T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
 ```
 
 ### Phase 3: Configurador
@@ -418,6 +418,29 @@ T22 → T23 → T24 → T25
 
 ---
 
+### T14b: Fechar a escala do tema ✅
+
+**What**: Levar ao tema a escala tipográfica, a escala de empilhamento e o `scroll-padding`, substituindo os `clamp()` e tamanhos arbitrários que a fase 2 espalhou pelos componentes.
+**Where**: `src/styles/index.css`
+**Depends on**: T14
+**Reuses**: Tokens de T1
+**Requirement**: MT07-01
+
+**Done when**:
+
+- [x] `--text-hero`, `--text-section`, `--text-sub`, `--text-figure`, `--text-body-sm` e `--text-caption` no `@theme`, com altura de linha
+- [x] `--z-header`, `--z-overlay` e `--z-modal` definidos — o modal da fase 3 precisa vencer o header fixo
+- [x] `scroll-padding-top` global no `html`, com `scroll-behavior` desligado sob movimento reduzido
+- [x] Nenhum `text-[clamp(...)]`, `text-[NNpx]` ou `scroll-mt-16` resta nos componentes
+- [x] Gate check passa: 60 testes verdes, build verde, lint sem erro novo sobre o baseline
+
+**Tests**: none
+**Gate**: build
+
+**Commit**: `refactor(styles): move type scale and stacking order into the theme`
+
+---
+
 ### T15: Criar o indicador de passos
 
 **What**: `Stepper` único, com `role="tablist"`, substituindo os cinco blocos duplicados do pop-up antigo.
@@ -675,7 +698,7 @@ T22 → T23 → T24 → T25
 Phase 1 → Phase 2 → Phase 3 → Phase 4
 
 Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
-Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14
+Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
 Phase 3:  T15 → T16 → T17 → T18 → T19 → T20 → T21
 Phase 4:  T22 → T23 → T24 → T25
 ```
@@ -713,6 +736,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T12 | T11 | T11 → T12 | ✅ Match |
 | T13 | T12 | T12 → T13 | ✅ Match |
 | T14 | T13 | T13 → T14 | ✅ Match |
+| T14b | T14 | T14 → T14b | ✅ Match |
 | T15 | None (fase 2 concluída) | — | ✅ Match |
 | T16 | T15 | T15 → T16 | ✅ Match |
 | T17 | T16 | T16 → T17 | ✅ Match |
@@ -744,6 +768,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T12 | Apresentação | none | none | ✅ OK |
 | T13 | Apresentação | none | none | ✅ OK |
 | T14 | Apresentação | none | none | ✅ OK |
+| T14b | Config/estilo | none | none | ✅ OK |
 | T15 | Componente com interação | unit | unit | ✅ OK |
 | T16 | Componente com interação | unit | unit | ✅ OK |
 | T17 | Componente com interação | unit | unit | ✅ OK |

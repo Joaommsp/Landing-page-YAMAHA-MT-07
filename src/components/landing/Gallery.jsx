@@ -11,9 +11,9 @@ function figureIndex(index) {
 
 function Gallery({ id = SECTION_IDS.gallery }) {
   return (
-    <section className="scroll-mt-16 bg-ink py-10 md:py-14" id={id}>
+    <section className=" bg-ink py-10 md:py-14" id={id}>
       <Reveal className="flex flex-wrap items-end gap-6 px-5 pb-6 md:px-11">
-        <h2 className="display-tight text-[clamp(24px,3.4vw,44px)]">
+        <h2 className="display-tight text-section">
           Conforto
           <br />e postura
         </h2>
@@ -44,7 +44,7 @@ function Gallery({ id = SECTION_IDS.gallery }) {
               className="aspect-[42/29] w-full object-cover grayscale-[.3] transition duration-700 ease-editorial group-hover:scale-105 group-hover:grayscale-0"
               src={item.image}
             />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink to-transparent px-4 pb-3.5 pt-8 text-[13px] font-light text-paper-dim">
+            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink to-transparent px-4 pb-3.5 pt-8 text-caption font-light text-paper-dim">
               <span className="label-mono mb-1 block text-cyan">
                 {figureIndex(index)}
               </span>

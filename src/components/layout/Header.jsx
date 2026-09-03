@@ -16,7 +16,7 @@ const NAV_LINKS = [
 const MOBILE_MENU_ID = "menu-navegacao";
 
 const LINK_CLASS =
-  "group relative inline-block pb-1 text-[13px] tracking-[0.04em] " +
+  "group relative inline-block pb-1 text-caption tracking-[0.04em] " +
   "text-paper-dim transition-colors duration-300 hover:text-paper";
 
 function NavLink({ href, label, onSelect }) {
@@ -43,7 +43,7 @@ function Header({ onOpenConfigurator }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 flex items-center gap-6 border-b border-line bg-ink/90 px-5 py-4 backdrop-blur-md md:px-7">
+    <header className="sticky top-0 z-[var(--z-header)] flex items-center gap-6 border-b border-line bg-ink/90 px-5 py-4 backdrop-blur-md md:px-7">
       <a className="flex items-center" href={sectionHref(SECTION_IDS.hero)}>
         <img className="h-5 w-auto" src={Logo} alt="Yamaha" />
       </a>
