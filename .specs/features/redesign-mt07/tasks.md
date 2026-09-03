@@ -590,23 +590,25 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T20: Criar o passo de pagamento
+### T20: Criar o passo de pagamento ✅
 
 **What**: `PaymentStep` com resumo do pedido e cartão espelhando o formulário.
 **Where**: `src/components/configurator/steps/PaymentStep.jsx`
 **Depends on**: T19
-**Reuses**: `src/lib/currency.js`, `src/lib/masks.js`
+**Reuses**: `src/lib/currency.js`, `src/components/configurator/FieldGrid.jsx`, `src/components/ui/Button.jsx`
 **Requirement**: MT07-09
 
 **Done when**:
 
-- [ ] Resumo lista moto com a cor escolhida, entrega e cada opcional selecionado com preço
-- [ ] Digitar o número do cartão reflete os dígitos agrupados de quatro em quatro no cartão exibido
-- [ ] Digitar o titular reflete o nome em caixa alta no cartão exibido
-- [ ] Finalizar com formulário válido exibe carregamento e depois a confirmação
-- [ ] Finalizar com campo inválido mantém o passo e aponta o erro
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 8 testes passam
+- [x] Resumo lista moto com a cor escolhida, entrega e cada opcional selecionado com preço
+- [x] Subtotal da moto e total do pedido em linhas próprias, conforme AD-008
+- [x] Digitar o número do cartão reflete os dígitos agrupados de quatro em quatro no cartão exibido
+- [x] Digitar o titular reflete o nome em caixa alta no cartão exibido — caixa alta em JS, não só em CSS
+- [x] Finalizar com formulário válido exibe carregamento e depois a confirmação
+- [x] Finalizar com campo inválido mantém o passo e aponta o erro
+- [x] `status === "submitting"` desabilita botão e todos os campos
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 8 testes passam (100 na suíte)
 
 **Tests**: unit
 **Gate**: quick

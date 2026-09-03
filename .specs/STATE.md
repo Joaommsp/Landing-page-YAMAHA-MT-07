@@ -23,10 +23,11 @@
 | AD-017 | `validateExpiration` distingue formato de vencimento (`Validade inválida` × `Cartão vencido`) e o CVV ganha validador e tipo próprios | Validade só conferia o mês: `01/20` fechava pedido com cartão morto. E o CVV era tipo `text`, então três letras passavam. A referência de tempo entra por parâmetro para o teste não depender do relógio | 2026-09-03 |
 | AD-018 | `CONFIGURATOR_PANEL_ID` e `stepTabId(stepId)` vivem em `data/catalog.js` | O `aria-controls` do stepper e o `aria-labelledby` do painel são o mesmo contrato dos dois lados; escrever o id à mão nos dois arquivos repetiria o erro que a AD-014 corrigiu nas âncoras | 2026-09-03 |
 | AD-019 | `Field` (apresentação pura, em `ui/`) e `FieldGrid` (lista do catálogo, `maskByType`, validador no `blur`) servem aos três passos com formulário | Sem eles PersonalStep, DeliveryStep e PaymentStep repetiriam o mesmo encanamento três vezes — a duplicação que esta feature existe para matar. O erro do fluxo (avançar/finalizar) chega por prop e tem precedência sobre o erro de saída de campo | 2026-09-03 |
+| AD-020 | O passo de pagamento não traz as abas de forma de pagamento (Cartão/Pix/Financiamento) que o mockup desenha | Só o cartão é simulado nesta entrega; três abas em que duas não fazem nada seriam controle morto na tela. Se Pix e financiamento entrarem, entram com comportamento | 2026-09-03 |
 
 ## Handoff
 
 **Feature**: redesign-mt07
 **Fase**: Execute — fase 3 (Configurador) em curso
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T20 (passo de pagamento)
+**Próximo passo**: T21 (shell do configurador)
