@@ -196,3 +196,46 @@ export const STEPS = [
 
 export const FIRST_STEP = STEPS[0].id;
 export const LAST_STEP = STEPS[STEPS.length - 1].id;
+
+/* Vocabulário de tipo de campo: escolhe a máscara na entrada e o validador na
+   saída. Fica no catálogo para que os dois lados leiam a mesma lista. */
+export const FIELD_TYPES = {
+  TEXT: "text",
+  EMAIL: "email",
+  CPF: "cpf",
+  PHONE: "phone",
+  CEP: "cep",
+  CARD: "card",
+  EXPIRATION: "expiration",
+};
+
+/* Teto do e-mail pela RFC 5321: cortar antes disso trancaria endereço legítimo
+   e truncaria valor colado. */
+const EMAIL_MAX_LENGTH = 254;
+
+/* Campos de cada passo com formulário: rótulo, ordem, tipo e teto de
+   caracteres são catálogo de produto — o mesmo teto alimenta o contador
+   exibido no campo. */
+export const STEP_FIELDS = {
+  [STEP_IDS.PERSONAL]: [
+    { name: "firstName", label: "Nome", type: FIELD_TYPES.TEXT, maxLength: 40 },
+    { name: "lastName", label: "Sobrenome", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "cpf", label: "CPF", type: FIELD_TYPES.CPF, maxLength: 14 },
+    { name: "email", label: "E-mail", type: FIELD_TYPES.EMAIL, maxLength: EMAIL_MAX_LENGTH },
+    { name: "phone", label: "Telefone", type: FIELD_TYPES.PHONE, maxLength: 15 },
+  ],
+  [STEP_IDS.DELIVERY]: [
+    { name: "cep", label: "CEP", type: FIELD_TYPES.CEP, maxLength: 9 },
+    { name: "street", label: "Rua", type: FIELD_TYPES.TEXT, maxLength: 80 },
+    { name: "number", label: "Número", type: FIELD_TYPES.TEXT, maxLength: 10 },
+    { name: "neighborhood", label: "Bairro", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "city", label: "Cidade", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "state", label: "Estado", type: FIELD_TYPES.TEXT, maxLength: 2 },
+  ],
+  [STEP_IDS.PAYMENT]: [
+    { name: "cardHolder", label: "Nome no cartão", type: FIELD_TYPES.TEXT, maxLength: 40 },
+    { name: "cardNumber", label: "Número do cartão", type: FIELD_TYPES.CARD, maxLength: 19 },
+    { name: "cardExpiration", label: "Validade", type: FIELD_TYPES.EXPIRATION, maxLength: 5 },
+    { name: "cardCvv", label: "CVV", type: FIELD_TYPES.TEXT, maxLength: 4 },
+  ],
+};

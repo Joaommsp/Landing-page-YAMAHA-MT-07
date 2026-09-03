@@ -2,6 +2,10 @@ import {
   validateRequired,
   validateEmail,
   validateCPF,
+  validatePhone,
+  validateCEP,
+  validateCard,
+  validateExpiration,
   validateStep,
   MESSAGES,
 } from "../validation";
@@ -62,6 +66,39 @@ describe("validateCPF", () => {
     expect(validateCPF("529.982.247-25")).toBe("");
     expect(validateCPF("52998224725")).toBe("");
     expect(validateCPF("12345678909")).toBe("");
+  });
+});
+
+describe("validatePhone", () => {
+  it("acusa 'Telefone incompleto' abaixo de dez dígitos", () => {
+    expect(validatePhone("(31) 9888")).toBe("Telefone incompleto");
+    expect(validatePhone("313333444")).toBe("Telefone incompleto");
+    expect(validatePhone("(31) 3333-4444")).toBe("");
+    expect(validatePhone("(31) 98888-7777")).toBe("");
+  });
+});
+
+describe("validateCEP", () => {
+  it("acusa 'CEP incompleto' fora dos oito dígitos", () => {
+    expect(validateCEP("30140-07")).toBe("CEP incompleto");
+    expect(validateCEP("30140-071")).toBe("");
+  });
+});
+
+describe("validateCard", () => {
+  it("acusa 'Número do cartão incompleto' abaixo de dezesseis dígitos", () => {
+    expect(validateCard("4429 8812 0043")).toBe("Número do cartão incompleto");
+    expect(validateCard("4429 8812 0043 1197")).toBe("");
+  });
+});
+
+describe("validateExpiration", () => {
+  it("acusa 'Validade inválida' fora de MM/AA ou com mês fora de 01 a 12", () => {
+    expect(validateExpiration("1229")).toBe("Validade inválida");
+    expect(validateExpiration("13/29")).toBe("Validade inválida");
+    expect(validateExpiration("00/29")).toBe("Validade inválida");
+    expect(validateExpiration("12/29")).toBe("");
+    expect(validateExpiration("01/30")).toBe("");
   });
 });
 

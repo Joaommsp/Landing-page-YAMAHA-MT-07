@@ -1,4 +1,4 @@
-import { formatBRL, formatParcel } from "../currency";
+import { formatBRL, formatParcel, NO_DATA } from "../currency";
 import { BASE_PRICE, INSTALLMENTS } from "../../data/catalog";
 
 describe("formatBRL", () => {
@@ -6,8 +6,11 @@ describe("formatBRL", () => {
     expect(formatBRL(BASE_PRICE)).toBe("R$ 48.500,00");
   });
 
-  it("formata zero como R$ 0,00", () => {
+  it("distingue zero real de ausência de dado", () => {
     expect(formatBRL(0)).toBe("R$ 0,00");
+    expect(formatBRL(undefined)).toBe(NO_DATA);
+    expect(formatBRL(null)).toBe(NO_DATA);
+    expect(formatBRL(Number.NaN)).toBe(NO_DATA);
   });
 
   it("não abrevia valores altos nem usa notação compacta", () => {

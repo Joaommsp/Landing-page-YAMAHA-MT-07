@@ -1,6 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 
-import { useConfigurator } from "../useConfigurator";
+import {
+  useConfigurator,
+  SUBMIT_STATUS,
+  SUBMIT_DELAY_MS,
+} from "../useConfigurator";
 import {
   BASE_PRICE,
   DELIVERY_PRICE,
@@ -14,6 +18,16 @@ import {
 import { MESSAGES } from "../../lib/validation";
 
 const START_TOTAL = BASE_PRICE + DELIVERY_PRICE;
+
+/* Roda o corpo com relógio controlado: a confirmação do pedido é assíncrona. */
+const withFakeTimers = (run) => {
+  vi.useFakeTimers();
+  try {
+    run();
+  } finally {
+    vi.useRealTimers();
+  }
+};
 const windscreen = OPTIONS.find((option) => option.id === "windscreen");
 const kit = OPTIONS.find((option) => option.id === "dark-side-kit");
 const paidColor = COLORS.find((color) => color.surcharge > 0);
@@ -61,10 +75,11 @@ const advanceTo = (result, step) => {
 };
 
 describe("useConfigurator — preço", () => {
-  it("começa no preço base somado à entrega, sem opcional marcado", () => {
+  it("começa no preço da moto, com a entrega somada só no total do pedido", () => {
     const { result } = renderHook(() => useConfigurator());
 
     expect(result.current.state.optionIds).toEqual([]);
+    expect(result.current.subtotal).toBe(BASE_PRICE);
     expect(result.current.total).toBe(START_TOTAL);
   });
 
@@ -73,6 +88,7 @@ describe("useConfigurator — preço", () => {
 
     act(() => result.current.actions.toggleOption(windscreen.id));
 
+    expect(result.current.subtotal).toBe(BASE_PRICE + windscreen.price);
     expect(result.current.total).toBe(START_TOTAL + windscreen.price);
   });
 
@@ -84,7 +100,7 @@ describe("useConfigurator — preço", () => {
     act(() => result.current.actions.toggleOption(windscreen.id));
 
     expect(result.current.state.optionIds).toEqual([kit.id]);
-    expect(result.current.total).toBe(START_TOTAL + kit.price);
+    expect(result.current.subtotal).toBe(BASE_PRICE + kit.price);
   });
 
   it("soma todos os opcionais do catálogo quando todos estão marcados", () => {
@@ -95,25 +111,30 @@ describe("useConfigurator — preço", () => {
     });
 
     const allOptions = OPTIONS.reduce((sum, option) => sum + option.price, 0);
+    expect(result.current.subtotal).toBe(BASE_PRICE + allOptions);
     expect(result.current.total).toBe(START_TOTAL + allOptions);
   });
 
-  it("soma o acréscimo da cor escolhida ao total", () => {
+  it("soma o acréscimo da cor escolhida ao preço da moto", () => {
     const { result } = renderHook(() => useConfigurator());
 
     act(() => result.current.actions.selectColor(paidColor.id));
 
+    expect(result.current.subtotal).toBe(BASE_PRICE + paidColor.surcharge);
     expect(result.current.total).toBe(START_TOTAL + paidColor.surcharge);
   });
 
-  it("expõe a parcela como o total dividido pelo parcelamento do catálogo", () => {
+  it("parcela o preço da moto, não a entrega", () => {
     const { result } = renderHook(() => useConfigurator());
 
     act(() => result.current.actions.toggleOption(kit.id));
 
     expect(result.current.parcel).toBeCloseTo(
-      result.current.total / INSTALLMENTS,
+      result.current.subtotal / INSTALLMENTS,
       5
+    );
+    expect(result.current.parcel).toBeLessThan(
+      result.current.total / INSTALLMENTS
     );
   });
 });
@@ -181,27 +202,55 @@ describe("useConfigurator — navegação", () => {
 });
 
 describe("useConfigurator — conclusão", () => {
-  it("só confirma o pedido quando todos os passos de formulário estão válidos", () => {
+  it("não confirma e leva ao primeiro passo inválido quando falta dado", () => {
     const { result } = renderHook(() => useConfigurator());
 
     advanceTo(result, STEP_IDS.PAYMENT);
     act(() => result.current.actions.submit());
 
-    expect(result.current.state.confirmed).toBe(false);
-    expect(result.current.state.errors.cardHolder).toBe(MESSAGES.required);
+    expect(result.current.state.status).toBe(SUBMIT_STATUS.idle);
     expect(result.current.state.step).toBe(STEP_IDS.PAYMENT);
+    expect(result.current.state.errors.cardHolder).toBe(MESSAGES.required);
 
     fill(result, "payment", validPayment);
-    act(() => result.current.actions.submit());
-
-    expect(result.current.state.errors).toEqual({});
-    expect(result.current.state.confirmed).toBe(true);
-
     act(() => result.current.actions.setField("delivery", "city", ""));
     act(() => result.current.actions.submit());
 
-    expect(result.current.state.confirmed).toBe(false);
+    expect(result.current.state.status).toBe(SUBMIT_STATUS.idle);
     expect(result.current.state.step).toBe(STEP_IDS.DELIVERY);
     expect(result.current.state.errors.city).toBe(MESSAGES.required);
+  });
+
+  it("passa por carregamento antes de confirmar o pedido válido", () => {
+    withFakeTimers(() => {
+      const { result } = renderHook(() => useConfigurator());
+
+      advanceTo(result, STEP_IDS.PAYMENT);
+      fill(result, "payment", validPayment);
+      act(() => result.current.actions.submit());
+
+      expect(result.current.state.errors).toEqual({});
+      expect(result.current.state.status).toBe(SUBMIT_STATUS.submitting);
+
+      act(() => vi.advanceTimersByTime(SUBMIT_DELAY_MS));
+
+      expect(result.current.state.status).toBe(SUBMIT_STATUS.confirmed);
+    });
+  });
+
+  it("reabre o pedido quando um campo é editado depois de confirmado", () => {
+    withFakeTimers(() => {
+      const { result } = renderHook(() => useConfigurator());
+
+      advanceTo(result, STEP_IDS.PAYMENT);
+      fill(result, "payment", validPayment);
+      act(() => result.current.actions.submit());
+      act(() => vi.advanceTimersByTime(SUBMIT_DELAY_MS));
+      expect(result.current.state.status).toBe(SUBMIT_STATUS.confirmed);
+
+      act(() => result.current.actions.setField("payment", "cardCvv", "999"));
+
+      expect(result.current.state.status).toBe(SUBMIT_STATUS.idle);
+    });
   });
 });

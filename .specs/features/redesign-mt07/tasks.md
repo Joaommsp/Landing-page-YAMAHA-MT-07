@@ -42,7 +42,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ### Phase 1: Fundação
 
 ```
-T1 → T2 → T3 → T4 → T5 → T6 → T7
+T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 ```
 
 ### Phase 2: Landing
@@ -239,6 +239,33 @@ T22 → T23 → T24 → T25
 **Gate**: quick
 
 **Commit**: `feat(hooks): add configurator state machine`
+
+---
+
+### T7b: Separar subtotal de total e fechar as lacunas de validação ✅
+
+**What**: Aplicar as decisões AD-008 a AD-013 sobre a fundação: subtotal da moto separado do total do pedido, submissão assíncrona por `status`, validação de telefone, CEP, cartão e validade, `STEP_FIELDS` no catálogo, elo `maskByType` e `formatBRL` devolvendo `—` sem dado.
+**Where**: `src/data/catalog.js`, `src/lib/{currency,masks,validation}.js`, `src/hooks/useConfigurator.js`
+**Depends on**: T7
+**Reuses**: Módulos da fase 1
+**Requirement**: MT07-05, MT07-06, MT07-08, MT07-09
+
+**Done when**:
+
+- [x] Hook expõe `subtotal` (base + cor + opcionais), `total` (subtotal + entrega) e `parcel` (subtotal ÷ 24)
+- [x] `status` idle → submitting → confirmed; editar campo volta a idle
+- [x] `Telefone incompleto`, `CEP incompleto`, `Número do cartão incompleto` e `Validade inválida` implementadas
+- [x] `STEP_FIELDS` e `FIELD_TYPES` vivem em `data/catalog.js`; `validation.js` só com funções puras
+- [x] `maskByType` e `maskExpiration` disponíveis para T18–T20
+- [x] `formatBRL` de valor não finito devolve `—`
+- [x] Edge case do `spec.md` corrigido e AD-008 a AD-013 registradas no `STATE.md`
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 51 testes passam na suíte (era 42)
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `fix(configurator): split subtotal from total and close validation gaps`
 
 ---
 
@@ -580,7 +607,7 @@ T22 → T23 → T24 → T25
 
 ### T23: Remover as dependências mortas
 
-**What**: Desinstalar `bootstrap`, `react-spinners`, `styled-components` e `gsap` e apagar os `styles.js` e componentes antigos que ficaram órfãos.
+**What**: Desinstalar `bootstrap`, `react-spinners`, `styled-components`, `gsap` e `react-imask` e apagar os `styles.js` e componentes antigos que ficaram órfãos.
 **Where**: `package.json`
 **Depends on**: T22
 **Reuses**: NONE
@@ -588,8 +615,8 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Nenhuma das quatro dependências consta em `package.json`
-- [ ] `grep -r "styled-components\|gsap\|bootstrap" src` não retorna nada
+- [ ] Nenhuma das cinco dependências consta em `package.json` (`react-imask` fica órfão quando o Checkout legado sai)
+- [ ] `grep -r "styled-components\|gsap\|bootstrap\|react-imask" src` não retorna nada
 - [ ] Nenhum arquivo `styles.js` resta em `src`
 - [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
@@ -647,7 +674,7 @@ T22 → T23 → T24 → T25
 ```
 Phase 1 → Phase 2 → Phase 3 → Phase 4
 
-Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7
+Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14
 Phase 3:  T15 → T16 → T17 → T18 → T19 → T20 → T21
 Phase 4:  T22 → T23 → T24 → T25
@@ -662,6 +689,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T1 | 1 arquivo de tema | ✅ Granular |
 | T2 | 1 config | ✅ Granular |
 | T3–T7 | 1 módulo cada | ✅ Granular |
+| T7b | correção transversal da fase 1 (AD-008..013) | ✅ Granular |
 | T8–T14 | 1 componente cada | ✅ Granular |
 | T15–T21 | 1 componente cada | ✅ Granular |
 | T22–T25 | 1 arquivo cada | ✅ Granular |
@@ -677,6 +705,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T5 | T4 | T4 → T5 | ✅ Match |
 | T6 | T5 | T5 → T6 | ✅ Match |
 | T7 | T6 | T6 → T7 | ✅ Match |
+| T7b | T7 | T7 → T7b | ✅ Match |
 | T8 | None (fase 1 concluída) | — | ✅ Match |
 | T9 | T8 | T8 → T9 | ✅ Match |
 | T10 | T9 | T9 → T10 | ✅ Match |
@@ -707,6 +736,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T5 | Lógica pura | unit | unit | ✅ OK |
 | T6 | Lógica pura | unit | unit | ✅ OK |
 | T7 | Hook de estado | unit | unit | ✅ OK |
+| T7b | Dados + lógica pura + hook | unit | unit | ✅ OK |
 | T8 | Apresentação | none | none | ✅ OK |
 | T9 | Apresentação | none | none | ✅ OK |
 | T10 | Componente com estado | unit | unit | ✅ OK |

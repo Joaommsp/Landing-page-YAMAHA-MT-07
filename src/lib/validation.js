@@ -1,46 +1,30 @@
-import { CPF_DIGITS, onlyDigits } from "./masks";
-import { STEP_IDS } from "../data/catalog";
+import {
+  CARD_DIGITS,
+  CEP_DIGITS,
+  CPF_DIGITS,
+  PHONE_MIN_DIGITS,
+  onlyDigits,
+} from "./masks";
+import { FIELD_TYPES, STEP_FIELDS } from "../data/catalog";
 
 /* Mensagens de erro em fonte única: a spec fixa o texto exibido ao usuário. */
 export const MESSAGES = {
   required: "Campo obrigatório",
   email: "Informe um e-mail válido",
   cpf: "CPF inválido",
+  phone: "Telefone incompleto",
+  cep: "CEP incompleto",
+  card: "Número do cartão incompleto",
+  expiration: "Validade inválida",
 };
 
 /* Módulo do cálculo mod-11 do CPF. Coincide numericamente com a quantidade de
    dígitos, mas é outra coisa: separado para que mexer num não quebre o outro. */
 const CPF_CHECK_MODULUS = 11;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
-/* Teto do e-mail pela RFC 5321: cortar antes disso trancaria endereço legítimo
-   e truncaria valor colado. */
-const EMAIL_MAX_LENGTH = 254;
-
-/* Regras de campo por passo: rótulo, tipo de validação e teto de caracteres —
-   o mesmo teto alimenta o contador exibido no formulário. */
-export const STEP_FIELDS = {
-  [STEP_IDS.PERSONAL]: [
-    { name: "firstName", label: "Nome", type: "text", maxLength: 40 },
-    { name: "lastName", label: "Sobrenome", type: "text", maxLength: 60 },
-    { name: "cpf", label: "CPF", type: "cpf", maxLength: 14 },
-    { name: "email", label: "E-mail", type: "email", maxLength: EMAIL_MAX_LENGTH },
-    { name: "phone", label: "Telefone", type: "phone", maxLength: 15 },
-  ],
-  [STEP_IDS.DELIVERY]: [
-    { name: "cep", label: "CEP", type: "cep", maxLength: 9 },
-    { name: "street", label: "Rua", type: "text", maxLength: 80 },
-    { name: "number", label: "Número", type: "text", maxLength: 10 },
-    { name: "neighborhood", label: "Bairro", type: "text", maxLength: 60 },
-    { name: "city", label: "Cidade", type: "text", maxLength: 60 },
-    { name: "state", label: "Estado", type: "text", maxLength: 2 },
-  ],
-  [STEP_IDS.PAYMENT]: [
-    { name: "cardHolder", label: "Nome no cartão", type: "text", maxLength: 40 },
-    { name: "cardNumber", label: "Número do cartão", type: "card", maxLength: 19 },
-    { name: "cardExpiration", label: "Validade", type: "text", maxLength: 5 },
-    { name: "cardCvv", label: "CVV", type: "text", maxLength: 4 },
-  ],
-};
+const EXPIRATION_PATTERN = /^(\d{2})\/(\d{2})$/;
+const FIRST_MONTH = 1;
+const LAST_MONTH = 12;
 
 export function validateRequired(value) {
   return String(value ?? "").trim() ? "" : MESSAGES.required;
@@ -75,14 +59,43 @@ export function validateCPF(value) {
   return "";
 }
 
+export function validatePhone(value) {
+  return onlyDigits(value).length >= PHONE_MIN_DIGITS ? "" : MESSAGES.phone;
+}
+
+export function validateCEP(value) {
+  return onlyDigits(value).length === CEP_DIGITS ? "" : MESSAGES.cep;
+}
+
+export function validateCard(value) {
+  return onlyDigits(value).length === CARD_DIGITS ? "" : MESSAGES.card;
+}
+
+export function validateExpiration(value) {
+  const match = EXPIRATION_PATTERN.exec(String(value ?? "").trim());
+  if (!match) return MESSAGES.expiration;
+
+  const month = Number(match[1]);
+  return month >= FIRST_MONTH && month <= LAST_MONTH
+    ? ""
+    : MESSAGES.expiration;
+}
+
+const VALIDATOR_BY_TYPE = {
+  [FIELD_TYPES.EMAIL]: validateEmail,
+  [FIELD_TYPES.CPF]: validateCPF,
+  [FIELD_TYPES.PHONE]: validatePhone,
+  [FIELD_TYPES.CEP]: validateCEP,
+  [FIELD_TYPES.CARD]: validateCard,
+  [FIELD_TYPES.EXPIRATION]: validateExpiration,
+};
+
 export function validateField(field, value) {
   const required = validateRequired(value);
   if (required) return required;
 
-  if (field.type === "email") return validateEmail(value);
-  if (field.type === "cpf") return validateCPF(value);
-
-  return "";
+  const validate = VALIDATOR_BY_TYPE[field.type];
+  return validate ? validate(value) : "";
 }
 
 export function validateStep(stepId, values = {}) {

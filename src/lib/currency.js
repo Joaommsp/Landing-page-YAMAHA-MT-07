@@ -13,12 +13,16 @@ const brl = new Intl.NumberFormat("pt-BR", {
    e os testes trabalham com espaço comum. */
 const NARROW_SPACES = /[\u00a0\u202f]/g;
 
+/* Sem dado não é zero: valor ausente vira travessão, para a interface nunca
+   afirmar "R$ 0,00" onde na verdade não há informação. */
+export const NO_DATA = "—";
+
 export function formatBRL(value) {
-  const amount = Number.isFinite(value) ? value : 0;
-  return brl.format(amount).replace(NARROW_SPACES, " ");
+  if (!Number.isFinite(value)) return NO_DATA;
+  return brl.format(value).replace(NARROW_SPACES, " ");
 }
 
 export function formatParcel(total, installments = INSTALLMENTS) {
-  if (!installments) return formatBRL(0);
+  // Divisão sem parcela vira Infinity e cai no travessão, não em "R$ 0,00".
   return formatBRL(total / installments);
 }

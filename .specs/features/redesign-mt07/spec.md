@@ -106,9 +106,9 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 3. WHILE o passo atual é o primeiro o sistema SHALL desabilitar a navegação para o passo anterior.
 4. WHILE o passo atual é o último o sistema SHALL desabilitar a navegação para o próximo passo.
 5. WHEN a pessoa seleciona uma cor THEN o sistema SHALL trocar a imagem exibida da moto e marcar aquela cor como selecionada.
-6. WHEN a pessoa marca um opcional THEN o sistema SHALL somar o preço do opcional ao total, mantendo o preço base de R$ 48.500,00 intacto.
-7. WHEN a pessoa desmarca um opcional THEN o sistema SHALL subtrair aquele preço do total.
-8. The system SHALL exibir o valor da parcela como o total dividido por 24.
+6. WHEN a pessoa marca um opcional THEN o sistema SHALL somar o preço do opcional ao subtotal, mantendo o preço base de R$ 48.500,00 intacto.
+7. WHEN a pessoa desmarca um opcional THEN o sistema SHALL subtrair aquele preço do subtotal.
+8. The system SHALL exibir o valor da parcela como o subtotal da moto dividido por 24, sem parcelar a entrega.
 9. IF a pessoa fecha o configurador THEN o sistema SHALL preservar as escolhas já feitas ao reabrir.
 
 **Independent Test**: Abrir o configurador, trocar de cor, marcar dois opcionais e conferir o total somando exatamente os valores do catálogo.
@@ -148,7 +148,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 3. WHEN a pessoa digita o nome do titular THEN o sistema SHALL refletir o nome em caixa alta no cartão exibido.
 4. The system SHALL exibir todo valor monetário em BRL por extenso (ex.: `R$ 48.500,00`), sem notação abreviada.
 5. WHEN a pessoa aciona "Finalizar compra" com o formulário válido THEN o sistema SHALL exibir estado de carregamento e, ao fim, a confirmação do pedido.
-6. IF a pessoa aciona "Finalizar compra" com algum campo inválido THEN o sistema SHALL manter o passo atual e apontar o campo com erro.
+6. IF a pessoa aciona "Finalizar compra" com algum campo inválido THEN o sistema SHALL levar ao primeiro passo com erro e apontar o campo, exibindo `Telefone incompleto`, `CEP incompleto`, `Número do cartão incompleto` ou `Validade inválida` conforme o caso (AD-010).
 
 **Independent Test**: Preencher o cartão, ver o número espelhado no cartão desenhado e finalizar vendo a confirmação.
 
@@ -208,8 +208,8 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 ## Edge Cases
 
 - IF uma imagem do acervo falhar ao carregar THEN o sistema SHALL manter a altura reservada do bloco, sem deslocar o conteúdo vizinho.
-- IF a pessoa não seleciona nenhum opcional THEN o sistema SHALL exibir o total igual ao preço base de R$ 48.500,00.
-- IF a pessoa seleciona todos os opcionais do catálogo THEN o sistema SHALL exibir o total igual ao preço base somado a todos os opcionais.
+- IF a pessoa não seleciona nenhum opcional THEN o sistema SHALL exibir subtotal de R$ 48.500,00 e total do pedido de R$ 50.500,00, com a entrega como linha própria do resumo (AD-008).
+- IF a pessoa seleciona todos os opcionais do catálogo THEN o sistema SHALL exibir subtotal igual ao preço base somado a todos os opcionais, e total igual a esse subtotal somado à entrega.
 - WHEN a largura da tela é menor que 768px THEN o sistema SHALL empilhar o configurador em coluna única, mantendo o indicador de passos acessível.
 - IF o valor de um campo mascarado é colado já formatado THEN o sistema SHALL preservar apenas os dígitos e reaplicar a máscara.
 - IF a pessoa navega até o último passo e volta ao primeiro THEN o sistema SHALL manter as seleções de cor e opcionais.

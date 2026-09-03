@@ -11,10 +11,16 @@
 | AD-005 | Estado do configurador em `useReducer` (`useConfigurator`) | Os 10 `useState` do pop-up antigo são uma máquina de estado só; total vira função pura testável | 2026-09-02 |
 | AD-006 | Vitest + Testing Library como suíte de teste | Runner nativo do Vite, que o projeto já usa | 2026-09-02 |
 | AD-007 | Sem persistência: estado só em memória | Não há backend; `localStorage` seria estado sem dono | 2026-09-02 |
+| AD-008 | Subtotal (moto) separado do total (moto + entrega); parcela é subtotal/24 | O cabeçalho do configurador mostra o preço do produto; a entrega é linha do resumo e não é parcelada. A spec dizia "total = preço base" e estava errada — corrigida junto | 2026-09-02 |
+| AD-009 | Submissão assíncrona: `status` idle → submitting → confirmed, no hook | MT07-09 pede carregamento antes da confirmação; se o estado ficasse no PaymentStep a máquina de estado se partiria em duas | 2026-09-02 |
+| AD-010 | Telefone, CEP, cartão e validade validados, com mensagens fixas | Sem isso o `type` do campo era garantia falsa: valor incompleto passava e o pedido fechava com dado quebrado | 2026-09-02 |
+| AD-011 | `STEP_FIELDS` mora em `data/catalog.js`, não em `lib/validation.js` | Rótulo, ordem, tipo e teto de caracteres são catálogo de produto; `validation.js` fica só com funções puras | 2026-09-02 |
+| AD-012 | `maskByType(type, value)` como elo único tipo → máscara | Evita o mesmo `switch` repetido em PersonalStep, DeliveryStep e PaymentStep | 2026-09-02 |
+| AD-013 | `formatBRL` devolve `—` para valor não finito, nunca `R$ 0,00` | Regra da casa: distinguir "sem dado" de "zero real" | 2026-09-02 |
 
 ## Handoff
 
 **Feature**: redesign-mt07
-**Fase**: Tasks aprovadas — Execute não iniciado
-**Branch**: (a criar) `feat/redesign-2026`
-**Próximo passo**: T1
+**Fase**: Execute — fase 1 (Fundação) concluída
+**Branch**: `feat/redesign-2026`
+**Próximo passo**: T8 (fase 2, Landing)

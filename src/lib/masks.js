@@ -1,12 +1,16 @@
+import { FIELD_TYPES } from "../data/catalog";
+
 /* Máscaras de entrada brasileiras. Toda função aceita valor cru ou já
    formatado: guarda apenas os dígitos e reaplica o formato, para que colar um
    valor pronto dê o mesmo resultado que digitá-lo. */
 
 export const CPF_DIGITS = 11;
-const CEP_DIGITS = 8;
-const CARD_DIGITS = 16;
+export const CEP_DIGITS = 8;
+export const CARD_DIGITS = 16;
+export const PHONE_MIN_DIGITS = 10;
+export const EXPIRATION_DIGITS = 4;
+
 const PHONE_MAX_DIGITS = 11;
-const PHONE_LANDLINE_DIGITS = 10;
 const PHONE_AREA_DIGITS = 2;
 const CARD_GROUP_SIZE = 4;
 const PHONE_MOBILE_PREFIX = 5;
@@ -32,7 +36,7 @@ export function maskPhone(value) {
   if (digits.length <= PHONE_AREA_DIGITS) return `(${digits}`;
 
   const prefixSize =
-    digits.length > PHONE_LANDLINE_DIGITS
+    digits.length > PHONE_MIN_DIGITS
       ? PHONE_MOBILE_PREFIX
       : PHONE_LANDLINE_PREFIX;
   const area = digits.slice(0, PHONE_AREA_DIGITS);
@@ -50,4 +54,24 @@ export function maskCEP(value) {
 export function maskCard(value) {
   const digits = onlyDigits(value).slice(0, CARD_DIGITS);
   return digits.replace(CARD_GROUP_PATTERN, "$1 ");
+}
+
+export function maskExpiration(value) {
+  const digits = onlyDigits(value).slice(0, EXPIRATION_DIGITS);
+  return digits.replace(/^(\d{2})(\d)/, "$1/$2");
+}
+
+const MASK_BY_TYPE = {
+  [FIELD_TYPES.CPF]: maskCPF,
+  [FIELD_TYPES.PHONE]: maskPhone,
+  [FIELD_TYPES.CEP]: maskCEP,
+  [FIELD_TYPES.CARD]: maskCard,
+  [FIELD_TYPES.EXPIRATION]: maskExpiration,
+};
+
+/* Elo único entre o tipo do campo e sua máscara: o formulário não repete o
+   mesmo switch em cada passo. Tipo sem máscara passa o texto adiante. */
+export function maskByType(type, value) {
+  const mask = MASK_BY_TYPE[type];
+  return mask ? mask(value) : String(value ?? "");
 }

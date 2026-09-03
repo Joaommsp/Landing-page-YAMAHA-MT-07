@@ -8,6 +8,8 @@ import {
   GALLERY,
   STEPS,
   STEP_IDS,
+  STEP_FIELDS,
+  FIELD_TYPES,
 } from "../catalog";
 
 describe("catálogo de produto — preços", () => {
@@ -123,5 +125,32 @@ describe("catálogo de produto — passos do configurador", () => {
       STEP_IDS.DELIVERY,
       STEP_IDS.PAYMENT,
     ]);
+  });
+});
+
+describe("catálogo de produto — campos dos passos", () => {
+  it("descreve os campos dos três passos de formulário com rótulo, tipo e teto", () => {
+    const steps = [STEP_IDS.PERSONAL, STEP_IDS.DELIVERY, STEP_IDS.PAYMENT];
+    const known = Object.values(FIELD_TYPES);
+
+    steps.forEach((step) => {
+      expect(STEP_FIELDS[step].length).toBeGreaterThan(0);
+
+      STEP_FIELDS[step].forEach((field) => {
+        expect(field.name).toBeTruthy();
+        expect(field.label).toBeTruthy();
+        expect(known).toContain(field.type);
+        expect(field.maxLength).toBeGreaterThan(0);
+      });
+    });
+
+    expect(STEP_FIELDS[STEP_IDS.COLOR]).toBeUndefined();
+    expect(STEP_FIELDS[STEP_IDS.OPTIONS]).toBeUndefined();
+
+    // Teto de e-mail curto tranca endereço legítimo e trunca valor colado.
+    const email = STEP_FIELDS[STEP_IDS.PERSONAL].find(
+      (field) => field.name === "email"
+    );
+    expect(email.maxLength).toBe(254);
   });
 });

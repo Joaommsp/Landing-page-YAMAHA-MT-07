@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 
 import {
   BASE_PRICE,
@@ -24,6 +24,16 @@ const SECTION_BY_STEP = {
 const FORM_STEPS = Object.keys(SECTION_BY_STEP).map(Number);
 const SECTIONS = Object.values(SECTION_BY_STEP);
 
+export const SUBMIT_STATUS = {
+  idle: "idle",
+  submitting: "submitting",
+  confirmed: "confirmed",
+};
+
+/* Não há backend: a confirmação simula o tempo de resposta do pedido para que
+   o passo de pagamento tenha um estado de carregamento de verdade. */
+export const SUBMIT_DELAY_MS = 900;
+
 export const initialState = {
   step: FIRST_STEP,
   // Teto já liberado: só se avança validando, então saltar adiante é proibido.
@@ -34,17 +44,22 @@ export const initialState = {
   delivery: {},
   payment: {},
   errors: {},
-  confirmed: false,
+  status: SUBMIT_STATUS.idle,
 };
 
-/* Função pura: o total é derivado do estado, nunca guardado nele. */
-export function computeTotal(state) {
+/* Subtotal é o preço da moto montada: base, acréscimo da cor e opcionais. A
+   entrega é linha do resumo, não parte do preço do produto. */
+export function computeSubtotal(state) {
   const color = COLORS.find((item) => item.id === state.colorId);
   const optionsTotal = OPTIONS.filter((option) =>
     state.optionIds.includes(option.id)
   ).reduce((sum, option) => sum + option.price, 0);
 
-  return BASE_PRICE + DELIVERY_PRICE + (color?.surcharge ?? 0) + optionsTotal;
+  return BASE_PRICE + (color?.surcharge ?? 0) + optionsTotal;
+}
+
+export function computeTotal(state) {
+  return computeSubtotal(state) + DELIVERY_PRICE;
 }
 
 function clampStep(step) {
@@ -102,9 +117,14 @@ export function reducer(state, action) {
       const section = { ...state[action.section], [action.name]: action.value };
       const errors = { ...state.errors };
       delete errors[action.name];
-      // Editar depois de confirmar reabre o pedido: a confirmação era do
-      // conjunto anterior de dados.
-      return { ...state, [action.section]: section, errors, confirmed: false };
+
+      // Editar reabre o pedido: a confirmação era do conjunto anterior de dados.
+      return {
+        ...state,
+        [action.section]: section,
+        errors,
+        status: SUBMIT_STATUS.idle,
+      };
     }
 
     case "submit": {
@@ -120,11 +140,19 @@ export function reducer(state, action) {
       );
 
       if (firstInvalid) {
-        return { ...state, errors, step: firstInvalid[0], confirmed: false };
+        return {
+          ...state,
+          errors,
+          step: firstInvalid[0],
+          status: SUBMIT_STATUS.idle,
+        };
       }
 
-      return { ...state, errors: {}, confirmed: true };
+      return { ...state, errors: {}, status: SUBMIT_STATUS.submitting };
     }
+
+    case "confirm":
+      return { ...state, status: SUBMIT_STATUS.confirmed };
 
     default:
       return state;
@@ -148,11 +176,21 @@ export function useConfigurator() {
     []
   );
 
+  useEffect(() => {
+    if (state.status !== SUBMIT_STATUS.submitting) return undefined;
+
+    const timer = setTimeout(
+      () => dispatch({ type: "confirm" }),
+      SUBMIT_DELAY_MS
+    );
+    return () => clearTimeout(timer);
+  }, [state.status]);
+
   const { colorId, optionIds } = state;
 
-  // O total depende só de cor e opcionais; digitar num formulário não recalcula.
-  const total = useMemo(
-    () => computeTotal({ colorId, optionIds }),
+  // O preço depende só de cor e opcionais; digitar num formulário não recalcula.
+  const subtotal = useMemo(
+    () => computeSubtotal({ colorId, optionIds }),
     [colorId, optionIds]
   );
   const color = useMemo(
@@ -168,8 +206,10 @@ export function useConfigurator() {
     state,
     color,
     options,
-    total,
-    parcel: total / INSTALLMENTS,
+    subtotal,
+    total: subtotal + DELIVERY_PRICE,
+    // A parcela é do produto: a entrega não é parcelada.
+    parcel: subtotal / INSTALLMENTS,
     actions,
   };
 }
