@@ -9,6 +9,7 @@ export const CEP_DIGITS = 8;
 export const CARD_DIGITS = 16;
 export const PHONE_MIN_DIGITS = 10;
 export const EXPIRATION_DIGITS = 4;
+export const CVV_MAX_DIGITS = 4;
 
 const PHONE_MAX_DIGITS = 11;
 const PHONE_AREA_DIGITS = 2;
@@ -61,12 +62,19 @@ export function maskExpiration(value) {
   return digits.replace(/^(\d{2})(\d)/, "$1/$2");
 }
 
+/* O CVV não tem separador, mas tem máscara: sem ela é o único campo numérico
+   onde a letra entra na caixa e só cai no `blur`. */
+export function maskCVV(value) {
+  return onlyDigits(value).slice(0, CVV_MAX_DIGITS);
+}
+
 const MASK_BY_TYPE = {
   [FIELD_TYPES.CPF]: maskCPF,
   [FIELD_TYPES.PHONE]: maskPhone,
   [FIELD_TYPES.CEP]: maskCEP,
   [FIELD_TYPES.CARD]: maskCard,
   [FIELD_TYPES.EXPIRATION]: maskExpiration,
+  [FIELD_TYPES.CVV]: maskCVV,
 };
 
 /* Elo único entre o tipo do campo e sua máscara: o formulário não repete o

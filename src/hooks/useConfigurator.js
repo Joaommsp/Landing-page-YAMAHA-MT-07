@@ -47,15 +47,21 @@ export const initialState = {
   status: SUBMIT_STATUS.idle,
 };
 
+/* Preço da moto sem opcional: base mais o acréscimo da cor. É a linha da moto
+   no resumo do pedido — quem exibe não recalcula. */
+export function computeMotorcyclePrice(state) {
+  const color = COLORS.find((item) => item.id === state.colorId);
+  return BASE_PRICE + (color?.surcharge ?? 0);
+}
+
 /* Subtotal é o preço da moto montada: base, acréscimo da cor e opcionais. A
    entrega é linha do resumo, não parte do preço do produto. */
 export function computeSubtotal(state) {
-  const color = COLORS.find((item) => item.id === state.colorId);
   const optionsTotal = OPTIONS.filter((option) =>
     state.optionIds.includes(option.id)
   ).reduce((sum, option) => sum + option.price, 0);
 
-  return BASE_PRICE + (color?.surcharge ?? 0) + optionsTotal;
+  return computeMotorcyclePrice(state) + optionsTotal;
 }
 
 export function computeTotal(state) {
@@ -189,6 +195,10 @@ export function useConfigurator() {
   const { colorId, optionIds } = state;
 
   // O preço depende só de cor e opcionais; digitar num formulário não recalcula.
+  const motorcyclePrice = useMemo(
+    () => computeMotorcyclePrice({ colorId }),
+    [colorId]
+  );
   const subtotal = useMemo(
     () => computeSubtotal({ colorId, optionIds }),
     [colorId, optionIds]
@@ -206,6 +216,7 @@ export function useConfigurator() {
     state,
     color,
     options,
+    motorcyclePrice,
     subtotal,
     total: subtotal + DELIVERY_PRICE,
     // A parcela é do produto: a entrega não é parcelada.

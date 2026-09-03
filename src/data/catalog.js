@@ -17,6 +17,11 @@ export const BASE_PRICE = 48500;
 export const DELIVERY_PRICE = 2000;
 export const INSTALLMENTS = 24;
 
+/* Ano do modelo e prazo de entrega são dado de produto, não copy: apareciam
+   escritos à mão no hero e no resumo do pedido. */
+export const MODEL_YEAR = 2025;
+export const DELIVERY_LEAD_TIME_DAYS = 15;
+
 export const COLORS = [
   {
     id: "racing-blue",

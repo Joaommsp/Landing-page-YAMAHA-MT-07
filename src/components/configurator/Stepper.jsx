@@ -51,14 +51,18 @@ const MARK_CLASS =
 function Stepper({
   current,
   furthest = current,
+  locked = false,
   onSelect,
   panelId = CONFIGURATOR_PANEL_ID,
 }) {
   const tabsRef = useRef([]);
 
   /* Passo destravado é o que o fluxo já validou: adiante disso o hook recusa o
-     salto, então o trilho não oferece o que seria recusado. */
-  const isUnlocked = (step) => step.id <= furthest;
+     salto, então o trilho não oferece o que seria recusado. `locked` fecha o
+     trilho inteiro enquanto o pedido está em envio — menos o passo atual, para
+     o foco não sumir de dentro do diálogo. */
+  const isUnlocked = (step) =>
+    step.id === current || (!locked && step.id <= furthest);
 
   const focusStep = (step) => {
     const index = STEPS.findIndex((item) => item.id === step.id);
@@ -140,6 +144,7 @@ function Stepper({
 Stepper.propTypes = {
   current: PropTypes.number.isRequired,
   furthest: PropTypes.number,
+  locked: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
   panelId: PropTypes.string,
 };

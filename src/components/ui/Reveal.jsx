@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import { motion, useReducedMotion } from "motion/react";
 
+import { EASE_EDITORIAL } from "../../lib/motion";
+
 /* Revelação de seção ao entrar na viewport. O deslocamento é curto de
    propósito: movimento que sublinha a leitura, não que a atrapalha. */
 
 const OFFSET = 24;
 const DURATION = 0.7;
-/* Mesma curva do token `--ease-editorial` do tema: o motion é JS e não lê o
-   `@theme`, então o valor é espelhado aqui de propósito. */
-const EASE = [0.22, 1, 0.36, 1];
 const VIEWPORT = { once: true, amount: 0.2 };
 
 /* Tags aceitas: o proxy do `motion` cria componente para qualquer chave, então
@@ -37,7 +36,7 @@ function Reveal({ as = "div", delay = 0, className = "", children, ...rest }) {
       initial={{ opacity: 0, y: OFFSET }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={VIEWPORT}
-      transition={{ duration: DURATION, delay, ease: EASE }}
+      transition={{ duration: DURATION, delay, ease: EASE_EDITORIAL }}
       {...rest}
     >
       {children}

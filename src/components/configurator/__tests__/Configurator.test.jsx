@@ -23,6 +23,13 @@ const PERSONAL = {
   Telefone: "31998765432",
 };
 
+const PAYMENT = {
+  "Nome no cartão": "Joao Melo",
+  "Número do cartão": "4429881200431197",
+  Validade: "1229",
+  CVV: "123",
+};
+
 const DELIVERY = {
   CEP: "30140071",
   Rua: "Rua da Bahia",
@@ -167,6 +174,24 @@ describe("Configurator", () => {
     expect(
       await screen.findByRole("button", { name: new RegExp(PAID_COLOR.name, "i") })
     ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("tranca a navegação enquanto o pedido está sendo enviado", async () => {
+    const user = userEvent.setup();
+    renderConfigurator();
+
+    await advanceToPayment(user);
+    await fillStep(user, PAYMENT);
+    await user.click(screen.getByRole("button", { name: /finalizar compra/i }));
+
+    expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled();
+    screen
+      .getAllByRole("tab")
+      .filter((tab) => tab.getAttribute("aria-selected") === "false")
+      .forEach((tab) => expect(tab).toBeDisabled());
+    expect(
+      screen.getByRole("button", { name: /fechar configurador/i })
+    ).toBeEnabled();
   });
 
   it("fecha pelo botão e pela tecla Escape", async () => {

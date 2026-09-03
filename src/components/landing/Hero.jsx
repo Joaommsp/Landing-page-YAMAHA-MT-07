@@ -1,7 +1,13 @@
 import PropTypes from "prop-types";
 
 import Button from "../ui/Button";
-import { BASE_PRICE, SECTION_IDS, SPECS, sectionHref } from "../../data/catalog";
+import {
+  BASE_PRICE,
+  MODEL_YEAR,
+  SECTION_IDS,
+  SPECS,
+  sectionHref,
+} from "../../data/catalog";
 import { formatBRL } from "../../lib/currency";
 import HeroImage from "../../assets/images/banner-mt07.jpg";
 
@@ -43,7 +49,7 @@ function Hero({
         <div>
           <p className="label-mono flex items-center gap-3 text-cyan">
             <span aria-hidden="true" className="h-px w-9 bg-cyan" />
-            Hyper Naked · 2025
+            {`Hyper Naked · ${MODEL_YEAR}`}
           </p>
 
           <h1 className="mt-3">

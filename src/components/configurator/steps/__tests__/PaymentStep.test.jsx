@@ -18,10 +18,9 @@ import { SUBMIT_STATUS } from "../../../../hooks/useConfigurator";
 
 const COLOR = COLORS.find((item) => item.surcharge > 0);
 const CHOSEN = OPTIONS.filter((option) => !option.featured).slice(0, 2);
+const MOTORCYCLE_PRICE = BASE_PRICE + COLOR.surcharge;
 const SUBTOTAL =
-  BASE_PRICE +
-  COLOR.surcharge +
-  CHOSEN.reduce((sum, option) => sum + option.price, 0);
+  MOTORCYCLE_PRICE + CHOSEN.reduce((sum, option) => sum + option.price, 0);
 const TOTAL = SUBTOTAL + DELIVERY_PRICE;
 const EMPTY = {};
 
@@ -33,6 +32,7 @@ function renderStep(props = {}) {
       color={COLOR}
       errors={EMPTY}
       onChange={onChange}
+      motorcyclePrice={MOTORCYCLE_PRICE}
       onSubmit={onSubmit}
       options={CHOSEN}
       subtotal={SUBTOTAL}
@@ -54,6 +54,7 @@ function ControlledPaymentStep() {
       onChange={(name, value) =>
         setValues((current) => ({ ...current, [name]: value }))
       }
+      motorcyclePrice={MOTORCYCLE_PRICE}
       onSubmit={vi.fn()}
       options={CHOSEN}
       subtotal={SUBTOTAL}
@@ -73,8 +74,16 @@ describe("PaymentStep", () => {
       within(summary).getByText(`Yamaha MT-07 · ${COLOR.name}`)
     ).toBeInTheDocument();
     expect(
-      within(summary).getByText(formatBRL(BASE_PRICE + COLOR.surcharge))
+      within(summary).getByText(formatBRL(MOTORCYCLE_PRICE))
     ).toBeInTheDocument();
+  });
+
+  it("mostra no resumo a foto da cor escolhida, não uma imagem fixa", () => {
+    renderStep();
+
+    const summary = screen.getByRole("region", { name: /resumo do pedido/i });
+
+    expect(summary.querySelector("img")).toHaveAttribute("src", COLOR.image);
   });
 
   it("lista a entrega e cada opcional selecionado com seu preço", () => {

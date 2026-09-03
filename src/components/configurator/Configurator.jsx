@@ -18,7 +18,8 @@ import {
   STEP_IDS,
   stepTabId,
 } from "../../data/catalog";
-import { formatBRL } from "../../lib/currency";
+import { formatBRL, formatParcel } from "../../lib/currency";
+import { EASE_EDITORIAL } from "../../lib/motion";
 import { SUBMIT_STATUS, useConfigurator } from "../../hooks/useConfigurator";
 
 /* Shell do configurador: trilho de passos, cabeçalho com preço, painel do
@@ -38,7 +39,7 @@ const PANEL_MOTION = {
   initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.5, ease: EASE_EDITORIAL },
 };
 
 function Configurator({ isOpen, onClose }) {
@@ -46,7 +47,7 @@ function Configurator({ isOpen, onClose }) {
   const dialogRef = useRef(null);
   const closeRef = useRef(null);
 
-  const { state, color, options, subtotal, total, parcel, actions } =
+  const { state, color, options, motorcyclePrice, subtotal, total, actions } =
     useConfigurator();
 
   /* Ao abrir, o foco entra no diálogo; ao fechar, volta a quem o abriu. */
@@ -67,6 +68,12 @@ function Configurator({ isOpen, onClose }) {
   const position = STEPS.indexOf(current) + 1;
   const progress = `${(position / STEPS.length) * 100}%`;
   const hasErrors = Object.keys(state.errors).length > 0;
+
+  /* Pedido em envio (ou já confirmado) tranca a navegação: sair do passo e
+     digitar noutro campo reabriria o pedido pelo `setField`, e o efeito do hook
+     mataria o temporizador — o envio seria cancelado sem ninguém saber. Fechar
+     continua liberado: é saída, não edição, e o pedido segue seu curso. */
+  const busy = state.status !== SUBMIT_STATUS.idle;
 
   /* Foco preso: Tab circula dentro do diálogo enquanto ele está aberto. */
   const handleKeyDown = (event) => {
@@ -121,6 +128,7 @@ function Configurator({ isOpen, onClose }) {
       <PaymentStep
         color={color}
         errors={state.errors}
+        motorcyclePrice={motorcyclePrice}
         onChange={(name, value) => actions.setField("payment", name, value)}
         onSubmit={actions.submit}
         options={options}
@@ -149,6 +157,7 @@ function Configurator({ isOpen, onClose }) {
         <Stepper
           current={state.step}
           furthest={state.furthestStep}
+          locked={busy}
           onSelect={actions.goTo}
         />
 
@@ -166,7 +175,7 @@ function Configurator({ isOpen, onClose }) {
             <div className="ml-auto text-right">
               <p className="data-figure text-figure">{formatBRL(subtotal)}</p>
               <p className="mt-1 font-mono text-caption text-paper-dim">
-                {`ou ${INSTALLMENTS}x de ${formatBRL(parcel)}`}
+                {`ou ${INSTALLMENTS}x de ${formatParcel(subtotal)}`}
               </p>
             </div>
 
@@ -221,7 +230,7 @@ function Configurator({ isOpen, onClose }) {
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button
-              disabled={state.step === FIRST_STEP}
+              disabled={busy || state.step === FIRST_STEP}
               onClick={actions.previous}
               size="sm"
               variant="ghost"
@@ -229,7 +238,7 @@ function Configurator({ isOpen, onClose }) {
               Anterior
             </Button>
             <Button
-              disabled={state.step === LAST_STEP}
+              disabled={busy || state.step === LAST_STEP}
               onClick={actions.next}
               size="sm"
             >

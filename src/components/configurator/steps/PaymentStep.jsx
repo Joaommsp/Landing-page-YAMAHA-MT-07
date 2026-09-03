@@ -2,10 +2,15 @@ import PropTypes from "prop-types";
 
 import Button from "../../ui/Button";
 import FieldGrid from "../FieldGrid";
-import { BASE_PRICE, DELIVERY_PRICE, STEP_IDS } from "../../../data/catalog";
+import {
+  DELIVERY_LEAD_TIME_DAYS,
+  DELIVERY_PRICE,
+  MODEL_YEAR,
+  STEP_IDS,
+} from "../../../data/catalog";
 import { formatBRL } from "../../../lib/currency";
 import { SUBMIT_STATUS } from "../../../hooks/useConfigurator";
-import ModelThumb from "../../../assets/images/banner02.png";
+import FallbackThumb from "../../../assets/images/banner02.png";
 
 /* Passo 5 — resumo do pedido e pagamento. O cartão desenhado espelha o que se
    digita; nenhum valor é calculado aqui: subtotal e total chegam prontos do
@@ -19,7 +24,7 @@ const CARD_NUMBER_PLACEHOLDER = "•••• •••• •••• ••�
 const CARD_HOLDER_PLACEHOLDER = "NOME DO TITULAR";
 const CARD_EXPIRATION_PLACEHOLDER = "MM/AA";
 
-const SUMMARY_COLUMN = "bg-ink-2 p-6";
+const PANEL_COLUMN = "bg-ink-2 p-6";
 const LINE_CLASS = "flex items-center gap-3.5 border-b border-line py-3.5";
 const THUMB_CLASS =
   "grid h-10 w-14 shrink-0 place-items-center overflow-hidden bg-ink-3";
@@ -72,6 +77,7 @@ TotalRow.propTypes = {
 function PaymentStep({
   color,
   options = EMPTY_OPTIONS,
+  motorcyclePrice,
   subtotal,
   total,
   values,
@@ -108,19 +114,25 @@ function PaymentStep({
 
   return (
     <div className="grid gap-0.5 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
-      <section aria-label="Resumo do pedido" className={SUMMARY_COLUMN}>
+      <section aria-label="Resumo do pedido" className={PANEL_COLUMN}>
         <h4 className="label-mono mb-4 text-khaki">Resumo do pedido</h4>
 
         <SummaryLine
-          meta="1 unidade · 2025"
+          meta={`1 unidade · ${MODEL_YEAR}`}
           name={color ? `Yamaha MT-07 · ${color.name}` : "Yamaha MT-07"}
-          price={BASE_PRICE + (color ? color.surcharge : 0)}
+          price={motorcyclePrice}
         >
-          <img alt="" className="h-full w-full object-cover" src={ModelThumb} />
+          {/* A miniatura é a foto da cor escolhida: mostrar outra moto ao lado
+              do nome da cor seria contradizer a própria linha. */}
+          <img
+            alt=""
+            className="h-full w-full object-cover"
+            src={color ? color.image : FallbackThumb}
+          />
         </SummaryLine>
 
         <SummaryLine
-          meta="Prazo de 15 dias úteis"
+          meta={`Prazo de ${DELIVERY_LEAD_TIME_DAYS} dias úteis`}
           name="Entrega em domicílio"
           price={DELIVERY_PRICE}
         >
@@ -166,7 +178,7 @@ function PaymentStep({
         </div>
       </section>
 
-      <section aria-label="Pagamento" className={SUMMARY_COLUMN}>
+      <section aria-label="Pagamento" className={PANEL_COLUMN}>
         <h4 className="label-mono mb-4 text-khaki">Pagamento</h4>
 
         {/* O cartão é desenho, não formulário: repete o que já está nos campos
@@ -230,7 +242,7 @@ function PaymentStep({
 PaymentStep.propTypes = {
   color: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    surcharge: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
   }),
   options: PropTypes.arrayOf(
     PropTypes.shape({
@@ -239,6 +251,7 @@ PaymentStep.propTypes = {
       price: PropTypes.number.isRequired,
     })
   ),
+  motorcyclePrice: PropTypes.number.isRequired,
   subtotal: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   values: PropTypes.object,

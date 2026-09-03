@@ -3,13 +3,14 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { COLORS } from "../../../data/catalog";
 import { formatBRL } from "../../../lib/currency";
+import { EASE_EDITORIAL } from "../../../lib/motion";
 
 /* Passo 1 — cor. A imagem da moto troca em crossfade e a cor escolhida fica
    marcada; preço e imagem vêm do catálogo, nunca do componente. */
 
 /* Crossfade curto com deslocamento lateral: a troca se lê como movimento da
    mesma moto, não como uma foto sumindo e outra chegando. */
-const FADE = { duration: 0.35, ease: [0.22, 1, 0.36, 1] };
+const FADE = { duration: 0.35, ease: EASE_EDITORIAL };
 const SHIFT = 12;
 
 const SWATCH_CLASS =
