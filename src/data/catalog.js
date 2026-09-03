@@ -176,12 +176,22 @@ export const GALLERY = [
   },
 ];
 
+/* Cada passo é identificado por nome, não por posição no array: quem valida ou
+   navega importa o id, e reordenar a lista não muda o significado de ninguém. */
+export const STEP_IDS = {
+  COLOR: 1,
+  OPTIONS: 2,
+  PERSONAL: 3,
+  DELIVERY: 4,
+  PAYMENT: 5,
+};
+
 export const STEPS = [
-  { id: 1, label: "Cor", title: "Escolha a cor" },
-  { id: 2, label: "Opcionais", title: "Monte o pacote" },
-  { id: 3, label: "Dados", title: "Seus dados" },
-  { id: 4, label: "Entrega", title: "Endereço de entrega" },
-  { id: 5, label: "Pagamento", title: "Pagamento e resumo" },
+  { id: STEP_IDS.COLOR, label: "Cor", title: "Escolha a cor" },
+  { id: STEP_IDS.OPTIONS, label: "Opcionais", title: "Monte o pacote" },
+  { id: STEP_IDS.PERSONAL, label: "Dados", title: "Seus dados" },
+  { id: STEP_IDS.DELIVERY, label: "Entrega", title: "Endereço de entrega" },
+  { id: STEP_IDS.PAYMENT, label: "Pagamento", title: "Pagamento e resumo" },
 ];
 
 export const FIRST_STEP = STEPS[0].id;

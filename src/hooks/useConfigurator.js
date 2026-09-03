@@ -9,24 +9,25 @@ import {
   INSTALLMENTS,
   LAST_STEP,
   OPTIONS,
-  STEPS,
+  STEP_IDS,
 } from "../data/catalog";
 import { validateStep } from "../lib/validation";
-
-const [, , PERSONAL_STEP, DELIVERY_STEP, PAYMENT_STEP] = STEPS.map(
-  (step) => step.id
-);
 
 /* Cada passo com formulário guarda seus valores na própria seção do estado;
    os passos de cor e opcionais não têm campo e por isso não aparecem aqui. */
 const SECTION_BY_STEP = {
-  [PERSONAL_STEP]: "personal",
-  [DELIVERY_STEP]: "delivery",
-  [PAYMENT_STEP]: "payment",
+  [STEP_IDS.PERSONAL]: "personal",
+  [STEP_IDS.DELIVERY]: "delivery",
+  [STEP_IDS.PAYMENT]: "payment",
 };
+
+const FORM_STEPS = Object.keys(SECTION_BY_STEP).map(Number);
+const SECTIONS = Object.values(SECTION_BY_STEP);
 
 export const initialState = {
   step: FIRST_STEP,
+  // Teto já liberado: só se avança validando, então saltar adiante é proibido.
+  furthestStep: FIRST_STEP,
   colorId: DEFAULT_COLOR_ID,
   optionIds: [],
   personal: {},
@@ -57,13 +58,24 @@ function errorsOfStep(state, step) {
 
 export function reducer(state, action) {
   switch (action.type) {
-    case "goTo":
-      return { ...state, step: clampStep(action.step), errors: {} };
+    case "goTo": {
+      const target = clampStep(action.step);
+      // Voltar é sempre livre; ir adiante, só até onde o fluxo já foi validado.
+      if (target > state.furthestStep) return state;
+      return { ...state, step: target, errors: {} };
+    }
 
     case "next": {
       const errors = errorsOfStep(state, state.step);
       if (Object.keys(errors).length > 0) return { ...state, errors };
-      return { ...state, step: clampStep(state.step + 1), errors: {} };
+
+      const step = clampStep(state.step + 1);
+      return {
+        ...state,
+        step,
+        furthestStep: Math.max(state.furthestStep, step),
+        errors: {},
+      };
     }
 
     case "previous":
@@ -83,16 +95,35 @@ export function reducer(state, action) {
     }
 
     case "setField": {
+      // Só as seções de formulário aceitam campo: assim um nome errado não
+      // sobrescreve outra parte do estado em silêncio.
+      if (!SECTIONS.includes(action.section)) return state;
+
       const section = { ...state[action.section], [action.name]: action.value };
       const errors = { ...state.errors };
       delete errors[action.name];
-      return { ...state, [action.section]: section, errors };
+      // Editar depois de confirmar reabre o pedido: a confirmação era do
+      // conjunto anterior de dados.
+      return { ...state, [action.section]: section, errors, confirmed: false };
     }
 
     case "submit": {
-      const errors = errorsOfStep(state, PAYMENT_STEP);
-      const valid = Object.keys(errors).length === 0;
-      return { ...state, errors, confirmed: valid };
+      // Confirmar fecha o pedido inteiro: todo passo com formulário é conferido,
+      // não só o de pagamento.
+      const byStep = FORM_STEPS.map((step) => [step, errorsOfStep(state, step)]);
+      const errors = byStep.reduce(
+        (all, [, stepErrors]) => ({ ...all, ...stepErrors }),
+        {}
+      );
+      const firstInvalid = byStep.find(
+        ([, stepErrors]) => Object.keys(stepErrors).length > 0
+      );
+
+      if (firstInvalid) {
+        return { ...state, errors, step: firstInvalid[0], confirmed: false };
+      }
+
+      return { ...state, errors: {}, confirmed: true };
     }
 
     default:
@@ -117,14 +148,20 @@ export function useConfigurator() {
     []
   );
 
-  const total = useMemo(() => computeTotal(state), [state]);
+  const { colorId, optionIds } = state;
+
+  // O total depende só de cor e opcionais; digitar num formulário não recalcula.
+  const total = useMemo(
+    () => computeTotal({ colorId, optionIds }),
+    [colorId, optionIds]
+  );
   const color = useMemo(
-    () => COLORS.find((item) => item.id === state.colorId),
-    [state.colorId]
+    () => COLORS.find((item) => item.id === colorId),
+    [colorId]
   );
   const options = useMemo(
-    () => OPTIONS.filter((option) => state.optionIds.includes(option.id)),
-    [state.optionIds]
+    () => OPTIONS.filter((option) => optionIds.includes(option.id)),
+    [optionIds]
   );
 
   return {

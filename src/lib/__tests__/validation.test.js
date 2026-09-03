@@ -5,9 +5,9 @@ import {
   validateStep,
   MESSAGES,
 } from "../validation";
-import { STEPS } from "../../data/catalog";
+import { STEP_IDS } from "../../data/catalog";
 
-const PERSONAL_STEP = STEPS[2].id;
+const PERSONAL_STEP = STEP_IDS.PERSONAL;
 
 const validPersonal = {
   firstName: "João",

@@ -7,6 +7,7 @@ import {
   SPECS,
   GALLERY,
   STEPS,
+  STEP_IDS,
 } from "../catalog";
 
 describe("catálogo de produto — preços", () => {
@@ -115,6 +116,12 @@ describe("catálogo de produto — passos do configurador", () => {
       "Entrega",
       "Pagamento",
     ]);
-    expect(STEPS.map((step) => step.id)).toEqual([1, 2, 3, 4, 5]);
+    expect(STEPS.map((step) => step.id)).toEqual([
+      STEP_IDS.COLOR,
+      STEP_IDS.OPTIONS,
+      STEP_IDS.PERSONAL,
+      STEP_IDS.DELIVERY,
+      STEP_IDS.PAYMENT,
+    ]);
   });
 });

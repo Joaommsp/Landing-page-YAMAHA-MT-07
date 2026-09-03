@@ -7,19 +7,33 @@ import {
   INSTALLMENTS,
   COLORS,
   OPTIONS,
-  STEPS,
+  STEP_IDS,
   FIRST_STEP,
   LAST_STEP,
 } from "../../data/catalog";
 import { MESSAGES } from "../../lib/validation";
 
-const PERSONAL_STEP = STEPS[2].id;
-const PAYMENT_STEP = STEPS[4].id;
-
 const START_TOTAL = BASE_PRICE + DELIVERY_PRICE;
 const windscreen = OPTIONS.find((option) => option.id === "windscreen");
 const kit = OPTIONS.find((option) => option.id === "dark-side-kit");
 const paidColor = COLORS.find((color) => color.surcharge > 0);
+
+const validPersonal = {
+  firstName: "João",
+  lastName: "Melo",
+  cpf: "529.982.247-25",
+  email: "joao@exemplo.com",
+  phone: "(31) 98888-7777",
+};
+
+const validDelivery = {
+  cep: "30140-071",
+  street: "Avenida Afonso Pena",
+  number: "1270",
+  neighborhood: "Centro",
+  city: "Belo Horizonte",
+  state: "MG",
+};
 
 const validPayment = {
   cardHolder: "João Melo",
@@ -28,10 +42,22 @@ const validPayment = {
   cardCvv: "123",
 };
 
-const fillPayment = (result) => {
-  Object.entries(validPayment).forEach(([name, value]) => {
-    act(() => result.current.actions.setField("payment", name, value));
+const fill = (result, section, values) => {
+  Object.entries(values).forEach(([name, value]) => {
+    act(() => result.current.actions.setField(section, name, value));
   });
+};
+
+/* Chega ao passo pedido pelo caminho real: preenche os formulários e avança um
+   passo de cada vez, porque saltar adiante é justamente o que não se pode. */
+const advanceTo = (result, step) => {
+  fill(result, "personal", validPersonal);
+  fill(result, "delivery", validDelivery);
+
+  for (let attempt = 0; attempt < LAST_STEP; attempt += 1) {
+    if (result.current.state.step >= step) break;
+    act(() => result.current.actions.next());
+  }
 };
 
 describe("useConfigurator — preço", () => {
@@ -85,8 +111,10 @@ describe("useConfigurator — preço", () => {
 
     act(() => result.current.actions.toggleOption(kit.id));
 
-    expect(result.current.parcel).toBeCloseTo(result.current.total / INSTALLMENTS, 5);
-    expect(INSTALLMENTS).toBe(24);
+    expect(result.current.parcel).toBeCloseTo(
+      result.current.total / INSTALLMENTS,
+      5
+    );
   });
 });
 
@@ -114,20 +142,25 @@ describe("useConfigurator — navegação", () => {
   it("mantém o último passo quando pedem o próximo", () => {
     const { result } = renderHook(() => useConfigurator());
 
-    act(() => result.current.actions.goTo(LAST_STEP));
+    advanceTo(result, LAST_STEP);
     act(() => result.current.actions.next());
 
     expect(result.current.state.step).toBe(LAST_STEP);
   });
 
-  it("não avança enquanto o passo atual tem campo obrigatório vazio", () => {
+  it("não avança enquanto o passo atual tem campo obrigatório vazio, nem por salto no indicador", () => {
     const { result } = renderHook(() => useConfigurator());
 
-    act(() => result.current.actions.goTo(PERSONAL_STEP));
     act(() => result.current.actions.next());
+    act(() => result.current.actions.next());
+    expect(result.current.state.step).toBe(STEP_IDS.PERSONAL);
 
-    expect(result.current.state.step).toBe(PERSONAL_STEP);
+    act(() => result.current.actions.next());
+    expect(result.current.state.step).toBe(STEP_IDS.PERSONAL);
     expect(result.current.state.errors.firstName).toBe(MESSAGES.required);
+
+    act(() => result.current.actions.goTo(STEP_IDS.PAYMENT));
+    expect(result.current.state.step).toBe(STEP_IDS.PERSONAL);
   });
 
   it("preserva cor e opcionais ao ir até o último passo e voltar ao primeiro", () => {
@@ -135,7 +168,7 @@ describe("useConfigurator — navegação", () => {
 
     act(() => result.current.actions.selectColor(paidColor.id));
     act(() => result.current.actions.toggleOption(kit.id));
-    act(() => result.current.actions.goTo(LAST_STEP));
+    advanceTo(result, LAST_STEP);
     act(() => result.current.actions.goTo(FIRST_STEP));
 
     expect(result.current.state.step).toBe(FIRST_STEP);
@@ -148,19 +181,27 @@ describe("useConfigurator — navegação", () => {
 });
 
 describe("useConfigurator — conclusão", () => {
-  it("só confirma o pedido quando o pagamento está válido", () => {
+  it("só confirma o pedido quando todos os passos de formulário estão válidos", () => {
     const { result } = renderHook(() => useConfigurator());
 
-    act(() => result.current.actions.goTo(PAYMENT_STEP));
+    advanceTo(result, STEP_IDS.PAYMENT);
     act(() => result.current.actions.submit());
 
     expect(result.current.state.confirmed).toBe(false);
     expect(result.current.state.errors.cardHolder).toBe(MESSAGES.required);
+    expect(result.current.state.step).toBe(STEP_IDS.PAYMENT);
 
-    fillPayment(result);
+    fill(result, "payment", validPayment);
     act(() => result.current.actions.submit());
 
     expect(result.current.state.errors).toEqual({});
     expect(result.current.state.confirmed).toBe(true);
+
+    act(() => result.current.actions.setField("delivery", "city", ""));
+    act(() => result.current.actions.submit());
+
+    expect(result.current.state.confirmed).toBe(false);
+    expect(result.current.state.step).toBe(STEP_IDS.DELIVERY);
+    expect(result.current.state.errors.city).toBe(MESSAGES.required);
   });
 });
