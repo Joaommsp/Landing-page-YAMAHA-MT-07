@@ -1,90 +1,95 @@
-# Landing Page Yamaha MT-07
+# Landing page MT-07
 
-Página de vitrine da Yamaha MT-07, com configurador de compra em cinco passos:
-cor, opcionais, dados pessoais, entrega e pagamento. Projeto de portfólio, sem
-fim comercial — não há backend nem gateway de pagamento: o pedido é simulado do
-início ao fim.
+Landing page de compra de motocicleta: ficha técnica, seção editorial de detalhes e um configurador de cinco passos que vai da escolha da cor até a confirmação do pedido.
 
-<img src="./src/assets/images/yamahaLogo.png" alt="Yamaha">
+Projeto de estudo, sem vínculo com a fabricante. Todas as marcas e imagens pertencem aos seus donos.
+
+**No ar:** https://purchase-page-yamaha-mt-07.vercel.app
+
+---
+
+## Telas
+
+### Hero
+
+![Hero da landing, com o nome do produto e a ficha de desempenho](docs/screenshots/desktop-hero.jpg)
+
+### Ficha técnica
+
+Cada especificação tem uma barra proporcional ao valor, derivada do próprio dado do catálogo.
+
+![Ficha técnica com barras proporcionais](docs/screenshots/desktop-ficha.jpg)
+
+### Capítulos de conforto
+
+Uma foto grande por vez, com o argumento e os números daquele detalhe ao lado, alternando o lado a cada capítulo.
+
+![Capítulos alternados com foto e dados técnicos](docs/screenshots/desktop-capitulos.jpg)
+
+### Configurador
+
+Cinco passos — cor, opcionais, dados, entrega e pagamento — com preço reativo, validação por campo e cartão que espelha o formulário.
+
+![Configurador aberto no passo de escolha de cor](docs/screenshots/desktop-configurador.jpg)
+
+### Responsivo
+
+<img src="docs/screenshots/mobile-hero.jpg" alt="Hero em tela de celular" width="330"> <img src="docs/screenshots/mobile-capitulos.jpg" alt="Capítulos em tela de celular" width="330">
+
+---
 
 ## Stack
 
-| Camada | O que é usado |
-| ------ | ------------- |
-| Interface | React 18 |
-| Build | Vite 5 |
-| Estilo | Tailwind CSS v4, com os tokens do tema em `src/styles/index.css` |
-| Motion | Motion (Framer Motion), `motion/react` |
-| Tipos de prop | prop-types |
+| Camada | Escolha |
+| ------ | ------- |
+| UI | React 18 + Vite 5 |
+| Estilo | Tailwind CSS 4, com tokens de cor, tipografia e espaçamento em `src/styles/index.css` |
+| Movimento | Motion (`motion/react`) e CSS, respeitando `prefers-reduced-motion` |
+| Estado | `useReducer` em `useConfigurator` — passo, cor, opcionais, formulários e total derivado |
 | Testes | Vitest + Testing Library + jsdom |
-| Lint | ESLint |
+| Qualidade | ESLint |
 
-## Como rodar
+Fontes: Archivo (display variável), Barlow (corpo) e IBM Plex Mono (dado técnico).
 
-```
-git clone https://github.com/Joaommsp/purchase-page-YAMAHA-MT-07.git
-cd purchase-page-YAMAHA-MT-07
-```
+## Rodando
 
-```
-npm i          # instala as dependências
-npm run dev    # sobe o servidor de desenvolvimento
-npm test       # roda a suíte (Vitest); use `npm test -- --run` para uma passada só
-npm run build  # gera o pacote de produção
-npm run lint   # análise estática
+```bash
+npm install
+npm run dev      # http://localhost:9000
 ```
 
-## O que mudou no redesenho
+```bash
+npm test         # suíte completa (vitest)
+npm run lint     # eslint, zero aviso tolerado
+npm run build    # build de produção
+npm run preview  # serve o build em http://localhost:9001
+```
 
-O projeto nasceu em 2024 e foi refeito de ponta a ponta em 2026, com a direção
-visual "editorial de performance":
+## Como o projeto se organiza
 
-- **Estilo**: `styled-components` e `bootstrap` deram lugar ao Tailwind CSS v4.
-  Cor, tipografia, escala e ordem de empilhamento vivem num único bloco
-  `@theme`; nenhum componente declara hexadecimal. O acento passou a ser o ciano
-  `#2BD4CF`, no lugar do verde que carregava a página inteira.
-- **Motion**: GSAP com seletor de classe dentro de `useEffect` saiu; entrou
-  Motion, declarativo. `MotionConfig reducedMotion="user"` na raiz garante que
-  quem pede movimento reduzido no sistema receba todo conteúdo em estado final.
-- **Configurador**: os cinco blocos de indicador de passo duplicados viraram um
-  componente só, e os dez `useState` soltos viraram uma máquina de estado em
-  `useReducer` (`useConfigurator`), com preço, subtotal e parcela derivados de
-  função pura.
-- **Formulários**: campos controlados, máscaras brasileiras (CPF, telefone, CEP,
-  cartão) e validadores próprios — incluindo dígitos verificadores de CPF e
-  recusa de cartão vencido. O menu passou a abrir e fechar por estado do React,
-  sem `classList.toggle`.
-- **Testes**: o projeto não tinha nenhum. A suíte nasceu com o redesenho, sobre
-  os critérios de aceite da especificação em `.specs/features/redesign-mt07/`.
-- **Dependências**: `bootstrap`, `gsap`, `styled-components`, `react-spinners`,
-  `react-imask` e `react-router-dom` saíram do `package.json`.
+```
+src/
+├── data/catalog.js      # preço, cores, opcionais, ficha técnica, capítulos e campos de formulário
+├── lib/                 # moeda, máscaras, validadores, formatação numérica e curva de easing
+├── hooks/               # useConfigurator: a máquina de estado do fluxo de compra
+├── components/
+│   ├── ui/              # Button, Field, Reveal, CountUp, SpecMarquee
+│   ├── layout/          # Header, Footer
+│   ├── landing/         # Hero, SpecSheet, Gallery
+│   └── configurator/    # Stepper, FieldGrid e os cinco passos
+├── styles/index.css     # tema: tokens, escala tipográfica e camada de movimento
+└── Pages/Home           # composição da página
+```
 
-## Capturas
+Duas regras que valem em todo o código: **nenhum valor de produto vive em componente** — preço, cor, opcional e especificação saem do catálogo; e **nenhum componente calcula preço** — subtotal, total e parcela chegam prontos do hook, para a página não poder exibir dois números diferentes para a mesma coisa.
 
-As imagens abaixo são do **desenho antigo**, anterior ao redesenho de 2026, e
-ficam aqui como registro do ponto de partida. As capturas da versão nova ainda
-serão geradas.
+## Acessibilidade
 
-### Antes — desktop
+- Configurador em `dialog` com foco preso, `Escape` para fechar, devolução do foco ao gatilho e o resto da página inerte enquanto aberto.
+- Indicador de passos como `tablist`/`tab`/`tabpanel`, navegável pelas setas, Home e End.
+- Erro de formulário fiel à mensagem do validador, nunca genérico.
+- Sob `prefers-reduced-motion`, todo conteúdo aparece em estado final, sem animação.
 
-![Versão antiga em desktop](./MacBook%20Pro-1719152539497.jpeg)
-![Versão antiga em desktop](./MacBook%20Pro-1719152555239.jpeg)
+---
 
-### Antes — mobile
-
-![Versão antiga em mobile](./iPhone%2012%20Pro-1719152939398.jpeg)
-![Versão antiga em mobile](./iPhone%2012%20Pro-1719152589875.jpeg)
-
-## Deploy
-
-<div align="left">
-  <a href="https://purchase-page-yamaha-mt-07.vercel.app/"><img src="https://skillicons.dev/icons?i=vercel" height="40" alt="Vercel"  /></a>
-</div>
-
-## Crédito
-
-Desenvolvido por **João Marcos** — [LinkedIn](https://www.linkedin.com/in/joaomarcosmsp/)
-· [GitHub](https://github.com/Joaommsp).
-
-Projeto sem fim comercial, feito como estudo de interface e de fluxo de compra.
-Marca, nome e imagens da Yamaha MT-07 pertencem aos seus detentores.
+Desenvolvido por **João Marcos**.
