@@ -114,6 +114,23 @@ describe("Configurator", () => {
     expect(screen.getByRole("button", { name: "Anterior" })).toBeEnabled();
   });
 
+  /* AC MT07-10.2 — a troca de passo anima a transição entre os painéis. O que
+     distingue o ramo animado do estado final é a marca do motion no painel:
+     opacidade e deslocamento inline no invólucro do passo atual. */
+  it("anima a transição entre os painéis ao trocar de passo", async () => {
+    const user = userEvent.setup();
+    renderConfigurator();
+
+    await goNext(user);
+    const options = await screen.findByRole("group", { name: /^opcionais$/i });
+
+    const animated = screen.getByRole("tabpanel").firstElementChild;
+
+    expect(animated).toContainElement(options);
+    expect(animated.style.opacity).not.toBe("");
+    expect(animated.style.transform).toMatch(/translateY/);
+  });
+
   it("reflete no cabeçalho o preço e a parcela do hook", async () => {
     const user = userEvent.setup();
     renderConfigurator();

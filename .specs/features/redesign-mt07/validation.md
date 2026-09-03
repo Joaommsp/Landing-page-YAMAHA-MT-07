@@ -144,6 +144,26 @@ precisão da spec**.
 
 ---
 
+## Lacunas registradas em vez de testadas
+
+Onde a AC não vira assertiva honesta no ambiente da suíte, o critério fica
+registrado aqui — com o motivo — em vez de ganhar teste teatral. Nenhum destes
+é defeito de comportamento.
+
+| Critério | Por que não vira assertiva | Onde a regra vive de fato |
+| -------- | -------------------------- | ------------------------- |
+| AC MT07-02.5 — foco visível em todo elemento interativo | **Limitação do ambiente.** O `:focus-visible` é heurística do navegador e o contorno vem de folha de estilo; o jsdom não avalia a pseudo-classe nem calcula estilo aplicado (`css: false` na config do Vitest). Assertar a *string* de classe `focus-visible:outline-2` provaria que o texto existe no `className`, não que há contorno visível — teste teatral | `src/styles/index.css:58` (`:focus-visible { outline: 2px solid var(--color-cyan) }`) e a variante em `src/components/ui/Button.jsx:9`, `:24`, `:26`. O que É testável e está testado: alcance por teclado e foco preso no diálogo (`Configurator.test.jsx:210`) e devolução do foco ao gatilho (`Home.test.jsx:51`, `:63`) |
+| Edge case — imagem que falha ao carregar não desloca o vizinho | **Limitação do ambiente.** O jsdom não carrega imagem nem faz layout: não há altura para medir, e `aspect-ratio` não é resolvido. Além disso não existe ramo de código a cobrir — a reserva é puramente CSS, sem `onError` em nenhum `img` do projeto, de propósito | `src/components/landing/SpecSheet.jsx:66` (`aspect-[4/3] … md:min-h-[320px]`), `src/components/landing/Gallery.jsx:44` (`aspect-[42/29]`), `src/components/configurator/steps/ColorStep.jsx:31` (`min-h-[260px]`) |
+| Edge case — abaixo de 768px o configurador empilha em coluna única | **Limitação do ambiente.** O breakpoint é media query do Tailwind; o jsdom não avalia media query e a suíte roda com `css: false`. O indicador de passos, que é a parte acessível do critério, está testado por papel (`tablist`/`tab`) e por teclado, o que não depende de largura | `src/components/configurator/Configurator.jsx:169` (`grid-rows-[auto_minmax(0,1fr)] … md:grid-cols-…`) e `src/components/configurator/Stepper.jsx:102` (`flex … md:flex-col`) |
+| AC MT07-10.5 — conteúdo textual legível se o JS de animação não executar | **Lacuna de precisão da spec.** A página é React: sem JS não há DOM nenhum, então "o JS de animação não executa" não tem cenário observável isolado dentro da suíte. O que a AC quer dizer, na prática, é que nada de textual fica *dependendo* da animação terminar — e isso está coberto por dois lados: o ramo de movimento reduzido entrega o conteúdo em estado final (`reduced-motion.test.jsx`), e a barra da ficha nasce com a largura do dado, não de `scaleX` animado (`SpecSheet.test.jsx`, AD-015) | `src/components/ui/Reveal.jsx:22`, `src/components/landing/SpecSheet.jsx:56`, `src/styles/index.css:74` |
+| AC MT07-02.1 (parte) — primeira dobra "sem exigir rolagem" | **Lacuna de precisão da spec.** A spec não fixa altura de referência nem viewport de teste, e o jsdom não tem viewport. O conteúdo da dobra (nome, subtítulo, três números e preço) está todo asserido | `src/components/landing/Hero.jsx:33` (`min-h-[560px]`) |
+| AC MT07-02.4 — encaixe da imagem seguinte no início do trilho | **Limitação do ambiente**, agora com o contrato travado. O jsdom não rola nem faz snap; o teste trava o que o navegador executa (eixo, obrigatoriedade, ponto de encaixe por item e rolagem contida no trilho), não o encaixe em si | `src/components/landing/Gallery.jsx:31`, `:37`; teste em `src/components/landing/__tests__/Gallery.test.jsx` |
+
+Ficam de fora desta lista, por já terem virado assertiva: M6, M14, M15, M16,
+M17, M18, M19, M20, e as ACs MT07-10.2 e 10.3.
+
+---
+
 ## Sensor de discriminação
 
 **Isolamento**: `git worktree add <scratch>/sensor HEAD --detach`, com

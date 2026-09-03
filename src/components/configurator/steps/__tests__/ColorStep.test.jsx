@@ -50,6 +50,22 @@ describe("ColorStep", () => {
     ).toBeInTheDocument();
   });
 
+  /* AC MT07-10.3 — a troca de cor é crossfade, não corte seco: a foto que
+     chega entra por opacidade e deslocamento lateral, marcas do motion que o
+     estado final (movimento reduzido) não tem. */
+  it("faz crossfade na foto que entra quando a cor muda", async () => {
+    const { view } = renderStep();
+
+    view.rerender(<ColorStep colorId={PAID_COLOR.id} onSelect={vi.fn()} />);
+
+    const image = await screen.findByAltText(
+      new RegExp(`MT-07 ${PAID_COLOR.name}`, "i")
+    );
+
+    expect(image.style.opacity).not.toBe("");
+    expect(image.style.transform).toMatch(/translateX/);
+  });
+
   it("exibe o acréscimo da cor em BRL completo e marca as sem custo", () => {
     renderStep();
 
