@@ -397,7 +397,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T14: Redesenhar o rodapé
+### T14: Redesenhar o rodapé ✅
 
 **What**: `Footer` com colunas de links, redes e o crédito de autoria.
 **Where**: `src/components/layout/Footer.jsx`
@@ -407,9 +407,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Crédito de autoria e aviso de uso não comercial presentes
-- [ ] Links de rede com `rel="noreferrer"` quando abrem em nova aba
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Crédito de autoria e aviso de uso não comercial presentes
+- [x] Links de rede com `rel="noreferrer"` quando abrem em nova aba
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
 **Tests**: none
 **Gate**: build
