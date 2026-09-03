@@ -5,9 +5,17 @@ import PropTypes from "prop-types";
 
 const BASE =
   "relative inline-flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-[0.16em] " +
-  "px-6 py-4 cursor-pointer border transition-colors duration-300 ease-editorial " +
+  "cursor-pointer border transition-colors duration-300 ease-editorial " +
   "focus-visible:outline-2 focus-visible:outline-offset-[3px] " +
   "disabled:cursor-not-allowed disabled:opacity-60";
+
+/* Tamanho é contrato do componente, não classe solta de quem chama: sem
+   `tailwind-merge` no projeto, um padding vindo por `className` perderia para
+   o do próprio botão pela ordem da folha de estilo. */
+const SIZES = {
+  sm: "px-4 py-3",
+  md: "px-6 py-4",
+};
 
 /* O contorno de foco do tema é ciano; sobre o botão sólido (também ciano) ele
    sumiria, então a variante sólida troca o contorno para o tom de papel. */
@@ -20,13 +28,16 @@ const VARIANTS = {
 
 function Button({
   variant = "solid",
+  size = "md",
   href,
   type = "button",
   className = "",
   children,
   ...rest
 }) {
-  const classes = `${BASE} ${VARIANTS[variant] ?? VARIANTS.solid} ${className}`.trim();
+  const classes = `${BASE} ${SIZES[size] ?? SIZES.md} ${
+    VARIANTS[variant] ?? VARIANTS.solid
+  } ${className}`.trim();
 
   /* Mesma aparência para ação e navegação, sem duplicar a folha de estilo:
      com `href` o botão vira âncora e mantém a semântica de link. */
@@ -47,6 +58,7 @@ function Button({
 
 Button.propTypes = {
   variant: PropTypes.oneOf(Object.keys(VARIANTS)),
+  size: PropTypes.oneOf(Object.keys(SIZES)),
   href: PropTypes.string,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   className: PropTypes.string,

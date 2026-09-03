@@ -87,13 +87,15 @@ export const OPTIONS = [
 ];
 
 /* `ratio` é a fração da barra na ficha técnica: relação do valor com o teto da
-   categoria, definida na direção de arte aprovada. */
+   categoria, definida na direção de arte aprovada. `unitShort` é a unidade sem
+   a faixa de rotação, para a primeira dobra, que não comporta a linha inteira. */
 export const SPECS = [
   {
     id: "displacement",
     name: "Cilindrada",
     value: "689",
     unit: "cc",
+    unitShort: "cc",
     ratio: 0.86,
   },
   {
@@ -101,6 +103,7 @@ export const SPECS = [
     name: "Potência máxima",
     value: "74,8",
     unit: "cv @ 8.750 rpm",
+    unitShort: "cv",
     ratio: 0.74,
   },
   {
@@ -108,6 +111,7 @@ export const SPECS = [
     name: "Torque máximo",
     value: "6,9",
     unit: "kgf.m @ 6.500 rpm",
+    unitShort: "kgf.m",
     ratio: 0.69,
   },
   {
@@ -115,9 +119,22 @@ export const SPECS = [
     name: "Peso em ordem de marcha",
     value: "184",
     unit: "kg",
+    unitShort: "kg",
     ratio: 0.52,
   },
 ];
+
+/* Seções da landing: o id da âncora é contrato entre o cabeçalho, o rodapé e a
+   própria seção. Fonte única para os três lados nunca divergirem. */
+export const SECTION_IDS = {
+  hero: "hero",
+  specSheet: "ficha-tecnica",
+  gallery: "galeria",
+};
+
+export function sectionHref(sectionId) {
+  return `#${sectionId}`;
+}
 
 export const GALLERY = [
   {

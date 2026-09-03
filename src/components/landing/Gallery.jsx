@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import Reveal from "../ui/Reveal";
-import { GALLERY } from "../../data/catalog";
+import { GALLERY, SECTION_IDS } from "../../data/catalog";
 
 /* Numeração da galeria: dado derivado da posição no catálogo, para a legenda
    ter um índice sem inventar rótulo que não existe no dado. */
@@ -9,9 +9,9 @@ function figureIndex(index) {
   return String(index + 1).padStart(2, "0");
 }
 
-function Gallery({ id = "galeria" }) {
+function Gallery({ id = SECTION_IDS.gallery }) {
   return (
-    <section className="bg-ink py-10 md:py-14" id={id}>
+    <section className="scroll-mt-16 bg-ink py-10 md:py-14" id={id}>
       <Reveal className="flex flex-wrap items-end gap-6 px-5 pb-6 md:px-11">
         <h2 className="display-tight text-[clamp(24px,3.4vw,44px)]">
           Conforto
@@ -40,6 +40,7 @@ function Gallery({ id = "galeria" }) {
             {/* Proporção fixa: falha de carregamento não encolhe o trilho. */}
             <img
               alt={item.alt}
+              loading="lazy"
               className="aspect-[42/29] w-full object-cover grayscale-[.3] transition duration-700 ease-editorial group-hover:scale-105 group-hover:grayscale-0"
               src={item.image}
             />

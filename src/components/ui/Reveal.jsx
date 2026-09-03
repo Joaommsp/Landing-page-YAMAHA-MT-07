@@ -6,8 +6,14 @@ import { motion, useReducedMotion } from "motion/react";
 
 const OFFSET = 24;
 const DURATION = 0.7;
+/* Mesma curva do token `--ease-editorial` do tema: o motion é JS e não lê o
+   `@theme`, então o valor é espelhado aqui de propósito. */
 const EASE = [0.22, 1, 0.36, 1];
 const VIEWPORT = { once: true, amount: 0.2 };
+
+/* Tags aceitas: o proxy do `motion` cria componente para qualquer chave, então
+   quem restringe é o contrato de props. */
+const TAGS = ["div", "section", "article", "header", "footer", "ul", "li"];
 
 function Reveal({ as = "div", delay = 0, className = "", children, ...rest }) {
   const prefersReducedMotion = useReducedMotion();
@@ -23,7 +29,7 @@ function Reveal({ as = "div", delay = 0, className = "", children, ...rest }) {
     );
   }
 
-  const Animated = motion[as] ?? motion.div;
+  const Animated = motion[as];
 
   return (
     <Animated
@@ -40,7 +46,7 @@ function Reveal({ as = "div", delay = 0, className = "", children, ...rest }) {
 }
 
 Reveal.propTypes = {
-  as: PropTypes.string,
+  as: PropTypes.oneOf(TAGS),
   delay: PropTypes.number,
   className: PropTypes.string,
   children: PropTypes.node,

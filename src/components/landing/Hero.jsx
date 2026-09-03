@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import Button from "../ui/Button";
-import { BASE_PRICE, SPECS } from "../../data/catalog";
+import { BASE_PRICE, SECTION_IDS, SPECS, sectionHref } from "../../data/catalog";
 import { formatBRL } from "../../lib/currency";
 import HeroImage from "../../assets/images/banner-mt07.jpg";
 
@@ -9,20 +9,22 @@ import HeroImage from "../../assets/images/banner-mt07.jpg";
    do catálogo: o hero escolhe quais mostrar, não os redeclara. */
 const HERO_SPEC_IDS = ["displacement", "power", "torque"];
 
-const HERO_SPECS = HERO_SPEC_IDS.map((id) =>
-  SPECS.find((spec) => spec.id === id)
-).filter(Boolean);
+const HERO_SPECS = HERO_SPEC_IDS.map((id) => {
+  const spec = SPECS.find((item) => item.id === id);
+  /* Perder um número em silêncio é pior que quebrar: a primeira dobra promete
+     os três. */
+  if (!spec) throw new Error(`Especificação "${id}" ausente no catálogo`);
+  return spec;
+});
 
-/* Na primeira dobra a unidade é curta: a faixa de rotação completa fica para
-   a ficha técnica, logo abaixo. */
-function shortUnit(unit) {
-  return unit.split("@")[0].trim();
-}
-
-function Hero({ id = "hero", specSheetHref = "#ficha-tecnica", onOpenConfigurator }) {
+function Hero({
+  id = SECTION_IDS.hero,
+  specSheetHref = sectionHref(SECTION_IDS.specSheet),
+  onOpenConfigurator,
+}) {
   return (
     <section
-      className="relative grid min-h-[560px] grid-rows-[1fr_auto] overflow-hidden"
+      className="relative grid min-h-[560px] scroll-mt-16 grid-rows-[1fr_auto] overflow-hidden"
       id={id}
     >
       {/* A foto preenche o bloco em posição absoluta: se não carregar, o hero
@@ -76,7 +78,7 @@ function Hero({ id = "hero", specSheetHref = "#ficha-tecnica", onOpenConfigurato
               <p className="data-figure text-[34px] leading-none">
                 <span>{spec.value}</span>
                 <span className="ml-1 font-mono text-sm text-khaki">
-                  {shortUnit(spec.unit)}
+                  {spec.unitShort}
                 </span>
               </p>
               <p className="label-mono mt-1.5 text-paper-dim">{spec.name}</p>

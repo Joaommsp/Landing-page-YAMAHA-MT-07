@@ -2,14 +2,15 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import Button from "../ui/Button";
+import { SECTION_IDS, sectionHref } from "../../data/catalog";
 import Logo from "../../assets/images/yamahaLogo.png";
 
 /* Navegação da página: cada item aponta para a âncora da seção
    correspondente. É a lista única — o menu mobile renderiza a mesma. */
 const NAV_LINKS = [
-  { href: "#hero", label: "Início" },
-  { href: "#ficha-tecnica", label: "A moto" },
-  { href: "#galeria", label: "Galeria" },
+  { href: sectionHref(SECTION_IDS.hero), label: "Início" },
+  { href: sectionHref(SECTION_IDS.specSheet), label: "A moto" },
+  { href: sectionHref(SECTION_IDS.gallery), label: "Galeria" },
 ];
 
 const MOBILE_MENU_ID = "menu-navegacao";
@@ -43,7 +44,7 @@ function Header({ onOpenConfigurator }) {
 
   return (
     <header className="sticky top-0 z-40 flex items-center gap-6 border-b border-line bg-ink/90 px-5 py-4 backdrop-blur-md md:px-7">
-      <a className="flex items-center" href={NAV_LINKS[0].href}>
+      <a className="flex items-center" href={sectionHref(SECTION_IDS.hero)}>
         <img className="h-5 w-auto" src={Logo} alt="Yamaha" />
       </a>
 
@@ -58,7 +59,7 @@ function Header({ onOpenConfigurator }) {
       </nav>
 
       <div className="ml-auto flex items-center gap-3 md:ml-6">
-        <Button className="px-4 py-3 md:px-6 md:py-4" onClick={onOpenConfigurator}>
+        <Button onClick={onOpenConfigurator} size="sm">
           Montar a minha
         </Button>
 

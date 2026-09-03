@@ -1,4 +1,5 @@
 import Reveal from "../ui/Reveal";
+import { SECTION_IDS, sectionHref } from "../../data/catalog";
 import AuthorLogo from "../../assets/images/rakuzan-logo.png";
 
 /* Colunas do rodapé: âncoras da própria página e os perfis reais do autor.
@@ -7,9 +8,9 @@ const FOOTER_COLUMNS = [
   {
     title: "A moto",
     links: [
-      { href: "#hero", label: "Início" },
-      { href: "#ficha-tecnica", label: "Ficha técnica" },
-      { href: "#galeria", label: "Galeria" },
+      { href: sectionHref(SECTION_IDS.hero), label: "Início" },
+      { href: sectionHref(SECTION_IDS.specSheet), label: "Ficha técnica" },
+      { href: sectionHref(SECTION_IDS.gallery), label: "Galeria" },
     ],
   },
   {

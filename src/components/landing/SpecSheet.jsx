@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import Reveal from "../ui/Reveal";
-import { SPECS } from "../../data/catalog";
+import { SECTION_IDS, SPECS } from "../../data/catalog";
 import ArtImage from "../../assets/images/banner02.png";
 
 /* Stagger da entrada das linhas: a ficha se lê de cima para baixo, e o
@@ -15,9 +15,9 @@ function barWidth(ratio) {
   return `${Math.round(ratio * 100)}%`;
 }
 
-function SpecSheet({ id = "ficha-tecnica" }) {
+function SpecSheet({ id = SECTION_IDS.specSheet }) {
   return (
-    <section className="grid bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
+    <section className="grid scroll-mt-16 bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
       <div className="px-5 py-10 md:px-12 md:py-14">
         <Reveal>
           <p className="label-mono text-cyan">Engenharia</p>
