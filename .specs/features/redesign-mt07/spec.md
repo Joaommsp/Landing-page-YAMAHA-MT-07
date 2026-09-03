@@ -229,7 +229,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-07 | P1: Hero e seções da landing (imagens) | Design | Pending |
 | MT07-08 | P1: Formulários de dados e entrega | Design | Implementing |
 | MT07-09 | P1: Pagamento e resumo do pedido | Design | Implementing |
-| MT07-10 | P2: Motion com função | Design | Pending |
+| MT07-10 | P2: Motion com função | Design | Implementing |
 | MT07-11 | P2: Limpeza da base técnica | Design | Pending |
 | MT07-12 | P3: Rodapé e navegação | - | Pending |
 

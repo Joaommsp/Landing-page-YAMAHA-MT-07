@@ -290,7 +290,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T9: Criar o wrapper de revelação
+### T9: Criar o wrapper de revelação ✅
 
 **What**: Componente `Reveal` com `whileInView`, respeitando movimento reduzido e mantendo o conteúdo legível sem JS.
 **Where**: `src/components/ui/Reveal.jsx`
@@ -300,9 +300,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Deslocamento máximo de 24px e `viewport={{ once: true }}`
-- [ ] Sob `prefers-reduced-motion` o conteúdo aparece em estado final
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Deslocamento máximo de 24px e `viewport={{ once: true }}`
+- [x] Sob `prefers-reduced-motion` o conteúdo aparece em estado final
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
 **Tests**: none
 **Gate**: build
