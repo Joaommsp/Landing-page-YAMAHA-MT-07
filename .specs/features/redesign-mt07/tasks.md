@@ -617,22 +617,25 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T21: Montar o shell do configurador
+### T21: Montar o shell do configurador ✅
 
 **What**: `Configurator` reunindo stepper, painéis, navegação e preço, com transição entre passos.
 **Where**: `src/components/configurator/Configurator.jsx`
 **Depends on**: T20
-**Reuses**: `src/hooks/useConfigurator.js`, `Stepper`, `steps/*`
-**Requirement**: MT07-05
+**Reuses**: `src/hooks/useConfigurator.js`, `Stepper`, `steps/*`, `Button`
+**Requirement**: MT07-05, MT07-08, MT07-09, MT07-10
 
 **Done when**:
 
-- [ ] Painel exibido corresponde ao passo selecionado no stepper
-- [ ] Botão "anterior" desabilitado no passo 1; "próximo" desabilitado no passo 5
-- [ ] Preço e parcela do cabeçalho refletem o total do hook
-- [ ] Fechar e reabrir preserva cor e opcionais escolhidos
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 8 testes passam
+- [x] Painel exibido corresponde ao passo selecionado no stepper
+- [x] Botão "anterior" desabilitado no passo 1; "próximo" desabilitado no passo 5
+- [x] Preço e parcela do cabeçalho refletem o total do hook
+- [x] Fechar e reabrir preserva cor e opcionais escolhidos (o shell fica montado e apenas deixa de desenhar — AD-021)
+- [x] Diálogo com foco preso, `Escape` fechando e foco devolvido a quem abriu
+- [x] Avanço bloqueado por campo inválido avisa em `role="alert"` e mantém o passo
+- [x] Transição de painel em `AnimatePresence` (y 10 → 0, 0,5 s); sob movimento reduzido o painel entra direto
+- [x] Gate check passa: `npm test -- --run` e `npm run build`
+- [x] Test count: 8 testes passam (108 na suíte)
 
 **Tests**: unit
 **Gate**: full

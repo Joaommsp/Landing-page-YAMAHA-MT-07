@@ -24,10 +24,11 @@
 | AD-018 | `CONFIGURATOR_PANEL_ID` e `stepTabId(stepId)` vivem em `data/catalog.js` | O `aria-controls` do stepper e o `aria-labelledby` do painel são o mesmo contrato dos dois lados; escrever o id à mão nos dois arquivos repetiria o erro que a AD-014 corrigiu nas âncoras | 2026-09-03 |
 | AD-019 | `Field` (apresentação pura, em `ui/`) e `FieldGrid` (lista do catálogo, `maskByType`, validador no `blur`) servem aos três passos com formulário | Sem eles PersonalStep, DeliveryStep e PaymentStep repetiriam o mesmo encanamento três vezes — a duplicação que esta feature existe para matar. O erro do fluxo (avançar/finalizar) chega por prop e tem precedência sobre o erro de saída de campo | 2026-09-03 |
 | AD-020 | O passo de pagamento não traz as abas de forma de pagamento (Cartão/Pix/Financiamento) que o mockup desenha | Só o cartão é simulado nesta entrega; três abas em que duas não fazem nada seriam controle morto na tela. Se Pix e financiamento entrarem, entram com comportamento | 2026-09-03 |
+| AD-021 | Fechar o configurador não desmonta o shell: ele fica montado e devolve `null` | O estado vive no `useConfigurator` dentro do shell; desmontar apagaria cor e opcionais, e a spec exige que reabrir preserve as escolhas. Como nada se perde ao fechar, a saída também não precisa de diálogo de confirmação | 2026-09-03 |
 
 ## Handoff
 
 **Feature**: redesign-mt07
-**Fase**: Execute — fase 3 (Configurador) em curso
+**Fase**: Execute — fase 3 (Configurador) concluída
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T21 (shell do configurador)
+**Próximo passo**: T22 (compor a Home, fase 4)
