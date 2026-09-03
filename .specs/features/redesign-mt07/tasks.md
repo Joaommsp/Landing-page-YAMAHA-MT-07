@@ -596,7 +596,7 @@ T22 → T23 → T24 → T25
 
 **What**: `PaymentStep` com resumo do pedido e cartão espelhando o formulário.
 **Where**: `src/components/configurator/steps/PaymentStep.jsx`
-**Depends on**: T19
+**Depends on**: None (segue a T19b)
 **Reuses**: `src/lib/currency.js`, `src/components/configurator/FieldGrid.jsx`, `src/components/ui/Button.jsx`
 **Requirement**: MT07-09
 
@@ -825,7 +825,7 @@ Phase 5:  V1 → V2 → V3 → V4 → V5 → V6 → V7 → V8 → V9 → V10   (
 | T18 | T17 | T17 → T18 | ✅ Match |
 | T19 | T18 | T18 → T19 | ✅ Match |
 | T19b | None (fix da fase 3) | — | ✅ Match |
-| T20 | T19 | T19 → T20 | ✅ Match |
+| T20 | None (segue a T19b) | — | ✅ Match |
 | T21 | T20 | T20 → T21 | ✅ Match |
 | T22 | None (fase 3 concluída) | — | ✅ Match |
 | T23 | T22 | T22 → T23 | ✅ Match |
