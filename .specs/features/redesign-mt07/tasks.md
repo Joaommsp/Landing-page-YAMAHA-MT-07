@@ -144,7 +144,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T4: Criar o formatador de moeda
+### T4: Criar o formatador de moeda ✅
 
 **What**: Funções `formatBRL` e `formatParcel` em BRL completo, sem notação abreviada.
 **Where**: `src/lib/currency.js`
@@ -154,11 +154,11 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] `formatBRL(48500)` retorna `R$ 48.500,00`
-- [ ] `formatParcel(48500, 24)` retorna o valor da parcela em BRL completo
-- [ ] `formatBRL(0)` retorna `R$ 0,00` e `formatBRL(1000000)` não usa notação compacta
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 5 testes passam
+- [x] `formatBRL(48500)` retorna `R$ 48.500,00`
+- [x] `formatParcel(48500, 24)` retorna o valor da parcela em BRL completo
+- [x] `formatBRL(0)` retorna `R$ 0,00` e `formatBRL(1000000)` não usa notação compacta
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 5 testes passam
 
 **Tests**: unit
 **Gate**: quick
