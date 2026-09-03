@@ -94,7 +94,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T2: Configurar Vitest com Testing Library
+### T2: Configurar Vitest com Testing Library ✅
 
 **What**: Adicionar o ambiente de teste (jsdom, setup com `@testing-library/jest-dom`) e o script `test` no `package.json`.
 **Where**: `vite.config.js`
@@ -109,9 +109,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] `npm test -- --run` executa e reporta "no tests found" sem erro de configuração
-- [ ] `environment: "jsdom"` e `setupFiles` apontando para `src/setupTests.js`
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] `npm test -- --run` executa e sai com código 0
+- [x] `environment: "jsdom"` e `setupFiles` apontando para `src/setupTests.js`
+- [x] Gate check passa: build verde, suíte verde, lint sem erro novo sobre o baseline
 
 **Tests**: none
 **Gate**: build
