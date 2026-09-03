@@ -25,18 +25,23 @@ describe("Footer", () => {
     expect(screen.getByRole("contentinfo")).toHaveTextContent(NON_COMMERCIAL);
   });
 
-  it("aponta as âncoras da própria página pela fonte única do catálogo", () => {
+  /* Pega drift de id: renomear uma seção sem acertar o rodapé deixaria link
+     apontando para o vazio, sem erro de build (AD-014). */
+  it("aponta cada âncora do rodapé para o id atual da seção", () => {
     render(<Footer />);
 
     const nav = screen.getByRole("navigation", { name: /rodapé/i });
+    const expected = [
+      [/início/i, SECTION_IDS.hero],
+      [/ficha técnica/i, SECTION_IDS.specSheet],
+      [/galeria/i, SECTION_IDS.gallery],
+    ];
 
-    expect(within(nav).getByRole("link", { name: /ficha técnica/i })).toHaveAttribute(
-      "href",
-      sectionHref(SECTION_IDS.specSheet)
-    );
-    expect(within(nav).getByRole("link", { name: /galeria/i })).toHaveAttribute(
-      "href",
-      sectionHref(SECTION_IDS.gallery)
-    );
+    expected.forEach(([name, sectionId]) => {
+      expect(within(nav).getByRole("link", { name })).toHaveAttribute(
+        "href",
+        sectionHref(sectionId)
+      );
+    });
   });
 });

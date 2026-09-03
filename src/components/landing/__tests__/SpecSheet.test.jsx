@@ -9,12 +9,13 @@ import { SPECS } from "../../../data/catalog";
    comprimento não é escolhido no componente: mudar o `ratio` do catálogo tem
    de mudar a barra, e nada mais tem de mudá-la. */
 
-/* A barra é o único elemento da ficha com largura inline; os wrappers do
-   `Reveal` carregam opacidade e deslocamento, não largura. */
+/* A barra é a única filha da trilha (o `span` decorativo de cada linha), então
+   a busca é escopada nela — e não numa varredura de tudo que tem estilo inline,
+   que dependeria de o `Reveal` nunca animar largura. */
 function barWidths(root) {
-  return Array.from(root.querySelectorAll("[style]"))
-    .filter((node) => node.style.width !== "")
-    .map((node) => node.style.width);
+  return Array.from(
+    root.querySelectorAll('[aria-hidden="true"] > [style]')
+  ).map((node) => node.style.width);
 }
 
 const expectedWidth = (ratio) => `${Math.round(ratio * 100)}%`;
@@ -33,17 +34,5 @@ describe("SpecSheet", () => {
     const { container } = render(<SpecSheet />);
 
     expect(barWidths(container)).toEqual(SPECS.map((spec) => expectedWidth(spec.ratio)));
-  });
-
-  it("não repete a mesma largura em especificações de ratio diferente", () => {
-    const { container } = render(<SpecSheet />);
-
-    const widths = barWidths(container);
-    const ratios = new Set(SPECS.map((spec) => spec.ratio));
-
-    /* Guarda contra barra de comprimento fixo: tantas larguras distintas
-       quantos `ratio` distintos o catálogo tem. */
-    expect(new Set(widths).size).toBe(ratios.size);
-    expect(widths).toHaveLength(SPECS.length);
   });
 });

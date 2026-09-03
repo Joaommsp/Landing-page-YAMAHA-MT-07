@@ -104,16 +104,16 @@ describe("validateCard", () => {
 describe("validateExpiration", () => {
   it("acusa 'Validade inválida' fora de MM/AA ou com mês fora de 01 a 12", () => {
     expect(validateExpiration("1229", NOW)).toBe("Validade inválida");
-    expect(validateExpiration("13/29", NOW)).toBe(MESSAGES.expiration);
-    expect(validateExpiration("00/29", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("13/29", NOW)).toBe("Validade inválida");
+    expect(validateExpiration("00/29", NOW)).toBe("Validade inválida");
     expect(validateExpiration("12/29", NOW)).toBe("");
     expect(validateExpiration("01/30", NOW)).toBe("");
   });
 
   it("acusa 'Cartão vencido' em data já passada", () => {
     expect(validateExpiration("08/26", NOW)).toBe("Cartão vencido");
-    expect(validateExpiration("12/25", NOW)).toBe(MESSAGES.expired);
-    expect(validateExpiration("01/20", NOW)).toBe(MESSAGES.expired);
+    expect(validateExpiration("12/25", NOW)).toBe("Cartão vencido");
+    expect(validateExpiration("01/20", NOW)).toBe("Cartão vencido");
   });
 
   it("aceita o próprio mês corrente, que só vence no fim dele", () => {
@@ -134,10 +134,10 @@ describe("validateCVV", () => {
 
   it("acusa 'CVV inválido' com tamanho errado ou caractere que não é dígito", () => {
     expect(validateCVV("12")).toBe("CVV inválido");
-    expect(validateCVV("12345")).toBe(MESSAGES.cvv);
-    expect(validateCVV("12a")).toBe(MESSAGES.cvv);
-    expect(validateCVV("")).toBe(MESSAGES.cvv);
-    expect(validateCVV(undefined)).toBe(MESSAGES.cvv);
+    expect(validateCVV("12345")).toBe("CVV inválido");
+    expect(validateCVV("12a")).toBe("CVV inválido");
+    expect(validateCVV("")).toBe("CVV inválido");
+    expect(validateCVV(undefined)).toBe("CVV inválido");
   });
 });
 
