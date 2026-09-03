@@ -515,23 +515,25 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T18: Criar o passo de dados pessoais
+### T18: Criar o passo de dados pessoais ✅
 
 **What**: `PersonalStep` com campos controlados, máscaras, contador de caracteres e erro por campo.
-**Where**: `src/components/configurator/steps/PersonalStep.jsx`
+**Where**: `src/components/configurator/steps/PersonalStep.jsx`, `src/components/ui/Field.jsx`, `src/components/configurator/FieldGrid.jsx`
 **Depends on**: T17
-**Reuses**: `src/lib/masks.js`, `src/lib/validation.js`
+**Reuses**: `src/lib/masks.js`, `src/lib/validation.js`, `src/data/catalog.js` (`STEP_FIELDS`)
 **Requirement**: MT07-08
 
 **Done when**:
 
-- [ ] Sair de campo obrigatório vazio exibe a mensagem de erro naquele campo
-- [ ] E-mail inválido exibe `Informe um e-mail válido`
-- [ ] CPF inválido exibe `CPF inválido`
-- [ ] Campo com limite exibe contador de caracteres
-- [ ] Rótulos sem ícone decorativo
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 7 testes passam
+- [x] Sair de campo obrigatório vazio exibe a mensagem de erro naquele campo
+- [x] E-mail inválido exibe `Informe um e-mail válido`
+- [x] CPF inválido exibe `CPF inválido`
+- [x] Campo com limite exibe contador de caracteres
+- [x] Rótulos sem ícone decorativo
+- [x] `Field` (apresentação) e `FieldGrid` (máscara, erro de saída de campo) nascem aqui e servem também a T19 e T20 (AD-019)
+- [x] `disabled` desabilita todos os campos do passo
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 7 testes passam (81 na suíte)
 
 **Tests**: unit
 **Gate**: quick

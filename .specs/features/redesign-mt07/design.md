@@ -32,6 +32,7 @@ src/
 │   ├── configurator/
 │   │   ├── Configurator.jsx   # shell: modal, navegação, resumo do passo
 │   │   ├── Stepper.jsx        # indicador único dos 5 passos (mata a duplicação 5x)
+│   │   ├── FieldGrid.jsx      # grade de campos de um passo (máscara + erro), usada pelos 3 formulários
 │   │   └── steps/{ColorStep,OptionsStep,PersonalStep,DeliveryStep,PaymentStep}.jsx
 │   └── ui/{Button,Field,Reveal}.jsx
 └── Pages/Home/index.jsx
