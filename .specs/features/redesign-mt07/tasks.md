@@ -355,7 +355,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T12: Redesenhar a ficha técnica
+### T12: Redesenhar a ficha técnica ✅
 
 **What**: `SpecSheet` renderizando as especificações do catálogo com barra proporcional ao `ratio`.
 **Where**: `src/components/landing/SpecSheet.jsx`
@@ -365,9 +365,9 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Uma linha por item de `SPECS`, com nome, valor, unidade e barra
-- [ ] Largura da barra derivada do `ratio` do catálogo, não de valor fixo no componente
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Uma linha por item de `SPECS`, com nome, valor, unidade e barra
+- [x] Largura da barra derivada do `ratio` do catálogo, não de valor fixo no componente
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build`
 
 **Tests**: none
 **Gate**: build
