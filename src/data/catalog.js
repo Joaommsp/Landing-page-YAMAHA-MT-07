@@ -211,6 +211,15 @@ export const STEPS = [
   { id: STEP_IDS.PAYMENT, label: "Pagamento", title: "Pagamento e resumo" },
 ];
 
+/* Ids do configurador: o stepper aponta para o painel por `aria-controls` e o
+   painel volta ao passo por `aria-labelledby`. Fonte única para os dois lados,
+   pelo mesmo motivo de `SECTION_IDS` (AD-014). */
+export const CONFIGURATOR_PANEL_ID = "configurador-painel";
+
+export function stepTabId(stepId) {
+  return `configurador-passo-${stepId}`;
+}
+
 export const FIRST_STEP = STEPS[0].id;
 export const LAST_STEP = STEPS[STEPS.length - 1].id;
 

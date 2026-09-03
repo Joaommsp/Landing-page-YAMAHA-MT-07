@@ -441,21 +441,23 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T15: Criar o indicador de passos
+### T15: Criar o indicador de passos ✅
 
 **What**: `Stepper` único, com `role="tablist"`, substituindo os cinco blocos duplicados do pop-up antigo.
-**Where**: `src/components/configurator/Stepper.jsx`
+**Where**: `src/components/configurator/Stepper.jsx`, `src/data/catalog.js`
 **Depends on**: None (fase 2 concluída)
 **Reuses**: `src/data/catalog.js` (rótulos dos passos)
 **Requirement**: MT07-05
 
 **Done when**:
 
-- [ ] Cinco passos renderizados a partir de uma lista, sem repetição de bloco
-- [ ] `aria-selected` verdadeiro apenas no passo atual
-- [ ] Acionar um passo chama `onSelect` com o índice daquele passo
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 5 testes passam
+- [x] Cinco passos renderizados a partir de uma lista, sem repetição de bloco
+- [x] `aria-selected` verdadeiro apenas no passo atual
+- [x] Acionar um passo chama `onSelect` com o índice daquele passo
+- [x] Passo ainda não liberado pelo fluxo vem desabilitado; setas, Home e End andam pelo trilho
+- [x] `CONFIGURATOR_PANEL_ID` e `stepTabId` no catálogo, ligando `aria-controls` ao painel (AD-018)
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 5 testes passam (65 na suíte)
 
 **Tests**: unit
 **Gate**: quick

@@ -218,22 +218,22 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 
 ## Requirement Traceability
 
-| Requirement ID | Story | Phase | Status |
+| Requirement ID | Story | Tasks | Status |
 | -------------- | ----- | ----- | ------ |
-| MT07-01 | P1: Design system em tokens | Implementing | Done |
-| MT07-02 | P1: Hero e seções da landing | Design | Implementing |
-| MT07-03 | P1: Hero e seções da landing (ficha técnica) | Design | Implementing |
-| MT07-04 | P1: Hero e seções da landing (galeria) | Design | Implementing |
-| MT07-05 | P1: Configurador de 5 passos | Design | Implementing |
-| MT07-06 | P1: Configurador de 5 passos (preço) | Design | Implementing |
-| MT07-07 | P1: Hero e seções da landing (imagens) | Design | Implementing |
-| MT07-08 | P1: Formulários de dados e entrega | Design | Implementing |
-| MT07-09 | P1: Pagamento e resumo do pedido | Design | Implementing |
-| MT07-10 | P2: Motion com função | Design | Implementing |
-| MT07-11 | P2: Limpeza da base técnica | Design | Implementing |
-| MT07-12 | P3: Rodapé e navegação | - | Implementing |
+| MT07-01 | P1: Design system em tokens | T1, T8, T14b | Done |
+| MT07-02 | P1: Hero e seções da landing | T11, T22 | Implementing |
+| MT07-03 | P1: Hero e seções da landing (ficha técnica) | T12 | Done |
+| MT07-04 | P1: Hero e seções da landing (galeria) | T13 | Done |
+| MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16, T21 | Implementing |
+| MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17 | Implementing |
+| MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | Done |
+| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b | Implementing |
+| MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b, T20 | Implementing |
+| MT07-10 | P2: Motion com função | T9, T21, T24 | Implementing |
+| MT07-11 | P2: Limpeza da base técnica | T2, T10, T23, T24, T25 | Implementing |
+| MT07-12 | P3: Rodapé e navegação | T14 | Done |
 
-**Coverage:** 12 total, 0 mapeados para tasks, 12 pendentes.
+**Coverage:** 12 total, 12 mapeados para tasks, 0 sem task.
 
 ---
 
