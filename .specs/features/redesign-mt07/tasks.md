@@ -216,7 +216,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T7: Criar o hook de estado do configurador
+### T7: Criar o hook de estado do configurador ✅
 
 **What**: `useConfigurator` com `useReducer` cobrindo passo, cor, opcionais, formulários e o total derivado.
 **Where**: `src/hooks/useConfigurator.js`
@@ -226,14 +226,14 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Total inicial é `BASE_PRICE + DELIVERY_PRICE` sem opcional marcado
-- [ ] Marcar e desmarcar opcional soma e subtrai exatamente o preço do catálogo
-- [ ] `previous` no passo 1 mantém o passo 1; `next` no passo 5 mantém o passo 5
-- [ ] Selecionar cor com `surcharge` soma o acréscimo ao total
-- [ ] Voltar do passo 5 ao 1 preserva cor e opcionais
-- [ ] `next` com campo inválido no passo atual não avança
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 12 testes passam
+- [x] Total inicial é `BASE_PRICE + DELIVERY_PRICE` sem opcional marcado
+- [x] Marcar e desmarcar opcional soma e subtrai exatamente o preço do catálogo
+- [x] `previous` no passo 1 mantém o passo 1; `next` no passo 5 mantém o passo 5
+- [x] Selecionar cor com `surcharge` soma o acréscimo ao total
+- [x] Voltar do passo 5 ao 1 preserva cor e opcionais
+- [x] `next` com campo inválido no passo atual não avança
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 12 testes passam
 
 **Tests**: unit
 **Gate**: quick
