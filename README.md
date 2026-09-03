@@ -1,67 +1,95 @@
-# Landing Page mt-07
+# Landing page MT-07
 
-<div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
-  <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" height="40" alt="vscode logo"
-    />
-      <img width="12" />
-            <img width="12" />
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Vite-Dark.svg" height="40" alt="vite logo"  />
-    <img width="12" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" height="40" alt="figma logo"  />
-    <img width="12" />
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/StyledComponents.svg" height="40" alt="Styled components"  />
-</div>
-<br/>
+Landing page de compra de motocicleta: ficha técnica, seção editorial de detalhes e um configurador de cinco passos que vai da escolha da cor até a confirmação do pedido.
 
-<img src="./src/assets/images/yamahaLogo.png" alt="logo">
-<br/>
+Projeto de estudo, sem vínculo com a fabricante. Todas as marcas e imagens pertencem aos seus donos.
 
-### 📷 Images
+**No ar:** https://purchase-page-yamaha-mt-07.vercel.app
 
-![](./MacBook%20Pro-1719152539497.jpeg)
-![](./MacBook%20Pro-1719152555239.jpeg)
+---
 
-### 📱 Responsive Design
+## Telas
 
-![](./iPhone%2012%20Pro-1719152939398.jpeg)
+### Hero
 
-![](./iPhone%2012%20Pro-1719152589875.jpeg)
+![Hero da landing, com o nome do produto e a ficha de desempenho](docs/screenshots/desktop-hero.jpg)
 
-##
+### Ficha técnica
+
+Cada especificação tem uma barra proporcional ao valor, derivada do próprio dado do catálogo.
+
+![Ficha técnica com barras proporcionais](docs/screenshots/desktop-ficha.jpg)
+
+### Capítulos de conforto
+
+Uma foto grande por vez, com o argumento e os números daquele detalhe ao lado, alternando o lado a cada capítulo.
+
+![Capítulos alternados com foto e dados técnicos](docs/screenshots/desktop-capitulos.jpg)
+
+### Configurador
+
+Cinco passos — cor, opcionais, dados, entrega e pagamento — com preço reativo, validação por campo e cartão que espelha o formulário.
+
+![Configurador aberto no passo de escolha de cor](docs/screenshots/desktop-configurador.jpg)
+
+### Responsivo
+
+<img src="docs/screenshots/mobile-hero.jpg" alt="Hero em tela de celular" width="330"> <img src="docs/screenshots/mobile-capitulos.jpg" alt="Capítulos em tela de celular" width="330">
+
+---
+
+## Stack
+
+| Camada | Escolha |
+| ------ | ------- |
+| UI | React 18 + Vite 5 |
+| Estilo | Tailwind CSS 4, com tokens de cor, tipografia e espaçamento em `src/styles/index.css` |
+| Movimento | Motion (`motion/react`) e CSS, respeitando `prefers-reduced-motion` |
+| Estado | `useReducer` em `useConfigurator` — passo, cor, opcionais, formulários e total derivado |
+| Testes | Vitest + Testing Library + jsdom |
+| Qualidade | ESLint |
+
+Fontes: Archivo (display variável), Barlow (corpo) e IBM Plex Mono (dado técnico).
+
+## Rodando
+
+```bash
+npm install
+npm run dev      # http://localhost:9000
+```
+
+```bash
+npm test         # suíte completa (vitest)
+npm run lint     # eslint, zero aviso tolerado
+npm run build    # build de produção
+npm run preview  # serve o build em http://localhost:9001
+```
+
+## Como o projeto se organiza
 
 ```
-git clone https://github.com/Joaommsp/purchase-page-YAMAHA-MT-07.git
+src/
+├── data/catalog.js      # preço, cores, opcionais, ficha técnica, capítulos e campos de formulário
+├── lib/                 # moeda, máscaras, validadores, formatação numérica e curva de easing
+├── hooks/               # useConfigurator: a máquina de estado do fluxo de compra
+├── components/
+│   ├── ui/              # Button, Field, Reveal, CountUp, SpecMarquee
+│   ├── layout/          # Header, Footer
+│   ├── landing/         # Hero, SpecSheet, Gallery
+│   └── configurator/    # Stepper, FieldGrid e os cinco passos
+├── styles/index.css     # tema: tokens, escala tipográfica e camada de movimento
+└── Pages/Home           # composição da página
 ```
 
-```
-cd purchase-page-YAMAHA-MT-07
-```
+Duas regras que valem em todo o código: **nenhum valor de produto vive em componente** — preço, cor, opcional e especificação saem do catálogo; e **nenhum componente calcula preço** — subtotal, total e parcela chegam prontos do hook, para a página não poder exibir dois números diferentes para a mesma coisa.
 
-```
-npm i
-```
+## Acessibilidade
 
-```
-npm run dev
-```
+- Configurador em `dialog` com foco preso, `Escape` para fechar, devolução do foco ao gatilho e o resto da página inerte enquanto aberto.
+- Indicador de passos como `tablist`/`tab`/`tabpanel`, navegável pelas setas, Home e End.
+- Erro de formulário fiel à mensagem do validador, nunca genérico.
+- Sob `prefers-reduced-motion`, todo conteúdo aparece em estado final, sem animação.
 
-## 🔗 Deploy
+---
 
-Clique e acesse o projeto
-
-<div align="left">
-  <a href="https://purchase-page-yamaha-mt-07.vercel.app/"><img src="https://skillicons.dev/icons?i=vercel" height="40" alt="vercel logo"  /></a>
-</div>
-
-## React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Desenvolvido por **João Marcos**.

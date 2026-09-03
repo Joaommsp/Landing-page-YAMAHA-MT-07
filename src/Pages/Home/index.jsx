@@ -1,42 +1,45 @@
-import Header from "../../components/Header";
-import SelectModel from "../../components/SelectModelPopUp";
-import Specifications from "../../components/Specifications";
-import About from "../../components/About";
-import Footer from "../../components/Footer";
+import { useState } from "react";
 
-import Banner from "../../assets/images/banner-mt07.jpg";
-import SecundaryBanner from "../../assets/images/banner02.png";
-import TerciaryBanner from "../../assets/images/banner03.png";
+import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
+import Hero from "../../components/landing/Hero";
+import SpecSheet from "../../components/landing/SpecSheet";
+import Gallery from "../../components/landing/Gallery";
+import SpecMarquee from "../../components/ui/SpecMarquee";
+import Configurator from "../../components/configurator/Configurator";
 
-import {
-  HomeContainer,
-  BannerContainer,
-  BannerGradient,
-  SecundaryBannerContainer,
-} from "./styles";
+/* Página única do projeto: cabeçalho, as três seções da landing, rodapé e o
+   configurador em modal.
 
-const Home = () => {
+   O configurador fica montado o tempo todo e apenas deixa de desenhar quando
+   fechado (AD-021) — é o que preserva cor e opcionais entre uma abertura e
+   outra. A devolução do foco a quem abriu também é dele: o shell guarda o
+   elemento focado no momento da abertura, então tanto o botão do hero quanto o
+   do cabeçalho recuperam o foco ao fechar, sem a Home precisar de ref. */
+
+function Home() {
+  const [isConfiguratorOpen, setIsConfiguratorOpen] = useState(false);
+
+  const openConfigurator = () => setIsConfiguratorOpen(true);
+  const closeConfigurator = () => setIsConfiguratorOpen(false);
+
   return (
-    <HomeContainer>
-      <Header />
-      <BannerContainer $backgroundImg={Banner}>
-        <BannerGradient>
-          <div className="selectModelModalContainer">
-            <SelectModel />
-          </div>
-          <Specifications />
-          <SecundaryBannerContainer $bgColor={"#827e6c"}>
-            <img className="secundaryBanner" src={SecundaryBanner} alt="" />
-          </SecundaryBannerContainer>
-          <About />
-          <SecundaryBannerContainer $bgColor={"#EEFDD3"}>
-            <img className="secundaryBanner" src={TerciaryBanner} alt="" />
-          </SecundaryBannerContainer>
-          <Footer />
-        </BannerGradient>
-      </BannerContainer>
-    </HomeContainer>
+    <>
+      <Header onOpenConfigurator={openConfigurator} />
+
+      <main>
+        <Hero onOpenConfigurator={openConfigurator} />
+        <SpecMarquee />
+        <SpecSheet />
+        <Gallery />
+        <SpecMarquee />
+      </main>
+
+      <Footer />
+
+      <Configurator isOpen={isConfiguratorOpen} onClose={closeConfigurator} />
+    </>
   );
-};
+}
 
 export default Home;

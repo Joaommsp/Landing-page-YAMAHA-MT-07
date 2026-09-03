@@ -1,0 +1,289 @@
+import { Model } from "../assets/images/models/models";
+import { Optionals } from "../assets/images/optionals/optionals";
+import kitImage from "../assets/images/optionals-bg.png";
+import gallery1 from "../assets/images/gallery1.png";
+import gallery2 from "../assets/images/gallery2.png";
+import gallery3 from "../assets/images/gallery3.png";
+import gallery4 from "../assets/images/gallery4.png";
+import gallery5 from "../assets/images/gallery5.png";
+import gallery6 from "../assets/images/gallery6.png";
+
+/* Fonte única de verdade do produto: preço, cores, opcionais, ficha técnica,
+   galeria e passos do configurador. Nenhum desses valores é redeclarado em
+   componente. */
+
+export const BASE_PRICE = 48500;
+export const DELIVERY_PRICE = 2000;
+export const INSTALLMENTS = 24;
+
+/* Ano do modelo e prazo de entrega são dado de produto, não copy: apareciam
+   escritos à mão no hero e no resumo do pedido. */
+export const MODEL_YEAR = 2025;
+export const DELIVERY_LEAD_TIME_DAYS = 15;
+
+export const COLORS = [
+  {
+    id: "racing-blue",
+    name: "Racing Blue",
+    hex: "#1E4FA0",
+    surcharge: 0,
+    image: Model.racingBlue,
+  },
+  {
+    id: "storm-grey",
+    name: "Storm Grey",
+    hex: "#585C60",
+    surcharge: 0,
+    image: Model.stormGray,
+  },
+  {
+    id: "blood-white",
+    name: "Blood White",
+    hex: "#D8D6D1",
+    surcharge: 900,
+    image: Model.bloodWhite,
+  },
+];
+
+export const DEFAULT_COLOR_ID = COLORS[0].id;
+
+export const OPTIONS = [
+  {
+    id: "front-light-projector",
+    name: "Projetor auxiliar",
+    price: 1800,
+    description: "Feixe de LED extra para estrada à noite.",
+    image: Optionals.frontLightPrev,
+    featured: false,
+  },
+  {
+    id: "windscreen",
+    name: "Para-brisa esportivo",
+    price: 1250,
+    description: "Defletor baixo que tira o vento do peito.",
+    image: Optionals.windScreenPrev,
+    featured: false,
+  },
+  {
+    id: "tail-light",
+    name: "Lanterna traseira LED",
+    price: 740,
+    description: "Assinatura luminosa mais fina e visível.",
+    image: Optionals.tailLightPrev,
+    featured: false,
+  },
+  {
+    id: "led-indicator",
+    name: "Piscas sequenciais",
+    price: 620,
+    description: "Setas em varredura, à frente e atrás.",
+    image: Optionals.ledIndicatorPrev,
+    featured: false,
+  },
+  {
+    id: "dark-side-kit",
+    name: "Dark Side of Japan",
+    price: 2500,
+    description: "Kit de personalização completo em preto fosco.",
+    image: kitImage,
+    featured: true,
+  },
+];
+
+/* `ratio` é a fração da barra na ficha técnica: relação do valor com o teto da
+   categoria, definida na direção de arte aprovada. `unitShort` é a unidade sem
+   a faixa de rotação, para a primeira dobra, que não comporta a linha inteira. */
+export const SPECS = [
+  {
+    id: "displacement",
+    name: "Cilindrada",
+    value: "689",
+    unit: "cc",
+    unitShort: "cc",
+    ratio: 0.86,
+  },
+  {
+    id: "power",
+    name: "Potência máxima",
+    value: "74,8",
+    unit: "cv @ 8.750 rpm",
+    unitShort: "cv",
+    ratio: 0.74,
+  },
+  {
+    id: "torque",
+    name: "Torque máximo",
+    value: "6,9",
+    unit: "kgf.m @ 6.500 rpm",
+    unitShort: "kgf.m",
+    ratio: 0.69,
+  },
+  {
+    id: "weight",
+    name: "Peso em ordem de marcha",
+    value: "184",
+    unit: "kg",
+    unitShort: "kg",
+    ratio: 0.52,
+  },
+];
+
+/* Termos de campanha da faixa de especificações. Só o vocabulário entra aqui:
+   os números da faixa saem de `SPECS`, para a faixa nunca afirmar um valor
+   diferente do da ficha técnica. */
+export const MARQUEE_TERMS = [
+  "Master of torque",
+  "CP2 crossplane",
+  "Hyper naked",
+];
+
+/* A faixa intercala termo e número na ordem do mockup aprovado: termo, valor,
+   termo, valor — e segue só com os valores quando os termos acabam. */
+export const MARQUEE_ITEMS = SPECS.reduce((items, spec, index) => {
+  const term = MARQUEE_TERMS[index];
+  if (term) items.push(term);
+  items.push(`${spec.value} ${spec.unitShort}`);
+  return items;
+}, []);
+
+/* Seções da landing: o id da âncora é contrato entre o cabeçalho, o rodapé e a
+   própria seção. Fonte única para os três lados nunca divergirem. */
+export const SECTION_IDS = {
+  hero: "hero",
+  specSheet: "ficha-tecnica",
+  gallery: "galeria",
+};
+
+export function sectionHref(sectionId) {
+  return `#${sectionId}`;
+}
+
+/* Capítulos da seção de conforto e engenharia. Cada um é uma foto do acervo
+   com o argumento do lado e os números que aquele detalhe sustenta — não é
+   legenda, é conteúdo. Os valores repetidos aqui saem de `SPECS` para a página
+   nunca afirmar dois números diferentes para a mesma coisa.
+
+   Três capítulos, não seis: com seis a seção fica longa e repetitiva, e as
+   fotos que sobram continuam servindo à galeria de detalhes. */
+export const GALLERY_CHAPTERS = [
+  {
+    id: "cp2-engine",
+    image: gallery2,
+    alt: "Detalhe do motor CP2 da Yamaha MT-07",
+    eyebrow: "Motor",
+    title: ["Bicilíndrico", "CP2"],
+    text: "Dois cilindros em paralelo com virabrequim crossplane de 270°: o torque chega cheio desde baixo e a resposta ao acelerador é imediata, sem esperar giro.",
+    specIds: ["displacement", "power", "torque"],
+  },
+  {
+    id: "chassis",
+    image: gallery3,
+    alt: "Chassi tubular da Yamaha MT-07",
+    eyebrow: "Chassi",
+    title: ["Estrutura", "tubular de aço"],
+    text: "Quadro compacto que usa o motor como elemento estrutural. É o que mantém a moto leve e o entre-eixos curto, para trocar de direção sem esforço de guidão.",
+    specIds: ["weight"],
+  },
+  {
+    id: "rear-suspension",
+    image: gallery5,
+    alt: "Suspensão traseira da Yamaha MT-07",
+    eyebrow: "Conforto",
+    title: ["Monoamortecedor", "ajustável"],
+    text: "Ajuste de retorno e pré-carga na traseira, banco largo e triângulo de pilotagem ereto: a mesma moto serve para o trânsito diário e para a estrada.",
+    specIds: [],
+  },
+];
+
+/* Os números de cada capítulo, resolvidos na hora do uso: o capítulo guarda o
+   id da especificação, nunca o valor. */
+export function chapterSpecs(chapter) {
+  return chapter.specIds
+    .map((id) => SPECS.find((spec) => spec.id === id))
+    .filter(Boolean);
+}
+
+/* Cada passo é identificado por nome, não por posição no array: quem valida ou
+   navega importa o id, e reordenar a lista não muda o significado de ninguém. */
+export const STEP_IDS = {
+  COLOR: 1,
+  OPTIONS: 2,
+  PERSONAL: 3,
+  DELIVERY: 4,
+  PAYMENT: 5,
+};
+
+export const STEPS = [
+  { id: STEP_IDS.COLOR, label: "Cor", title: "Escolha a cor" },
+  { id: STEP_IDS.OPTIONS, label: "Opcionais", title: "Monte o pacote" },
+  { id: STEP_IDS.PERSONAL, label: "Dados", title: "Seus dados" },
+  { id: STEP_IDS.DELIVERY, label: "Entrega", title: "Endereço de entrega" },
+  { id: STEP_IDS.PAYMENT, label: "Pagamento", title: "Pagamento e resumo" },
+];
+
+/* Ids do configurador: o stepper aponta para o painel por `aria-controls` e o
+   painel volta ao passo por `aria-labelledby`. Fonte única para os dois lados,
+   pelo mesmo motivo de `SECTION_IDS` (AD-014). */
+export const CONFIGURATOR_PANEL_ID = "configurador-painel";
+
+export function stepTabId(stepId) {
+  return `configurador-passo-${stepId}`;
+}
+
+export const FIRST_STEP = STEPS[0].id;
+export const LAST_STEP = STEPS[STEPS.length - 1].id;
+
+/* Posição do passo na lista — dona única da conta que move o fluxo (AD-026,
+   AD-032). Hook, trilho e shell derivavam essa mesma posição cada um do seu
+   jeito, e o fallback divergia: com id fora da lista um tratava como primeiro
+   passo e o outro como "antes do primeiro", o que destravava lados opostos do
+   trilho. Aqui a decisão é uma: passo fora da lista conta como o primeiro, que
+   é o único destino sempre liberado. */
+export function stepPosition(stepId) {
+  const index = STEPS.findIndex((step) => step.id === stepId);
+  return index === -1 ? 0 : index;
+}
+
+/* Vocabulário de tipo de campo: escolhe a máscara na entrada e o validador na
+   saída. Fica no catálogo para que os dois lados leiam a mesma lista. */
+export const FIELD_TYPES = {
+  TEXT: "text",
+  EMAIL: "email",
+  CPF: "cpf",
+  PHONE: "phone",
+  CEP: "cep",
+  CARD: "card",
+  EXPIRATION: "expiration",
+  CVV: "cvv",
+};
+
+/* Teto do e-mail pela RFC 5321: cortar antes disso trancaria endereço legítimo
+   e truncaria valor colado. */
+const EMAIL_MAX_LENGTH = 254;
+
+/* Campos de cada passo com formulário: rótulo, ordem, tipo e teto de
+   caracteres são catálogo de produto — o mesmo teto alimenta o contador
+   exibido no campo. */
+export const STEP_FIELDS = {
+  [STEP_IDS.PERSONAL]: [
+    { name: "firstName", label: "Nome", type: FIELD_TYPES.TEXT, maxLength: 40 },
+    { name: "lastName", label: "Sobrenome", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "cpf", label: "CPF", type: FIELD_TYPES.CPF, maxLength: 14 },
+    { name: "email", label: "E-mail", type: FIELD_TYPES.EMAIL, maxLength: EMAIL_MAX_LENGTH },
+    { name: "phone", label: "Telefone", type: FIELD_TYPES.PHONE, maxLength: 15 },
+  ],
+  [STEP_IDS.DELIVERY]: [
+    { name: "cep", label: "CEP", type: FIELD_TYPES.CEP, maxLength: 9 },
+    { name: "street", label: "Rua", type: FIELD_TYPES.TEXT, maxLength: 80 },
+    { name: "number", label: "Número", type: FIELD_TYPES.TEXT, maxLength: 10 },
+    { name: "neighborhood", label: "Bairro", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "city", label: "Cidade", type: FIELD_TYPES.TEXT, maxLength: 60 },
+    { name: "state", label: "Estado", type: FIELD_TYPES.TEXT, maxLength: 2 },
+  ],
+  [STEP_IDS.PAYMENT]: [
+    { name: "cardHolder", label: "Nome no cartão", type: FIELD_TYPES.TEXT, maxLength: 40 },
+    { name: "cardNumber", label: "Número do cartão", type: FIELD_TYPES.CARD, maxLength: 19 },
+    { name: "cardExpiration", label: "Validade", type: FIELD_TYPES.EXPIRATION, maxLength: 5 },
+    { name: "cardCvv", label: "CVV", type: FIELD_TYPES.CVV, maxLength: 4 },
+  ],
+};
