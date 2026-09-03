@@ -669,7 +669,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T23: Remover as dependências mortas
+### T23: Remover as dependências mortas ✅
 
 **What**: Desinstalar `bootstrap`, `react-spinners`, `styled-components`, `gsap` e `react-imask` e apagar os `styles.js` e componentes antigos que ficaram órfãos.
 **Where**: `package.json`
@@ -679,10 +679,12 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Nenhuma das cinco dependências consta em `package.json` (`react-imask` fica órfão quando o Checkout legado sai)
-- [ ] `grep -r "styled-components\|gsap\|bootstrap\|react-imask" src` não retorna nada
-- [ ] Nenhum arquivo `styles.js` resta em `src`
-- [ ] Gate check passa: `npm run lint && npm test -- --run && npm run build`
+- [x] Nenhuma das cinco dependências consta em `package.json` (`react-imask` fica órfão quando o Checkout legado sai)
+- [x] `grep -r "styled-components\|gsap\|bootstrap\|react-imask" src` não retorna nada
+- [x] Nenhum arquivo `styles.js` resta em `src`
+- [x] Oito componentes legados apagados: `Header`, `About`, `Specifications`, `Footer`, `SelectModelPopUp`, `PersonalForm`, `DeliveryForm`, `Checkout`
+- [x] O `import` do bundle do bootstrap sai do `App.jsx` aqui, não na T24: sem isso o build quebraria assim que a dependência fosse desinstalada
+- [x] Gate check passa: `npm run lint && npm test -- --run && npm run build` — lint 100% limpo, os 8 erros do baseline saíram com os arquivos legados
 
 **Tests**: none
 **Gate**: build
