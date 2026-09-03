@@ -218,7 +218,7 @@ function PaymentStep({
         />
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Button disabled={submitting} onClick={onSubmit}>
+          <Button disabled={submitting} glow onClick={onSubmit}>
             {submitting && (
               <span
                 aria-hidden="true"

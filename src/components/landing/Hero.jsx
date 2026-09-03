@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 
 import Button from "../ui/Button";
+import CountUp from "../ui/CountUp";
 import {
   BASE_PRICE,
   MODEL_YEAR,
@@ -38,14 +39,14 @@ function Hero({
       <div className="absolute inset-0 z-0">
         <img
           alt="Yamaha MT-07 estacionada em uma garagem"
-          className="h-full w-full object-cover brightness-[.6] contrast-[1.08] grayscale-[.35]"
+          className="kenburns h-full w-full object-cover brightness-[.6] contrast-[1.08] grayscale-[.35]"
           src={HeroImage}
         />
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-transparent" />
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/40" />
       </div>
 
-      <div className="relative z-10 grid items-end gap-8 px-5 pb-7 pt-10 md:grid-cols-[minmax(0,1fr)_auto] md:px-7">
+      <div className="page-shell page-gutter relative z-10 grid w-full items-end gap-8 pb-7 pt-10 md:grid-cols-[minmax(0,1fr)_auto]">
         <div>
           <p className="label-mono flex items-center gap-3 text-cyan">
             <span aria-hidden="true" className="h-px w-9 bg-cyan" />
@@ -53,11 +54,13 @@ function Hero({
           </p>
 
           <h1 className="mt-3">
-            <span className="display-wide block text-hero">
-              MT-07
+            <span className="line block">
+              <span className="display-wide block text-hero">MT-07</span>
             </span>{" "}
-            <span className="display-narrow mt-1.5 block text-sub text-khaki">
-              Master of torque
+            <span className="line mt-1.5 block">
+              <span className="display-narrow block text-sub text-khaki">
+                Master of torque
+              </span>
             </span>
           </h1>
 
@@ -68,7 +71,9 @@ function Hero({
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-4">
-            <Button onClick={onOpenConfigurator}>Montar a minha</Button>
+            <Button glow onClick={onOpenConfigurator}>
+              Montar a minha
+            </Button>
             <Button href={specSheetHref} variant="ghost">
               Ficha técnica
             </Button>
@@ -82,7 +87,7 @@ function Hero({
           {HERO_SPECS.map((spec) => (
             <li key={spec.id}>
               <p className="data-figure text-figure">
-                <span>{spec.value}</span>
+                <CountUp value={spec.value} />
                 <span className="ml-1 font-mono text-sm text-khaki">
                   {spec.unitShort}
                 </span>
@@ -93,7 +98,7 @@ function Hero({
         </ul>
       </div>
 
-      <p className="label-mono relative z-10 flex items-center gap-3.5 border-t border-line px-5 py-3.5 text-paper-dim md:px-7">
+      <p className="label-mono page-shell page-gutter relative z-10 flex w-full items-center gap-3.5 border-t border-line py-3.5 text-paper-dim">
         <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-cyan" />
         Role para a ficha completa
         <span className="ml-auto text-khaki">

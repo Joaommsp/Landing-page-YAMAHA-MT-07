@@ -129,6 +129,24 @@ export const SPECS = [
   },
 ];
 
+/* Termos de campanha da faixa de especificações. Só o vocabulário entra aqui:
+   os números da faixa saem de `SPECS`, para a faixa nunca afirmar um valor
+   diferente do da ficha técnica. */
+export const MARQUEE_TERMS = [
+  "Master of torque",
+  "CP2 crossplane",
+  "Hyper naked",
+];
+
+/* A faixa intercala termo e número na ordem do mockup aprovado: termo, valor,
+   termo, valor — e segue só com os valores quando os termos acabam. */
+export const MARQUEE_ITEMS = SPECS.reduce((items, spec, index) => {
+  const term = MARQUEE_TERMS[index];
+  if (term) items.push(term);
+  items.push(`${spec.value} ${spec.unitShort}`);
+  return items;
+}, []);
+
 /* Seções da landing: o id da âncora é contrato entre o cabeçalho, o rodapé e a
    própria seção. Fonte única para os três lados nunca divergirem. */
 export const SECTION_IDS = {

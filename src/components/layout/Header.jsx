@@ -43,70 +43,77 @@ function Header({ onOpenConfigurator }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-[var(--z-header)] flex items-center gap-6 border-b border-line bg-ink/90 px-5 py-4 backdrop-blur-md md:px-7">
-      <a className="flex items-center" href={sectionHref(SECTION_IDS.hero)}>
-        <img className="h-5 w-auto" src={Logo} alt="Yamaha" />
-      </a>
+    <header className="sticky top-0 z-[var(--z-header)] border-b border-line bg-ink/90 backdrop-blur-md">
+      {/* A barra sangra de borda a borda; a linha de conteúdo é que respeita o
+          gutter e o teto de largura da página. */}
+      <div className="page-shell page-gutter flex items-center gap-6 py-4">
+        <a className="flex items-center" href={sectionHref(SECTION_IDS.hero)}>
+          <img className="h-5 w-auto" src={Logo} alt="Yamaha" />
+        </a>
 
-      <nav aria-label="Navegação principal" className="ml-auto hidden md:block">
-        <ul className="flex items-center gap-7">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <NavLink href={link.href} label={link.label} />
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div className="ml-auto flex items-center gap-3 md:ml-6">
-        <Button onClick={onOpenConfigurator} size="sm">
-          Montar a minha
-        </Button>
-
-        <button
-          aria-controls={MOBILE_MENU_ID}
-          aria-expanded={isMenuOpen}
-          aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-          className="border border-line p-3 text-paper transition-colors duration-300 hover:border-khaki md:hidden"
-          onClick={() => setIsMenuOpen((open) => !open)}
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            viewBox="0 0 24 24"
-          >
-            {isMenuOpen ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {isMenuOpen && (
         <nav
-          aria-label="Navegação do menu"
-          className="absolute inset-x-0 top-full border-b border-line bg-ink px-5 py-5 md:hidden"
-          id={MOBILE_MENU_ID}
+          aria-label="Navegação principal"
+          className="ml-auto hidden md:block"
         >
-          <ul className="flex flex-col gap-4">
+          <ul className="flex items-center gap-7">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <NavLink
-                  href={link.href}
-                  label={link.label}
-                  onSelect={() => setIsMenuOpen(false)}
-                />
+                <NavLink href={link.href} label={link.label} />
               </li>
             ))}
           </ul>
         </nav>
-      )}
+
+        <div className="ml-auto flex items-center gap-3 md:ml-6">
+          <Button onClick={onOpenConfigurator} size="sm">
+            Montar a minha
+          </Button>
+
+          <button
+            aria-controls={MOBILE_MENU_ID}
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+            className="border border-line p-3 text-paper transition-colors duration-300 hover:border-khaki md:hidden"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              viewBox="0 0 24 24"
+            >
+              {isMenuOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {isMenuOpen && (
+          <nav
+            aria-label="Navegação do menu"
+            className="page-shell page-gutter absolute inset-x-0 top-full border-b border-line bg-ink py-5 md:hidden"
+            id={MOBILE_MENU_ID}
+          >
+            <ul className="flex flex-col gap-4">
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <NavLink
+                    href={link.href}
+                    label={link.label}
+                    onSelect={() => setIsMenuOpen(false)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </div>
     </header>
   );
 }

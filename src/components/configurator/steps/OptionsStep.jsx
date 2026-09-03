@@ -71,7 +71,7 @@ function OptionsStep({ optionIds, onToggle }) {
       )}
 
       {FEATURED_OPTION && (
-        <div className="mt-6 flex flex-wrap items-center gap-5 border-l-2 border-khaki bg-gradient-to-r from-ink-3 to-ink-2 p-5">
+        <div className="beam mt-6 flex flex-wrap items-center gap-5 p-5">
           <div>
             <h4 className="display-tight text-xl">{FEATURED_OPTION.name}</h4>
             <p className="label-mono mt-1 text-khaki">

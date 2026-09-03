@@ -5,6 +5,7 @@ import Footer from "../../components/layout/Footer";
 import Hero from "../../components/landing/Hero";
 import SpecSheet from "../../components/landing/SpecSheet";
 import Gallery from "../../components/landing/Gallery";
+import SpecMarquee from "../../components/ui/SpecMarquee";
 import Configurator from "../../components/configurator/Configurator";
 
 /* Página única do projeto: cabeçalho, as três seções da landing, rodapé e o
@@ -28,8 +29,10 @@ function Home() {
 
       <main>
         <Hero onOpenConfigurator={openConfigurator} />
+        <SpecMarquee />
         <SpecSheet />
         <Gallery />
+        <SpecMarquee />
       </main>
 
       <Footer />

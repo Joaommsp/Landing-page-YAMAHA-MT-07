@@ -21,6 +21,25 @@
 
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 
+  /* Tempos da camada de movimento, como foram aprovados no mockup. Ficam no
+     tema porque a mesma duração reaparece em regra e em componente: o número
+     tem um dono só. */
+  --duration-marquee: 26s;
+  --duration-shimmer: 3.6s;
+  --duration-beam: 5s;
+  --duration-kenburns: 28s;
+  --duration-line-up: 0.9s;
+  --duration-tilt: 0.5s;
+  --duration-glare: 0.4s;
+
+  /* Atraso entre a primeira e a segunda linha do hero. */
+  --delay-line-up: 0.12s;
+
+  /* Profundidade da cena dos cards que inclinam, e raio do brilho que segue o
+     cursor dentro deles. */
+  --perspective-card: 900px;
+  --glare-radius: 300px;
+
   /* Escala tipográfica editorial: os quatro degraus fluidos que as seções usam.
      Sem eles cada componente inventa o seu clamp e a escala deixa de existir. */
   --text-hero: clamp(52px, 10.5vw, 148px);
@@ -78,6 +97,22 @@
   }
 }
 
+/* Gutter lateral único da página. Antes cada seção escolhia o seu `px-*` e o
+   conteúdo encostava na borda em tela larga. O respiro cresce com a tela e para
+   de crescer no teto do mockup aprovado — ajustar o respiro da página é mexer
+   nesta única linha. */
+@utility page-gutter {
+  padding-inline: clamp(20px, 4vw, 72px);
+}
+
+/* Teto de largura do conteúdo, centralizado. O fundo e as bordas de seção
+   continuam sangrando de borda a borda: quem respeita o teto é o conteúdo, que
+   em monitor largo pararia de ser legível se acompanhasse a tela. */
+@utility page-shell {
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
 @utility label-mono {
   font-family: var(--font-mono);
   font-size: 0.625rem;
@@ -113,4 +148,338 @@
   font-family: var(--font-display);
   font-variation-settings: "wdth" 76, "wght" 700;
   font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CAMADA DE MOVIMENTO — mockup aprovado "MT-07 Motion Layer".
+
+   Duração, ângulo, easing e limite vêm do mockup e foram aprovados como estão.
+   Nenhum destes efeitos carrega informação: desligados, a página continua
+   completa e legível. Nada nasce em `opacity: 0` esperando observador — as
+   revelações mascaram, não apagam.
+
+   O bloco de `prefers-reduced-motion` no fim da folha é o contrato do projeto
+   do lado do CSS, como o `MotionConfig reducedMotion="user"` é do lado do JS:
+   sob movimento reduzido tudo fica no estado final, sem animação nenhuma.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* O ângulo do gradiente cônico da borda-beam só interpola se for propriedade
+   registrada. Onde `@property` não existe, o traço fica parado e a borda
+   continua desenhada — o card não perde destaque, só o movimento. */
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@layer components {
+  /* A — faixa de especificações correndo, com pausa no hover.
+     A translação de -50% depende de haver exatamente dois grupos idênticos:
+     o segundo é a cópia `aria-hidden` que fecha o laço sem costura visível. */
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    border-block: 1px solid var(--color-line);
+    background-color: var(--color-ink);
+    padding-block: 0.875rem;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee var(--duration-marquee) linear infinite;
+  }
+
+  /* Pausa no hover: a faixa é legível, então quem quer ler tem como parar. */
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 2.125rem;
+    padding-right: 2.125rem;
+  }
+
+  .marquee__group span {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 72, "wght" 700;
+    font-size: clamp(22px, 3vw, 38px);
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-paper);
+  }
+
+  /* O ritmo é tipográfico, não colorido: uma palavra cheia, a seguinte apenas
+     contornada. `nth-of-type` conta só entre os termos, ignorando os losangos
+     que os separam. */
+  .marquee__group span:nth-of-type(even) {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-khaki-dim);
+  }
+
+  .marquee__group i {
+    font-style: normal;
+    font-size: 0.75rem;
+    color: var(--color-cyan);
+  }
+
+  /* Máscara de fade nas duas pontas: a palavra entra e sai da faixa em vez de
+     ser cortada na borda. */
+  .marquee::before,
+  .marquee::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 14%;
+    pointer-events: none;
+  }
+
+  .marquee::before {
+    left: 0;
+    background-image: linear-gradient(90deg, var(--color-ink), transparent);
+  }
+
+  .marquee::after {
+    right: 0;
+    background-image: linear-gradient(270deg, var(--color-ink), transparent);
+  }
+
+  /* B — reflexo varrendo o botão primário. A pausa longa entre passadas é o
+     que separa "metal pintado" de "anúncio piscando". */
+  .btn-shimmer {
+    overflow: hidden;
+  }
+
+  .btn-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      105deg,
+      transparent 35%,
+      color-mix(in srgb, var(--color-paper) 55%, transparent) 50%,
+      transparent 65%
+    );
+    background-size: 250% 100%;
+    animation: shimmer var(--duration-shimmer) var(--ease-editorial) infinite;
+  }
+
+  /* C — traço percorrendo a borda de um único card. */
+  .beam {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--color-ink-3);
+  }
+
+  .beam::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -2;
+    background-image: conic-gradient(
+      from var(--beam-angle),
+      transparent 0 72%,
+      var(--color-cyan) 84%,
+      transparent 92%
+    );
+    animation: beam var(--duration-beam) linear infinite;
+  }
+
+  /* Recobre o gradiente por dentro e deixa à vista só a faixa de 1px que faz
+     a borda. */
+  .beam::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    background-color: var(--color-ink-2);
+  }
+
+  /* D — rastros de velocidade: o meteoro reangulado para o ângulo da foto.
+     Ficam contidos no bloco da imagem e nunca sobre o texto. */
+  .streak-scene {
+    isolation: isolate;
+  }
+
+  .streak {
+    position: absolute;
+    top: -10%;
+    width: 180px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    background-image: linear-gradient(90deg, transparent, var(--color-cyan));
+    animation: streak linear infinite;
+  }
+
+  /* Posição e ritmo de cada rastro: são quatro, desencontrados de propósito —
+     em fila viraria chuveiro de meteoro. */
+  .streak:nth-of-type(1) {
+    left: 82%;
+    animation-duration: 3.4s;
+    animation-delay: 0s;
+  }
+
+  .streak:nth-of-type(2) {
+    left: 64%;
+    animation-duration: 4.2s;
+    animation-delay: 0.9s;
+  }
+
+  .streak:nth-of-type(3) {
+    left: 92%;
+    animation-duration: 3.8s;
+    animation-delay: 1.8s;
+  }
+
+  .streak:nth-of-type(4) {
+    left: 73%;
+    animation-duration: 4.6s;
+    animation-delay: 2.6s;
+  }
+
+  /* E — inclinação 3D e brilho seguindo o cursor. A cena tem profundidade
+     aqui; o giro em si é aplicado pelo `useTilt`, que só liga onde há hover
+     de verdade. Teto de 6 graus por eixo, no hook. */
+  .tilt-scene {
+    perspective: var(--perspective-card);
+  }
+
+  .tilt {
+    transform-style: preserve-3d;
+    transition: transform var(--duration-tilt) var(--ease-editorial);
+  }
+
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-glare) var(--ease-editorial);
+    background-image: radial-gradient(
+      var(--glare-radius) circle at var(--glare-x, 50%) var(--glare-y, 50%),
+      color-mix(in srgb, var(--color-paper) 16%, transparent),
+      transparent 60%
+    );
+  }
+
+  .tilt:hover .tilt-glare {
+    opacity: 1;
+  }
+
+  /* G — hero que respira: a cena avança devagar dentro da própria foto, sem
+     imagem nova sobreposta. */
+  .kenburns {
+    will-change: transform;
+    animation: kenburns var(--duration-kenburns) var(--ease-editorial) infinite
+      alternate;
+  }
+
+  /* Revelação por linha: a máscara sobe e o texto vem atrás dela. O texto não
+     translada para longe nem fica invisível — sem animação, a headline está
+     inteira e no lugar. */
+  .line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .line > * {
+    animation: line-up var(--duration-line-up) var(--ease-editorial) both;
+  }
+
+  .line:nth-of-type(2) > * {
+    animation-delay: var(--delay-line-up);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 180% 0;
+  }
+
+  60%,
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+@keyframes beam {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+@keyframes streak {
+  0% {
+    opacity: 0;
+    transform: rotate(196deg) translateX(0);
+  }
+
+  8% {
+    opacity: 0.85;
+  }
+
+  70% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(196deg) translateX(-620px);
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.09) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes line-up {
+  from {
+    transform: translateY(102%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Movimento reduzido: cada efeito entrega o estado final e para de animar.
+   O que só existe como enfeite (rastros, reflexo, brilho) sai de cena; o que
+   carrega conteúdo (faixa, headline, foto) fica parado e legível. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track,
+  .beam::before,
+  .kenburns,
+  .line > * {
+    animation: none;
+  }
+
+  .streak,
+  .btn-shimmer::after,
+  .tilt-glare {
+    display: none;
+  }
+
+  .tilt {
+    transition: none;
+  }
 }

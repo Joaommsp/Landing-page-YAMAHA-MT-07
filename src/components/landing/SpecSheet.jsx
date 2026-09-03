@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 
 import Reveal from "../ui/Reveal";
+import CountUp from "../ui/CountUp";
 import { SECTION_IDS, SPECS } from "../../data/catalog";
-import ArtImage from "../../assets/images/banner02.png";
+import ArtImage from "../../assets/images/gellery/galleryimg03.jpg";
 
 /* Stagger da entrada das linhas: a ficha se lê de cima para baixo, e o
    atraso acompanha essa leitura. */
@@ -17,8 +18,8 @@ function barWidth(ratio) {
 
 function SpecSheet({ id = SECTION_IDS.specSheet }) {
   return (
-    <section className="grid bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
-      <div className="px-5 py-10 md:px-12 md:py-14">
+    <section className="page-shell grid bg-ink md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]" id={id}>
+      <div className="page-gutter py-10 md:py-14">
         <Reveal>
           <p className="label-mono text-cyan">Engenharia</p>
           <h2 className="display-tight mt-3.5 text-section">
@@ -42,7 +43,7 @@ function SpecSheet({ id = SECTION_IDS.specSheet }) {
             >
               <span className="label-mono text-paper-dim">{spec.name}</span>
               <span className="data-figure text-2xl">
-                {spec.value}
+                <CountUp value={spec.value} />
                 <span className="ml-1.5 font-mono text-xs text-khaki">
                   {spec.unit}
                 </span>
@@ -63,10 +64,15 @@ function SpecSheet({ id = SECTION_IDS.specSheet }) {
 
       {/* Proporção fixa no bloco da imagem: se a foto não carregar, a coluna
           mantém a altura e nada ao redor se desloca. */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-ink-2 md:aspect-auto md:min-h-[320px]">
+      <div className="streak-scene relative aspect-[4/3] overflow-hidden bg-ink-2 md:aspect-auto md:min-h-[320px]">
+        {/* Rastros de velocidade: decoração atrás da foto, sem informação. */}
+        <span aria-hidden="true" className="streak" />
+        <span aria-hidden="true" className="streak" />
+        <span aria-hidden="true" className="streak" />
+        <span aria-hidden="true" className="streak" />
         <img
           alt="Yamaha MT-07 vista de perfil"
-          className="h-full w-full object-cover brightness-90 grayscale-[.2]"
+          className="h-full w-full object-cover object-[62%_center] brightness-90 grayscale-[.2]"
           src={ArtImage}
         />
       </div>

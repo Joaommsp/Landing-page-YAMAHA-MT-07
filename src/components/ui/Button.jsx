@@ -26,18 +26,26 @@ const VARIANTS = {
     "bg-transparent text-paper border-line hover:bg-ink-3 hover:border-khaki focus-visible:outline-cyan",
 };
 
+/* Reflexo varrendo a superfície do botão — a classe e os tempos vivem na folha
+   de estilo. O brilho é a marca da ação principal: se dois botões brilham,
+   nenhum é o primário. Por isso a prop só vale na variante sólida. */
+const GLOW = "btn-shimmer";
+
 function Button({
   variant = "solid",
   size = "md",
+  glow = false,
   href,
   type = "button",
   className = "",
   children,
   ...rest
 }) {
+  const shimmer = glow && variant === "solid" ? ` ${GLOW}` : "";
+
   const classes = `${BASE} ${SIZES[size] ?? SIZES.md} ${
     VARIANTS[variant] ?? VARIANTS.solid
-  } ${className}`.trim();
+  }${shimmer} ${className}`.trim();
 
   /* Mesma aparência para ação e navegação, sem duplicar a folha de estilo:
      com `href` o botão vira âncora e mantém a semântica de link. */
@@ -59,6 +67,7 @@ function Button({
 Button.propTypes = {
   variant: PropTypes.oneOf(Object.keys(VARIANTS)),
   size: PropTypes.oneOf(Object.keys(SIZES)),
+  glow: PropTypes.bool,
   href: PropTypes.string,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   className: PropTypes.string,
