@@ -466,20 +466,22 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T16: Criar o passo de cor
+### T16: Criar o passo de cor ✅
 
 **What**: `ColorStep` com troca de imagem em crossfade e marcação da cor selecionada.
 **Where**: `src/components/configurator/steps/ColorStep.jsx`
 **Depends on**: T15
 **Reuses**: `src/data/catalog.js`
-**Requirement**: MT07-05
+**Requirement**: MT07-05, MT07-10
 
 **Done when**:
 
-- [ ] Selecionar cor troca a imagem exibida e marca `aria-pressed` naquela cor
-- [ ] Cor com acréscimo exibe o valor em BRL completo
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 4 testes passam
+- [x] Selecionar cor troca a imagem exibida e marca `aria-pressed` naquela cor
+- [x] Cor com acréscimo exibe o valor em BRL completo
+- [x] Crossfade de 0,35 s na troca; sob movimento reduzido a imagem entra direto
+- [x] Cor ausente do catálogo não esvazia o palco
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 4 testes passam (69 na suíte)
 
 **Tests**: unit
 **Gate**: quick

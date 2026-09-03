@@ -27,4 +27,4 @@
 **Feature**: redesign-mt07
 **Fase**: Execute — fase 3 (Configurador) em curso
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T16 (passo de cor)
+**Próximo passo**: T17 (passo de opcionais)
