@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* Design system MT-07 — direção "editorial de performance".
+   Todo token de identidade vive aqui; componentes nunca declaram hex. */
+@theme {
+  --color-ink: #0b0c0d;
+  --color-ink-2: #141719;
+  --color-ink-3: #1d2124;
+  --color-line: #2a2f33;
+  --color-khaki: #8e8a76;
+  --color-khaki-dim: #5e5c50;
+  --color-paper: #e9e8e3;
+  --color-paper-dim: #9da1a3;
+  --color-cyan: #2bd4cf;
+  --color-cyan-soft: #63e6e2;
+  --color-danger: #e06a5b;
+
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Larguras opostas da mesma família variável: a tensão entre elas é a
+   assinatura tipográfica da página. */
+@utility display-wide {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 118, "wght" 800;
+  text-transform: uppercase;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+@utility display-narrow {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 68, "wght" 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+@utility display-tight {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 80, "wght" 800;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+@utility data-figure {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 76, "wght" 700;
+  font-variant-numeric: tabular-nums;
+}
