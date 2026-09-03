@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 6,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "surviving_mutant::ao testar um clamp de limite de estado chegue ao limite pelo caminho valido antes de assertar o clamp ou a assertiva pode medir o portao de validacao anterior em vez do limite",
+      "text": "Ao testar um clamp de limite de estado, chegue ao limite pelo caminho válido antes de assertar o clamp, ou a assertiva pode medir o portão de validação anterior em vez do limite.",
+      "signal": "surviving_mutant",
+      "scope": "hooks",
+      "status": "candidate",
+      "features": [
+        "redesign-mt07"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M6 — src/hooks/useConfigurator.js:79, src/hooks/__tests__/useConfigurator.test.jsx (hooks)"
+      ],
+      "created": "2026-09-03T15:09:59Z",
+      "last_seen": "2026-09-03T15:09:59Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::quando a spec disser proporcional ao valor sem fixar o teto da categoria registrar a decisao de que o numero e de direcao de arte e travar o elo dado visual nao o calculo implicito que a spec nao define",
+      "text": "Quando a spec disser 'proporcional ao valor' sem fixar o teto da categoria, registrar a decisão de que o número é de direção de arte e travar o elo dado→visual, não o cálculo implícito que a spec não define.",
+      "signal": "spec_precision_gap",
+      "scope": "landing",
+      "status": "candidate",
+      "features": [
+        "redesign-mt07"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "AC MT07-02.3 (SpecSheet ratio), AD-030 (landing)"
+      ],
+      "created": "2026-09-03T15:09:59Z",
+      "last_seen": "2026-09-03T15:09:59Z"
+    },
+    {
+      "id": "L-003",
+      "key": "spec_precision_gap::criterio de app react que presume dom sem js legivel sem animacao sem rolagem sem viewport de referencia nao tem cenario isolavel em teste de componente registrar como lacuna de precisao da spec em vez de simular o inexistente",
+      "text": "Critério de app React que presume DOM sem JS ('legível sem animação', 'sem rolagem' sem viewport de referência) não tem cenário isolável em teste de componente — registrar como lacuna de precisão da spec em vez de simular o inexistente.",
+      "signal": "spec_precision_gap",
+      "scope": "spec",
+      "status": "candidate",
+      "features": [
+        "redesign-mt07"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "AC MT07-10.5 e AC MT07-02.1 (parte), validation.md (spec)"
+      ],
+      "created": "2026-09-03T15:09:59Z",
+      "last_seen": "2026-09-03T15:09:59Z"
+    },
+    {
+      "id": "L-004",
+      "key": "spec_deviation::preco derivado base acrescimo deve ter uma funcao so consumida pelo hook e pela apresentacao nunca recalculado num componente de tela que diverge da fonte quando o dado muda",
+      "text": "Preço derivado (base + acréscimo) deve ter uma função só, consumida pelo hook e pela apresentação — nunca recalculado num componente de tela, que diverge da fonte quando o dado muda.",
+      "signal": "spec_deviation",
+      "scope": "configurator",
+      "status": "candidate",
+      "features": [
+        "redesign-mt07"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "AD-022 (2ª entrada, STATE.md) — achado bloqueante do revisor de reúso (configurator)"
+      ],
+      "created": "2026-09-03T15:10:06Z",
+      "last_seen": "2026-09-03T15:10:06Z"
+    },
+    {
+      "id": "L-005",
+      "key": "spec_deviation::nome de secao campo repassado entre camadas como string solta falha em silencio no op se um lado divergir do outro resolver a partir de uma fonte unica no reducer nunca duplicar o identificador entre chamador e callee",
+      "text": "Nome de seção/campo repassado entre camadas como string solta falha em silêncio (no-op) se um lado divergir do outro — resolver a partir de uma fonte única no reducer, nunca duplicar o identificador entre chamador e callee.",
+      "signal": "spec_deviation",
+      "scope": "configurator",
+      "status": "candidate",
+      "features": [
+        "redesign-mt07"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "AD-027, STATE.md — setField(name, value) por seção resolvida no reducer (configurator)"
+      ],
+      "created": "2026-09-03T15:10:06Z",
+      "last_seen": "2026-09-03T15:10:06Z"
+    }
+  ]
+}
