@@ -167,12 +167,18 @@ describe("useConfigurator — navegação", () => {
     expect(result.current.state.step).toBe(FIRST_STEP);
   });
 
-  it("mantém o último passo quando pedem o próximo", () => {
+  /* O teto do clamp só é exercitado com o último passo já VÁLIDO: sem preencher
+     o pagamento o `next` sai antes, no portão de validação, e a assertiva
+     mediria o portão em vez do limite. As duas assertivas juntas dizem isso —
+     nenhum erro pendente e, ainda assim, o passo não passa do último. */
+  it("mantém o último passo quando pedem o próximo com o formulário válido", () => {
     const { result } = renderHook(() => useConfigurator());
 
     advanceTo(result, LAST_STEP);
+    fill(result, validPayment);
     act(() => result.current.actions.next());
 
+    expect(result.current.state.errors).toEqual({});
     expect(result.current.state.step).toBe(LAST_STEP);
   });
 
