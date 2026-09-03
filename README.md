@@ -4,7 +4,7 @@ Landing page de compra de motocicleta: ficha técnica, seção editorial de deta
 
 Projeto de estudo, sem vínculo com a fabricante. Todas as marcas e imagens pertencem aos seus donos.
 
-**No ar:** https://purchase-page-yamaha-mt-07.vercel.app
+**No ar:** https://yamaha-mt-landing-page.vercel.app
 
 ---
 
