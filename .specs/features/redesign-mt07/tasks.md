@@ -192,7 +192,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T6: Criar os validadores de formulário
+### T6: Criar os validadores de formulário ✅
 
 **What**: `validateRequired`, `validateEmail`, `validateCPF` (dígitos verificadores) e `validateStep`, devolvendo as mensagens exatas da spec.
 **Where**: `src/lib/validation.js`
@@ -202,12 +202,12 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] E-mail sem domínio devolve `Informe um e-mail válido`
-- [ ] CPF com menos de 11 dígitos ou dígito verificador errado devolve `CPF inválido`
-- [ ] Campo obrigatório vazio devolve mensagem de erro
-- [ ] `validateStep` devolve objeto vazio quando todos os campos são válidos
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 10 testes passam
+- [x] E-mail sem domínio devolve `Informe um e-mail válido`
+- [x] CPF com menos de 11 dígitos ou dígito verificador errado devolve `CPF inválido`
+- [x] Campo obrigatório vazio devolve mensagem de erro
+- [x] `validateStep` devolve objeto vazio quando todos os campos são válidos
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 10 testes passam
 
 **Tests**: unit
 **Gate**: quick
