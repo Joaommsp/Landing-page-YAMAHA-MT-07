@@ -16,6 +16,8 @@ export const MESSAGES = {
   cep: "CEP incompleto",
   card: "Número do cartão incompleto",
   expiration: "Validade inválida",
+  expired: "Cartão vencido",
+  cvv: "CVV inválido",
 };
 
 /* Módulo do cálculo mod-11 do CPF. Coincide numericamente com a quantidade de
@@ -25,6 +27,14 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 const EXPIRATION_PATTERN = /^(\d{2})\/(\d{2})$/;
 const FIRST_MONTH = 1;
 const LAST_MONTH = 12;
+
+/* A validade vem com dois dígitos de ano; o século é o corrente, como em
+   qualquer cartão físico. */
+const YEAR_CENTURY = 2000;
+
+/* Três dígitos na maioria das bandeiras, quatro na American Express — e nada
+   além de dígito: o campo não tem máscara para filtrar antes. */
+const CVV_PATTERN = /^\d{3,4}$/;
 
 export function validateRequired(value) {
   return String(value ?? "").trim() ? "" : MESSAGES.required;
@@ -71,14 +81,30 @@ export function validateCard(value) {
   return onlyDigits(value).length === CARD_DIGITS ? "" : MESSAGES.card;
 }
 
-export function validateExpiration(value) {
+/* Formato e mês fora da faixa são "validade inválida"; data que já passou é
+   outra coisa e merece outra mensagem — o usuário digitou certo, o cartão é que
+   venceu. A referência de tempo entra por parâmetro para o teste não depender
+   do relógio da máquina. */
+export function validateExpiration(value, now = new Date()) {
   const match = EXPIRATION_PATTERN.exec(String(value ?? "").trim());
   if (!match) return MESSAGES.expiration;
 
   const month = Number(match[1]);
-  return month >= FIRST_MONTH && month <= LAST_MONTH
-    ? ""
-    : MESSAGES.expiration;
+  if (month < FIRST_MONTH || month > LAST_MONTH) return MESSAGES.expiration;
+
+  const year = YEAR_CENTURY + Number(match[2]);
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
+  // O cartão vale até o último dia do mês impresso: só o mês anterior vence.
+  if (year < currentYear) return MESSAGES.expired;
+  if (year === currentYear && month < currentMonth) return MESSAGES.expired;
+
+  return "";
+}
+
+export function validateCVV(value) {
+  return CVV_PATTERN.test(String(value ?? "").trim()) ? "" : MESSAGES.cvv;
 }
 
 const VALIDATOR_BY_TYPE = {
@@ -88,6 +114,7 @@ const VALIDATOR_BY_TYPE = {
   [FIELD_TYPES.CEP]: validateCEP,
   [FIELD_TYPES.CARD]: validateCard,
   [FIELD_TYPES.EXPIRATION]: validateExpiration,
+  [FIELD_TYPES.CVV]: validateCVV,
 };
 
 export function validateField(field, value) {

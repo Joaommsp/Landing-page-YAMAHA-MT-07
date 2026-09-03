@@ -148,7 +148,8 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 3. WHEN a pessoa digita o nome do titular THEN o sistema SHALL refletir o nome em caixa alta no cartão exibido.
 4. The system SHALL exibir todo valor monetário em BRL por extenso (ex.: `R$ 48.500,00`), sem notação abreviada.
 5. WHEN a pessoa aciona "Finalizar compra" com o formulário válido THEN o sistema SHALL exibir estado de carregamento e, ao fim, a confirmação do pedido.
-6. IF a pessoa aciona "Finalizar compra" com algum campo inválido THEN o sistema SHALL levar ao primeiro passo com erro e apontar o campo, exibindo `Telefone incompleto`, `CEP incompleto`, `Número do cartão incompleto` ou `Validade inválida` conforme o caso (AD-010).
+6. IF a pessoa aciona "Finalizar compra" com algum campo inválido THEN o sistema SHALL levar ao primeiro passo com erro e apontar o campo, exibindo `Telefone incompleto`, `CEP incompleto`, `Número do cartão incompleto`, `Validade inválida`, `Cartão vencido` ou `CVV inválido` conforme o caso (AD-010, AD-017).
+7. IF a validade informada já passou THEN o sistema SHALL exibir `Cartão vencido`, distinguindo data vencida de formato errado (AD-017).
 
 **Independent Test**: Preencher o cartão, ver o número espelhado no cartão desenhado e finalizar vendo a confirmação.
 
@@ -227,7 +228,7 @@ A landing page da Yamaha MT-07 foi escrita em 2024 e envelheceu no tratamento vi
 | MT07-05 | P1: Configurador de 5 passos | T7, T7b, T15, T16 | Implementing |
 | MT07-06 | P1: Configurador de 5 passos (preço) | T3, T7b, T17 | Implementing |
 | MT07-07 | P1: Hero e seções da landing (imagens) | T11, T12, T13 | Done |
-| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19 | Implementing |
+| MT07-08 | P1: Formulários de dados e entrega | T5, T6, T7b, T18, T19, T19b | Implementing |
 | MT07-09 | P1: Pagamento e resumo do pedido | T4, T7b | Implementing |
 | MT07-10 | P2: Motion com função | T9, T16 | Implementing |
 | MT07-11 | P2: Limpeza da base técnica | T2, T10 | Implementing |

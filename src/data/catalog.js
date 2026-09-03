@@ -233,6 +233,7 @@ export const FIELD_TYPES = {
   CEP: "cep",
   CARD: "card",
   EXPIRATION: "expiration",
+  CVV: "cvv",
 };
 
 /* Teto do e-mail pela RFC 5321: cortar antes disso trancaria endereço legítimo
@@ -262,6 +263,6 @@ export const STEP_FIELDS = {
     { name: "cardHolder", label: "Nome no cartão", type: FIELD_TYPES.TEXT, maxLength: 40 },
     { name: "cardNumber", label: "Número do cartão", type: FIELD_TYPES.CARD, maxLength: 19 },
     { name: "cardExpiration", label: "Validade", type: FIELD_TYPES.EXPIRATION, maxLength: 5 },
-    { name: "cardCvv", label: "CVV", type: FIELD_TYPES.TEXT, maxLength: 4 },
+    { name: "cardCvv", label: "CVV", type: FIELD_TYPES.CVV, maxLength: 4 },
   ],
 };

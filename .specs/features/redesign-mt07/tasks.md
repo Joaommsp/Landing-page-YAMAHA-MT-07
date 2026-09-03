@@ -54,7 +54,7 @@ T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
 ### Phase 3: Configurador
 
 ```
-T15 → T16 → T17 → T18 → T19 → T20 → T21
+T15 → T16 → T17 → T18 → T19 → T19b → T20 → T21
 ```
 
 ### Phase 4: Integração e limpeza
@@ -565,6 +565,31 @@ T22 → T23 → T24 → T25
 
 ---
 
+### T19b: Recusar cartão vencido e CVV malformado ✅
+
+**What**: `validateExpiration` passa a separar formato de vencimento e nasce `validateCVV`, ligado ao campo pelo tipo.
+**Where**: `src/lib/validation.js`, `src/data/catalog.js`, `src/components/configurator/FieldGrid.jsx`
+**Depends on**: None (fix da fase 3)
+**Reuses**: `src/data/catalog.js` (`FIELD_TYPES`), `src/lib/masks.js` (`onlyDigits`)
+**Requirement**: MT07-08, MT07-09
+
+**Done when**:
+
+- [x] Data já vencida devolve `Cartão vencido`; formato errado ou mês fora de 01–12 seguem em `Validade inválida`
+- [x] `validateCVV` aceita 3 ou 4 dígitos e devolve `CVV inválido` no resto
+- [x] `FIELD_TYPES.CVV` no catálogo liga o campo `cardCvv` ao validador pelo `validateField`
+- [x] A referência de tempo entra por parâmetro: o teste não depende do relógio da máquina
+- [x] AD-017 registrada no `STATE.md`
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 7 testes passam (92 na suíte)
+
+**Tests**: unit
+**Gate**: quick
+
+**Commit**: `fix(lib): reject expired card and malformed cvv`
+
+---
+
 ### T20: Criar o passo de pagamento
 
 **What**: `PaymentStep` com resumo do pedido e cartão espelhando o formulário.
@@ -708,7 +733,7 @@ Phase 1 → Phase 2 → Phase 3 → Phase 4
 
 Phase 1:  T1 → T2 → T3 → T4 → T5 → T6 → T7 → T7b
 Phase 2:  T8 → T9 → T10 → T11 → T12 → T13 → T14 → T14b
-Phase 3:  T15 → T16 → T17 → T18 → T19 → T20 → T21
+Phase 3:  T15 → T16 → T17 → T18 → T19 → T19b → T20 → T21
 Phase 4:  T22 → T23 → T24 → T25
 ```
 
@@ -724,6 +749,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T7b | correção transversal da fase 1 (AD-008..013) | ✅ Granular |
 | T8–T14 | 1 componente cada | ✅ Granular |
 | T15–T21 | 1 componente cada | ✅ Granular |
+| T19b | correção de validadores da fase 3 (AD-017) | ✅ Granular |
 | T22–T25 | 1 arquivo cada | ✅ Granular |
 
 ## Diagram-Definition Cross-Check
@@ -751,6 +777,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T17 | T16 | T16 → T17 | ✅ Match |
 | T18 | T17 | T17 → T18 | ✅ Match |
 | T19 | T18 | T18 → T19 | ✅ Match |
+| T19b | None (fix da fase 3) | — | ✅ Match |
 | T20 | T19 | T19 → T20 | ✅ Match |
 | T21 | T20 | T20 → T21 | ✅ Match |
 | T22 | None (fase 3 concluída) | — | ✅ Match |
@@ -783,6 +810,7 @@ Phase 4:  T22 → T23 → T24 → T25
 | T17 | Componente com interação | unit | unit | ✅ OK |
 | T18 | Componente com estado | unit | unit | ✅ OK |
 | T19 | Componente com estado | unit | unit | ✅ OK |
+| T19b | Lógica pura | unit | unit | ✅ OK |
 | T20 | Componente com estado | unit | unit | ✅ OK |
 | T21 | Componente com estado | unit | unit | ✅ OK |
 | T22 | Componente com estado | unit | unit | ✅ OK |

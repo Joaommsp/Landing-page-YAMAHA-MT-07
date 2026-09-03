@@ -29,6 +29,7 @@ const NUMERIC_TYPES = [
   FIELD_TYPES.CEP,
   FIELD_TYPES.CARD,
   FIELD_TYPES.EXPIRATION,
+  FIELD_TYPES.CVV,
 ];
 
 function fieldId(name) {

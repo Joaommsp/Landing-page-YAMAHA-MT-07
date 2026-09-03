@@ -6,10 +6,16 @@ import {
   validateCEP,
   validateCard,
   validateExpiration,
+  validateCVV,
+  validateField,
   validateStep,
   MESSAGES,
 } from "../validation";
-import { STEP_IDS } from "../../data/catalog";
+import { FIELD_TYPES, STEP_FIELDS, STEP_IDS } from "../../data/catalog";
+
+/* Relógio fixo: a validade é medida contra uma data conhecida, não contra o
+   dia em que a suíte roda. */
+const NOW = new Date("2026-09-03T12:00:00Z");
 
 const PERSONAL_STEP = STEP_IDS.PERSONAL;
 
@@ -94,11 +100,61 @@ describe("validateCard", () => {
 
 describe("validateExpiration", () => {
   it("acusa 'Validade inválida' fora de MM/AA ou com mês fora de 01 a 12", () => {
-    expect(validateExpiration("1229")).toBe("Validade inválida");
-    expect(validateExpiration("13/29")).toBe("Validade inválida");
-    expect(validateExpiration("00/29")).toBe("Validade inválida");
-    expect(validateExpiration("12/29")).toBe("");
-    expect(validateExpiration("01/30")).toBe("");
+    expect(validateExpiration("1229", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("13/29", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("00/29", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("12/29", NOW)).toBe("");
+    expect(validateExpiration("01/30", NOW)).toBe("");
+  });
+
+  it("acusa 'Cartão vencido' em data já passada", () => {
+    expect(validateExpiration("08/26", NOW)).toBe(MESSAGES.expired);
+    expect(validateExpiration("12/25", NOW)).toBe(MESSAGES.expired);
+    expect(validateExpiration("01/20", NOW)).toBe(MESSAGES.expired);
+  });
+
+  it("aceita o próprio mês corrente, que só vence no fim dele", () => {
+    expect(validateExpiration("09/26", NOW)).toBe("");
+    expect(validateExpiration("10/26", NOW)).toBe("");
+  });
+
+  it("separa formato de vencimento: mês fora da faixa não vira 'Cartão vencido'", () => {
+    expect(validateExpiration("13/20", NOW)).toBe(MESSAGES.expiration);
+  });
+});
+
+describe("validateCVV", () => {
+  it("aceita três ou quatro dígitos", () => {
+    expect(validateCVV("123")).toBe("");
+    expect(validateCVV("1234")).toBe("");
+  });
+
+  it("acusa 'CVV inválido' com tamanho errado ou caractere que não é dígito", () => {
+    expect(validateCVV("12")).toBe(MESSAGES.cvv);
+    expect(validateCVV("12345")).toBe(MESSAGES.cvv);
+    expect(validateCVV("12a")).toBe(MESSAGES.cvv);
+    expect(validateCVV("")).toBe(MESSAGES.cvv);
+    expect(validateCVV(undefined)).toBe(MESSAGES.cvv);
+  });
+});
+
+describe("validateField pelo tipo do campo", () => {
+  it("liga o campo de CVV do catálogo ao validador de CVV", () => {
+    const field = STEP_FIELDS[STEP_IDS.PAYMENT].find(
+      (item) => item.name === "cardCvv"
+    );
+
+    expect(field.type).toBe(FIELD_TYPES.CVV);
+    expect(validateField(field, "12")).toBe(MESSAGES.cvv);
+    expect(validateField(field, "123")).toBe("");
+  });
+
+  it("recusa cartão vencido pelo campo de validade do catálogo", () => {
+    const field = STEP_FIELDS[STEP_IDS.PAYMENT].find(
+      (item) => item.name === "cardExpiration"
+    );
+
+    expect(validateField(field, "01/20")).toBe(MESSAGES.expired);
   });
 });
 

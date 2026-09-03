@@ -20,6 +20,7 @@
 | AD-014 | `SECTION_IDS` + `sectionHref` vivem em `data/catalog.js`; cabeçalho, rodapé e as três seções da landing consomem a mesma fonte | Os ids das âncoras estavam escritos à mão em cinco arquivos: renomear um deixava link apontando para o vazio, sem erro de build (achado BLOQUEANTE dos dois revisores da fase 2) | 2026-09-03 |
 | AD-015 | A barra da ficha técnica nasce com a largura do `ratio`; a animação de `scaleX` prevista no `design.md` fica de fora | Sem JS ou com ele quebrado a proporção precisa continuar correta; o stagger da entrada permanece, pelo `Reveal` de cada linha | 2026-09-03 |
 | AD-016 | Tamanho do botão é prop (`size`), não `className` de quem chama | Sem `tailwind-merge` no projeto, um padding vindo por `className` perde para o do próprio componente pela ordem da folha — o override era inerte | 2026-09-03 |
+| AD-017 | `validateExpiration` distingue formato de vencimento (`Validade inválida` × `Cartão vencido`) e o CVV ganha validador e tipo próprios | Validade só conferia o mês: `01/20` fechava pedido com cartão morto. E o CVV era tipo `text`, então três letras passavam. A referência de tempo entra por parâmetro para o teste não depender do relógio | 2026-09-03 |
 | AD-018 | `CONFIGURATOR_PANEL_ID` e `stepTabId(stepId)` vivem em `data/catalog.js` | O `aria-controls` do stepper e o `aria-labelledby` do painel são o mesmo contrato dos dois lados; escrever o id à mão nos dois arquivos repetiria o erro que a AD-014 corrigiu nas âncoras | 2026-09-03 |
 | AD-019 | `Field` (apresentação pura, em `ui/`) e `FieldGrid` (lista do catálogo, `maskByType`, validador no `blur`) servem aos três passos com formulário | Sem eles PersonalStep, DeliveryStep e PaymentStep repetiriam o mesmo encanamento três vezes — a duplicação que esta feature existe para matar. O erro do fluxo (avançar/finalizar) chega por prop e tem precedência sobre o erro de saída de campo | 2026-09-03 |
 
@@ -28,4 +29,4 @@
 **Feature**: redesign-mt07
 **Fase**: Execute — fase 3 (Configurador) em curso
 **Branch**: `feat/redesign-2026`
-**Próximo passo**: T19b (cartão vencido e CVV)
+**Próximo passo**: T20 (passo de pagamento)
