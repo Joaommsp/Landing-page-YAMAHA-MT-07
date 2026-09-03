@@ -311,7 +311,7 @@ T22 → T23 → T24 → T25
 
 ---
 
-### T10: Redesenhar o cabeçalho
+### T10: Redesenhar o cabeçalho ✅
 
 **What**: `Header` com navegação por âncora e menu mobile controlado por estado do React.
 **Where**: `src/components/layout/Header.jsx`
@@ -321,10 +321,10 @@ T22 → T23 → T24 → T25
 
 **Done when**:
 
-- [ ] Menu abre e fecha por estado, sem `document.querySelector` nem `classList.toggle`
-- [ ] Botão do menu com `aria-expanded` refletindo o estado
-- [ ] Gate check passa: `npm test -- --run`
-- [ ] Test count: 4 testes passam
+- [x] Menu abre e fecha por estado, sem `document.querySelector` nem `classList.toggle`
+- [x] Botão do menu com `aria-expanded` refletindo o estado
+- [x] Gate check passa: `npm test -- --run`
+- [x] Test count: 4 testes passam
 
 **Tests**: unit
 **Gate**: quick
