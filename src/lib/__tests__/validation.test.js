@@ -98,9 +98,12 @@ describe("validateCard", () => {
   });
 });
 
+/* Os textos que a spec enumera (MT07-08.2, 08.3 e MT07-09.6) entram como
+   literal, não por `MESSAGES.*`: assertiva contra a própria constante passa
+   igual se o texto exibido ao usuário mudar. */
 describe("validateExpiration", () => {
   it("acusa 'Validade inválida' fora de MM/AA ou com mês fora de 01 a 12", () => {
-    expect(validateExpiration("1229", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("1229", NOW)).toBe("Validade inválida");
     expect(validateExpiration("13/29", NOW)).toBe(MESSAGES.expiration);
     expect(validateExpiration("00/29", NOW)).toBe(MESSAGES.expiration);
     expect(validateExpiration("12/29", NOW)).toBe("");
@@ -108,7 +111,7 @@ describe("validateExpiration", () => {
   });
 
   it("acusa 'Cartão vencido' em data já passada", () => {
-    expect(validateExpiration("08/26", NOW)).toBe(MESSAGES.expired);
+    expect(validateExpiration("08/26", NOW)).toBe("Cartão vencido");
     expect(validateExpiration("12/25", NOW)).toBe(MESSAGES.expired);
     expect(validateExpiration("01/20", NOW)).toBe(MESSAGES.expired);
   });
@@ -119,7 +122,7 @@ describe("validateExpiration", () => {
   });
 
   it("separa formato de vencimento: mês fora da faixa não vira 'Cartão vencido'", () => {
-    expect(validateExpiration("13/20", NOW)).toBe(MESSAGES.expiration);
+    expect(validateExpiration("13/20", NOW)).toBe("Validade inválida");
   });
 });
 
@@ -130,7 +133,7 @@ describe("validateCVV", () => {
   });
 
   it("acusa 'CVV inválido' com tamanho errado ou caractere que não é dígito", () => {
-    expect(validateCVV("12")).toBe(MESSAGES.cvv);
+    expect(validateCVV("12")).toBe("CVV inválido");
     expect(validateCVV("12345")).toBe(MESSAGES.cvv);
     expect(validateCVV("12a")).toBe(MESSAGES.cvv);
     expect(validateCVV("")).toBe(MESSAGES.cvv);
