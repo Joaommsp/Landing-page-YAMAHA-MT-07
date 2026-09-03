@@ -34,6 +34,26 @@
 ## Handoff
 
 **Feature**: redesign-mt07
-**Fase**: Execute — fase 4 (Integração e limpeza) concluída; as 25 tasks fechadas
-**Branch**: `feat/redesign-2026`
-**Próximo passo**: revisão do diff da fase 4 e verificação independente
+**Branch**: `feat/redesign-2026` (32 commits, árvore limpa, NADA empurrado)
+**Data**: 2026-09-03
+**Estado**: as 25 tasks + 4 fix tasks estão implementadas e commitadas. Gates verdes: 115 testes / 15 arquivos, `npm run lint` sem erro nem aviso, `npm run build` verde.
+
+**Próximo passo (obrigatório antes de declarar a feature pronta)**: rodar o Verifier independente da fase 9 do Execute (author ≠ verifier) sobre o range `main..HEAD`, que precisa escrever `.specs/features/redesign-mt07/validation.md` com veredito PASS, evidência `file:line` por AC e resultado do sensor de discriminação. Depois disso, `python3 <skill-dir>/scripts/validate_state.py redesign-mt07` tem de sair 0. Enquanto isso não roda, a feature NÃO está fechada.
+
+**Achados de revisão ainda ABERTOS** (dos revisores que o orquestrador rodou sobre a fase 3; o commit `59a4c06` fechou os quatro bloqueantes, estes ficaram):
+
+1. `src/components/configurator/Configurator.jsx:34-35` — o seletor `FOCUSABLE` só descarta `tabindex="-1"` na última cláusula, então `button:not([disabled])` casa as abas do stepper com foco itinerante. A partir do passo 2, a primeira parada calculada é uma aba inalcançável por Tab e o `Shift+Tab` escapa do diálogo. Corrigir aplicando `:not([tabindex="-1"])` a todas as cláusulas, ou filtrando por `el.tabIndex >= 0`. Não há teste cobrindo a circulação por Tab.
+2. `src/components/configurator/Configurator.jsx:115,123,132` — o shell escreve à mão os nomes de seção (`"personal"`, `"delivery"`, `"payment"`) que o hook já tem em `SECTION_BY_STEP` (privado). Divergência de nome vira no-op silencioso em `useConfigurator.js` (`if (!SECTIONS.includes(...)) return state`) — o campo simplesmente não digita. Corrigir com `setField(name, value)` resolvendo a seção pelo passo atual.
+3. `src/hooks/useConfigurator.js:93,103` — `next`/`previous` navegam por aritmética no id (`step ± 1`), contrariando o contrato que `catalog.js` declara em comentário ("cada passo é identificado por nome, não por posição"). Com id não contíguo, `clampStep` devolve passo inexistente e `Configurator.jsx` quebra em `current.label`. Navegar por índice em `STEPS`.
+4. `src/components/configurator/Stepper.jsx:56,110,149` — prop `panelId` com default que nenhum chamador usa: quem a passar troca o `aria-controls` sem trocar o `id` do painel, reabrindo o que a AD-018 fechou. Remover e consumir `CONFIGURATOR_PANEL_ID` direto.
+5. `src/components/configurator/Stepper.jsx:100` — `aria-orientation="vertical"` fixo, mas o trilho só é coluna a partir de `md`. Casar com o breakpoint ou omitir.
+6. `src/components/configurator/Configurator.jsx` — com o modal aberto, a landing atrás continua rolando e no fluxo de leitura de leitor de tela. Falta `overflow: hidden` no body e `inert`/`aria-hidden` no conteúdo da Home enquanto aberto.
+7. `src/components/configurator/FieldGrid.jsx` — `blurErrors` só é limpo por desmontagem; nada o zera quando `stepId` muda na mesma instância. Funciona hoje só porque o `AnimatePresence` desmonta cada passo. Um `useEffect` que zera ao mudar `stepId` fecha a dependência implícita.
+
+**Pendências de produto, não de código**:
+- As capturas na raiz do repo (`MacBook Pro-*.jpeg`, `iPhone 12 Pro-*.jpeg`) são do design ANTIGO. O README já as rotula como "antes"; faltam as capturas do redesenho.
+- As imagens dos modelos ainda são PNG de ~3 MB cada (`racingBlue`, `lightBlue`, `silverBlue`). Converter para WebP responsivo estava no mockup, mas ficou fora do escopo das tasks.
+- Limitação conhecida: `validateCard` exige 16 dígitos exatos — Amex (15) é recusada.
+- A parcela usa `subtotal / 24` com arredondamento normal (R$ 2.020,83). O mockup mostrava R$ 2.020,84; o código está certo, o mockup é que arredondou para cima.
+
+**Mockup aprovado** (referência visual da feature): artifact `https://claude.ai/code/artifact/35c48844-4f20-4608-936e-87a678a915ae`, fonte em `scratchpad/mt07-redesign.src.html`.
